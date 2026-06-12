@@ -20,7 +20,6 @@
             perspective: 1200px;
         }
 
-        /* 自訂橘色滑鼠游標 */
         body {
             cursor: none;
         }
@@ -55,7 +54,6 @@
             will-change: transform;
         }
 
-        /* 當滑鼠按下時的游標特效 */
         body.cursor-clicking #custom-cursor {
             transform: translate(-50%, -50%) scale(0.7);
             background: #ffaa00;
@@ -74,7 +72,6 @@
             position: relative;
         }
 
-        /* 頂級性能優化：啟用硬體加速並改用 transform 控制伸縮，完全不卡頓 */
         .split {
             flex: 1;
             display: flex;
@@ -83,7 +80,6 @@
             justify-content: center;
             padding: 40px;
             position: relative;
-            /* 改用更輕量高效的 transition */
             transition: flex-grow 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
             overflow: hidden;
             z-index: 1;
@@ -100,7 +96,6 @@
             will-change: transform, opacity;
         }
 
-        /* 滑鼠動態聚光燈背景特效 */
         .split::after {
             content: '';
             position: absolute;
@@ -127,7 +122,6 @@
             filter: blur(6px) brightness(0.2) grayscale(0.7);
         }
 
-        /* VN 科技藍風格 */
         .vn-side {
             background: linear-gradient(135deg, #040612 0%, #010102 100%);
         }
@@ -147,7 +141,6 @@
             opacity: 1;
         }
 
-        /* TY 奢華金風格 */
         .ty-side {
             background: linear-gradient(135deg, #0e0b07 0%, #010101 100%);
         }
@@ -165,7 +158,6 @@
             opacity: 1;
         }
 
-        /* 中央隔離帶特效強化 */
         .middle-gap {
             width: 85px;
             background: #050507;
@@ -180,7 +172,6 @@
             overflow: hidden;
         }
 
-        /* 鐳射流光掃描線 */
         .middle-gap::before {
             content: '';
             position: absolute;
@@ -197,7 +188,6 @@
             100% { top: 200%; }
         }
         
-        /* 合作中文字 3D 霓虹動效 */
         .coop-text {
             writing-mode: vertical-lr;
             text-orientation: upright;
@@ -226,7 +216,6 @@
             transform: scale(1.1) rotate(3deg);
         }
 
-        /* 玻璃擬態卡片 3D 傾斜與炫光邊框 */
         .card {
             background: rgba(255, 255, 255, 0.01);
             backdrop-filter: blur(25px);
@@ -243,7 +232,6 @@
             will-change: transform;
         }
 
-        /* 卡片內部元素立體懸浮 */
         .card > * {
             transform: translateZ(30px);
         }
@@ -266,7 +254,6 @@
             box-shadow: 0 40px 80px rgba(212, 175, 55, 0.22), inset 0 0 30px rgba(212, 175, 55, 0.08);
         }
 
-        /* 文字流光特效 */
         .logo-text {
             font-size: 5.5rem;
             font-weight: 900;
@@ -338,7 +325,6 @@
             color: #fff;
         }
 
-        /* 考核難度區塊特效強度升級 */
         .difficulty-box {
             border-radius: 24px;
             padding: 15px 28px;
@@ -391,7 +377,6 @@
             transform: scale(1.03) translateZ(55px);
         }
 
-        /* 按鈕粒子發光特效 */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -433,7 +418,6 @@
 </head>
 <body>
 
-    <!-- 橘色自訂滑鼠點與光圈 -->
     <div id="custom-cursor"></div>
     <div id="custom-cursor-blur"></div>
 
@@ -474,7 +458,6 @@
     </div>
 
     <script>
-        // --- 1. 高流暢度滑鼠追蹤與 3D 卡片傾斜效果 (使用 requestAnimationFrame 確保不卡頓) ---
         const cursor = document.getElementById('custom-cursor');
         const cursorBlur = document.getElementById('custom-cursor-blur');
         const vnSide = document.getElementById('vnSide');
@@ -485,26 +468,21 @@
         let cursorX = mouseX;
         let cursorY = mouseY;
 
-        // 滑鼠位置更新
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
         });
 
-        // 點擊縮放動畫效果
         window.addEventListener('mousedown', () => document.body.classList.add('cursor-clicking'));
         window.addEventListener('mouseup', () => document.body.classList.remove('cursor-clicking'));
 
-        // 核心渲染迴圈：處理滑鼠平滑追蹤、動態聚光燈與 3D 傾斜
         function updateVisuals() {
-            // 平滑跟隨效果 (橘色點與外圈)
             cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
             
             cursorX += (mouseX - cursorX) * 0.25;
             cursorY += (mouseY - cursorY) * 0.25;
             cursorBlur.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
 
-            // 處理區塊內的動態特效與 3D 卡片傾斜
             handleSideEffects(vnSide);
             handleSideEffects(tySide);
 
@@ -513,35 +491,29 @@
 
         function handleSideEffects(side) {
             const rect = side.getBoundingClientRect();
-            // 判斷滑鼠是否在當前區塊內
             if (mouseX >= rect.left && mouseX <= rect.right && mouseY >= rect.top && mouseY <= rect.bottom) {
                 const x = mouseX - rect.left;
                 const y = mouseY - rect.top;
                 
-                // 設定聚光燈 CSS 變數
                 side.style.setProperty('--x', `${x}px`);
                 side.style.setProperty('--y', `${y}px`);
                 
-                // 背景網格/線條隨著滑鼠微微位移的動態效果
                 const bgX = (x - rect.width / 2) * 0.04;
                 const bgY = (y - rect.height / 2) * 0.04;
                 side.style.setProperty('--bg-x', `${bgX}px`);
                 side.style.setProperty('--bg-y', `${bgY}px`);
 
-                // 3D 卡片傾斜計算
                 const card = side.querySelector('.card');
                 if (card) {
                     const cardRect = card.getBoundingClientRect();
                     const cardCenterX = cardRect.left + cardRect.width / 2;
                     const cardCenterY = cardRect.top + cardRect.height / 2;
-                    // 限制傾斜角度在 12 度以內，防止過度穿模且更顯流暢
                     const rotateX = -(mouseY - cardCenterY) / (cardRect.height / 2) * 12;
                     const rotateY = (mouseX - cardCenterX) / (cardRect.width / 2) * 12;
                     
                     card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
                 }
             } else {
-                // 滑鼠離開後復原卡片狀態
                 const card = side.querySelector('.card');
                 if (card && card.style.transform !== '') {
                     card.style.transform = '';
@@ -549,17 +521,14 @@
             }
         }
 
-        // 啟動高效渲染
         requestAnimationFrame(updateVisuals);
 
-        // --- 2. 點擊跳轉事件優化 (完美分離全域點擊與按鈕點擊) ---
         vnSide.addEventListener('click', () => window.open('https://discord.gg/UNRVAcKmD3', '_blank'));
         tySide.addEventListener('click', () => window.open('https://discord.gg/uVADKfqsWM', '_blank'));
 
         document.getElementById('vnBtn').addEventListener('click', (e) => e.stopPropagation());
         document.getElementById('tyBtn').addEventListener('click', (e) => e.stopPropagation());
 
-        // 如果滑鼠移出視窗則隱藏自訂游標
         document.addEventListener('mouseleave', () => {
             cursor.style.opacity = '0';
             cursorBlur.style.opacity = '0';
