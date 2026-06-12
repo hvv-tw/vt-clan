@@ -28,6 +28,7 @@
             cursor: none !important;
         }
 
+        /* 基礎滑鼠樣式與過渡動畫 */
         #custom-cursor {
             width: 8px;
             height: 8px;
@@ -39,6 +40,7 @@
             transform: translate(-50%, -50%);
             box-shadow: 0 0 10px #ff7300, 0 0 20px #ffaa00;
             will-change: transform;
+            transition: background 0.3s, box-shadow 0.3s;
         }
 
         #custom-cursor-blur {
@@ -50,19 +52,69 @@
             pointer-events: none;
             z-index: 9998;
             transform: translate(-50%, -50%);
-            transition: transform 0.08s cubic-bezier(0.25, 1, 0.5, 1), width 0.2s, height 0.2s;
+            transition: transform 0.08s cubic-bezier(0.25, 1, 0.5, 1), width 0.2s, height 0.2s, border-color 0.3s, background 0.3s;
             background: rgba(255, 115, 0, 0.03);
             will-change: transform;
         }
 
+        /* 點擊時的縮放縮放特效 */
         body.cursor-clicking #custom-cursor {
             transform: translate(-50%, -50%) scale(0.7);
-            background: #ffaa00;
         }
         body.cursor-clicking #custom-cursor-blur {
             transform: translate(-50%, -50%) scale(1.6);
-            border-color: #ffaa00;
-            background: rgba(255, 170, 0, 0.15);
+        }
+
+        /* 進入 VN CLAN 分頁時的游標顏色 */
+        body:has(.vn-side:hover) #custom-cursor {
+            background: #00f2fe;
+            box-shadow: 0 0 10px #00f2fe, 0 0 20px #4facfe;
+        }
+        body:has(.vn-side:hover) #custom-cursor-blur {
+            border-color: rgba(0, 242, 254, 0.6);
+            background: rgba(0, 242, 254, 0.08);
+        }
+        body.cursor-clicking:has(.vn-side:hover) #custom-cursor-blur {
+            background: rgba(0, 242, 254, 0.2);
+        }
+
+        /* 進入 TY CLAN 分頁時的游標顏色 */
+        body:has(.ty-side:hover) #custom-cursor {
+            background: #ffe259;
+            box-shadow: 0 0 10px #ffe259, 0 0 20px #ffa751;
+        }
+        body:has(.ty-side:hover) #custom-cursor-blur {
+            border-color: rgba(255, 226, 89, 0.5);
+            background: rgba(255, 226, 89, 0.06);
+        }
+        body.cursor-clicking:has(.ty-side:hover) #custom-cursor-blur {
+            background: rgba(255, 226, 89, 0.15);
+        }
+
+        /* 進入 中間區塊（合作中）時的彩虹霓虹流光特效 */
+        body:has(.middle-gap:hover) #custom-cursor {
+            animation: rainbow-dot 1.5s linear infinite;
+        }
+        body:has(.middle-gap:hover) #custom-cursor-blur {
+            animation: rainbow-blur 1.5s linear infinite;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        @keyframes rainbow-dot {
+            0% { background: #ff0055; box-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055; }
+            20% { background: #00f2fe; box-shadow: 0 0 10px #00f2fe, 0 0 20px #00f2fe; }
+            40% { background: #00ff66; box-shadow: 0 0 10px #00ff66, 0 0 20px #00ff66; }
+            60% { background: #ffe259; box-shadow: 0 0 10px #ffe259, 0 0 20px #ffe259; }
+            80% { background: #ff00ff; box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff; }
+            100% { background: #ff0055; box-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055; }
+        }
+        @keyframes rainbow-blur {
+            0% { border-color: rgba(255, 0, 85, 0.6); }
+            20% { border-color: rgba(0, 242, 254, 0.6); }
+            40% { border-color: rgba(0, 255, 102, 0.6); }
+            60% { border-color: rgba(255, 226, 89, 0.6); }
+            80% { border-color: rgba(255, 0, 255, 0.6); }
+            100% { border-color: rgba(255, 0, 85, 0.6); }
         }
 
         .container {
@@ -256,7 +308,7 @@
         }
 
         .logo-text {
-            font-size: 4.2rem; /* 稍微縮小字體以完美容納 CLAN 字樣 */
+            font-size: 4.2rem;
             font-weight: 900;
             letter-spacing: 4px;
             margin-bottom: 5px;
@@ -525,7 +577,6 @@
 
         requestAnimationFrame(updateVisuals);
 
-        // 移除全域點擊跳轉邏輯，現在只依靠 <a> 標籤按鈕點擊
         document.getElementById('vnBtn').addEventListener('click', (e) => e.stopPropagation());
         document.getElementById('tyBtn').addEventListener('click', (e) => e.stopPropagation());
 
