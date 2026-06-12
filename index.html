@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VN CLAN × TY CLAN | 戰隊總部</title>
+    <title>VN CLAN × TY CLAN</title>
     <style>
         * {
             margin: 0;
@@ -15,19 +15,20 @@
         body, html {
             height: 100%;
             overflow: hidden;
-            background-color: #050505;
+            background-color: #030303;
             color: #fff;
         }
 
-        /* 雙拼大容器 */
+        /* 主容器 */
         .container {
             display: flex;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
+            position: relative;
         }
 
-        /* 兩邊共用的基本設定 */
+        /* 兩邊戰隊共用基本設定 */
         .split {
             flex: 1;
             display: flex;
@@ -39,56 +40,52 @@
             transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1), filter 0.5s ease;
             cursor: pointer;
             overflow: hidden;
+            z-index: 1;
         }
 
-        /* 背景裝飾線條 */
+        /* 背景紋理 */
         .split::before {
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0.15;
+            opacity: 0.12;
             pointer-events: none;
             transition: opacity 0.5s ease, transform 0.6s ease;
         }
 
-        /* 滑鼠懸停時，放大被指到的那一邊 */
+        /* 動態伸縮特效 */
         .split:hover {
-            flex: 1.5;
+            flex: 1.4;
         }
-        /* 讓沒被指到的那一邊稍微變暗 */
         .container:has(.split:hover) .split:not(:hover) {
-            flex: 0.7;
-            filter: blur(2px) brightness(0.4);
+            flex: 0.8;
+            filter: blur(3px) brightness(0.3);
         }
 
         /* ==================== 
-           左半邊：VN CLAN (科技風)
+           左半邊：VN CLAN (賽博科技)
         ==================== */
         .vn-side {
-            background: linear-gradient(135deg, #090a15 0%, #020208 100%);
-            border-right: 1px solid rgba(0, 242, 254, 0.2);
+            background: linear-gradient(135deg, #070913 0%, #020205 100%);
         }
         .vn-side::before {
-            /* 科技感網格背景 */
             background-image: linear-gradient(rgba(0, 242, 254, 0.1) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(0, 242, 254, 0.1) 1px, transparent 1px);
-            background-size: 30px 30px;
+            background-size: 40px 40px;
         }
         .vn-side:hover::before {
-            opacity: 0.3;
+            opacity: 0.25;
             transform: scale(1.05);
         }
 
         /* ==================== 
-           右半邊：TY CLAN (優雅金)
+           右半邊：TY CLAN (暗金優雅)
         ==================== */
         .ty-side {
-            background: linear-gradient(135deg, #14110c 0%, #050402 100%);
-            border-left: 1px solid rgba(212, 175, 55, 0.2);
+            background: linear-gradient(135deg, #120f0a 0%, #040302 100%);
         }
         .ty-side::before {
-            /* 優雅斜線背景 */
-            background: repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.05) 10px, transparent 10px, transparent 20px);
+            background: repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.04), rgba(212, 175, 55, 0.04) 12px, transparent 12px, transparent 24px);
         }
         .ty-side:hover::before {
             opacity: 0.2;
@@ -96,93 +93,161 @@
         }
 
         /* ==================== 
-           卡片與內容特效 (Glassmorphism)
+           中間空隙飾條 (合作中)
         ==================== */
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 50px 40px;
-            width: 100%;
-            max-width: 450px;
-            text-align: center;
-            transform: translateY(20px);
-            opacity: 0.9;
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        .middle-gap {
+            width: 80px;
+            background: #0a0a0a;
+            border-left: 1px solid rgba(0, 242, 254, 0.15);
+            border-right: 1px solid rgba(212, 175, 55, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
             z-index: 10;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+        
+        /* 合作中直書文字 */
+        .coop-text {
+            writing-mode: vertical-lr;
+            text-orientation: upright;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 12px;
+            color: #888;
+            text-shadow: 0 0 10px rgba(255,255,255,0.05);
+            transition: all 0.5s ease;
         }
 
-        /* VN 卡片發光 */
+        /* 當滑鼠移到左邊或右邊時，中間字體會跟著發出對應的光芒 */
+        .container:has(.vn-side:hover) .coop-text {
+            color: #00f2fe;
+            text-shadow: 0 0 20px rgba(0, 242, 254, 0.8), 0 0 40px rgba(0, 242, 254, 0.4);
+        }
+        .container:has(.ty-side:hover) .coop-text {
+            color: #ffe259;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.8), 0 0 40px rgba(212, 175, 55, 0.4);
+        }
+
+        /* ==================== 
+           卡片結構 (Glassmorphism)
+        ==================== */
+        .card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 28px;
+            padding: 45px 35px;
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            transform: translateY(15px);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+        }
+
         .vn-side .card {
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(0, 242, 254, 0.05);
+            border: 1px solid rgba(0, 242, 254, 0.15);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
         }
         .vn-side:hover .card {
-            border-color: rgba(0, 242, 254, 0.6);
-            box-shadow: 0 30px 60px rgba(0, 242, 254, 0.15), inset 0 0 30px rgba(0, 242, 254, 0.1);
+            border-color: rgba(0, 242, 254, 0.5);
+            box-shadow: 0 30px 60px rgba(0, 242, 254, 0.15);
             transform: translateY(0);
         }
 
-        /* TY 卡片發光 */
         .ty-side .card {
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(212, 175, 55, 0.02);
+            border: 1px solid rgba(212, 175, 55, 0.12);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
         }
         .ty-side:hover .card {
-            border-color: rgba(212, 175, 55, 0.5);
-            box-shadow: 0 30px 60px rgba(212, 175, 55, 0.1), inset 0 0 30px rgba(212, 175, 55, 0.05);
+            border-color: rgba(212, 175, 55, 0.45);
+            box-shadow: 0 30px 60px rgba(212, 175, 55, 0.1);
             transform: translateY(0);
         }
 
-        /* 文字特效 */
+        /* 大標題文字 */
         .logo-text {
-            font-size: 4rem;
+            font-size: 4.5rem;
             font-weight: 900;
             letter-spacing: 4px;
             margin-bottom: 5px;
             text-transform: uppercase;
-            transition: transform 0.4s ease;
         }
-        
-        /* VN 科幻漸層字 */
         .vn-text {
             background: linear-gradient(45deg, #00f2fe, #4facfe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
         }
-        
-        /* TY 高級奢華字 */
         .ty-text {
             background: linear-gradient(45deg, #ffe259, #ffa751);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
         }
 
         .sub-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             letter-spacing: 6px;
             text-transform: uppercase;
             margin-bottom: 25px;
-            opacity: 0.7;
         }
-        .vn-side .sub-title { color: #00f2fe; }
-        .ty-side .sub-title { color: #d4af37; }
+        .vn-side .sub-title { color: #00f2fe; opacity: 0.8; }
+        .ty-side .sub-title { color: #d4af37; opacity: 0.8; }
 
         .desc {
             font-size: 0.95rem;
             line-height: 1.6;
-            color: #ccc;
-            margin-bottom: 35px;
-            opacity: 0.8;
+            color: #b5b5b5;
+            margin-bottom: 30px;
         }
 
         /* ==================== 
-           按鈕特效 (Button Animations)
+           難易度圓角框框 (高質感標籤)
+        ==================== */
+        .difficulty-box {
+            border-radius: 16px;
+            padding: 12px 20px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            margin-bottom: 35px;
+            display: inline-block;
+            width: 100%;
+            transition: all 0.4s ease;
+        }
+
+        /* VN: 比較難考 */
+        .vn-box {
+            background: rgba(0, 242, 254, 0.03);
+            border: 1px dashed rgba(0, 242, 254, 0.3);
+            color: #00f2fe;
+            box-shadow: inset 0 0 15px rgba(0, 242, 254, 0.05);
+        }
+        .vn-side:hover .vn-box {
+            background: rgba(0, 242, 254, 0.08);
+            border: 1px solid rgba(0, 242, 254, 0.8);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2), inset 0 0 15px rgba(0, 242, 254, 0.1);
+            transform: scale(1.02);
+        }
+
+        /* TY: 比較簡單 */
+        .ty-box {
+            background: rgba(212, 175, 55, 0.02);
+            border: 1px dashed rgba(212, 175, 55, 0.25);
+            color: #ffe259;
+            box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.02);
+        }
+        .ty-side:hover .ty-box {
+            background: rgba(212, 175, 55, 0.06);
+            border: 1px solid rgba(212, 175, 55, 0.7);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15), inset 0 0 15px rgba(212, 175, 55, 0.08);
+            transform: scale(1.02);
+        }
+
+        /* ==================== 
+           按鈕設定 
         ==================== */
         .btn {
             display: inline-flex;
@@ -195,91 +260,70 @@
             border-radius: 50px;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             width: 100%;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
 
-        /* VN 按鈕：電光藍 */
         .btn-vn {
             background: linear-gradient(45deg, #00f2fe, #4facfe);
-            color: #020208;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+            color: #020205;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
         }
         .btn-vn:hover {
-            transform: scale(1.05) translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 242, 254, 0.6);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0, 242, 254, 0.5);
         }
 
-        /* TY 按鈕：古銅金 */
         .btn-ty {
             background: transparent;
             color: #ffe259;
             border: 2px solid #ffe259;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
         }
         .btn-ty:hover {
             background: linear-gradient(45deg, #ffe259, #ffa751);
-            color: #14110c;
-            transform: scale(1.05) translateY(-3px);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.5);
+            color: #040302;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(212, 175, 55, 0.4);
             border-color: transparent;
-        }
-
-        /* 網頁中下方 PK 標籤 */
-        .vs-badge {
-            position: absolute;
-            left: 50%;
-            bottom: 8%;
-            transform: translateX(-50%);
-            background: #111;
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 900;
-            letter-spacing: 4px;
-            color: #666;
-            z-index: 100;
-            pointer-events: none;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
-        .container:has(.vn-side:hover) .vs-badge {
-            color: #00f2fe;
-            border-color: #00f2fe;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
-        }
-        .container:has(.ty-side:hover) .vs-badge {
-            color: #ffe259;
-            border-color: #ffe259;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
         }
     </style>
 </head>
 <body>
 
-    <div class="vs-badge">ALLIANCE HQ</div>
-
     <div class="container">
         
+        <!-- 左半邊：VN CLAN -->
         <div class="split vn-side" onclick="window.open('https://discord.gg/UNRVAcKmD3', '_blank')">
             <div class="card">
                 <div class="logo-text vn-text">VN</div>
-                <div class="sub-title">Clan Portal</div>
+                <div class="sub-title">CLAN PORTAL</div>
                 <p class="desc">
-                    核心競爭、未來科技。這是屬於我的硬核戰隊。頂尖技術與極致速度的完美交匯，點擊下方傳送門進入賽博矩陣。
+                    核心競爭、未來科技。頂尖技術與極致速度的完美交匯，屬於我的硬核戰隊。
                 </p>
+                <!-- 難易度框框 -->
+                <div class="difficulty-box vn-box">⚠️ 考核難度：比較難考</div>
+                
                 <a href="https://discord.gg/UNRVAcKmD3" target="_blank" class="btn btn-vn" onclick="event.stopPropagation();">
                     進入 DISCORD 伺服器
                 </a>
             </div>
         </div>
 
+        <!-- 中間空隙：合作中 -->
+        <div class="middle-gap">
+            <div class="coop-text">合作中</div>
+        </div>
+
+        <!-- 右半邊：TY CLAN -->
         <div class="split ty-side" onclick="window.open('https://discord.gg/uVADKfqsWM', '_blank')">
             <div class="card">
                 <div class="logo-text ty-text">TY</div>
                 <div class="sub-title">EST 2026</div>
                 <p class="desc">
-                    經典傳奇、極致優雅。與夥伴並肩作戰的榮譽象徵。凝聚無限可能的高端合作戰隊，點擊下方加入優雅殿堂。
+                    經典傳奇、極致優雅與夥伴並肩作戰的榮譽象徵，凝聚無限可能的高端合作戰隊。
                 </p>
+                <!-- 難易度框框 -->
+                <div class="difficulty-box ty-box">✨ 考核難度：比較簡單</div>
+                
                 <a href="https://discord.gg/uVADKfqsWM" target="_blank" class="btn btn-ty" onclick="event.stopPropagation();">
                     進入 DISCORD 伺服器
                 </a>
