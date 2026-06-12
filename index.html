@@ -17,7 +17,53 @@
             overflow: hidden;
             background-color: #020204;
             color: #fff;
-            perspective: 1000px;
+            perspective: 1200px;
+        }
+
+        /* 自訂橘色滑鼠游標 */
+        body {
+            cursor: none;
+        }
+        a, .split, .btn {
+            cursor: none !important;
+        }
+
+        #custom-cursor {
+            width: 8px;
+            height: 8px;
+            background: #ff7300;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #ff7300, 0 0 20px #ffaa00;
+            will-change: transform;
+        }
+
+        #custom-cursor-blur {
+            width: 32px;
+            height: 32px;
+            border: 1.5px solid rgba(255, 115, 0, 0.5);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: transform 0.08s cubic-bezier(0.25, 1, 0.5, 1), width 0.2s, height 0.2s;
+            background: rgba(255, 115, 0, 0.03);
+            will-change: transform;
+        }
+
+        /* 當滑鼠按下時的游標特效 */
+        body.cursor-clicking #custom-cursor {
+            transform: translate(-50%, -50%) scale(0.7);
+            background: #ffaa00;
+        }
+        body.cursor-clicking #custom-cursor-blur {
+            transform: translate(-50%, -50%) scale(1.6);
+            border-color: #ffaa00;
+            background: rgba(255, 170, 0, 0.15);
         }
 
         .container {
@@ -28,6 +74,7 @@
             position: relative;
         }
 
+        /* 頂級性能優化：啟用硬體加速並改用 transform 控制伸縮，完全不卡頓 */
         .split {
             flex: 1;
             display: flex;
@@ -36,205 +83,201 @@
             justify-content: center;
             padding: 40px;
             position: relative;
-            transition: flex 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
-            cursor: pointer;
+            /* 改用更輕量高效的 transition */
+            transition: flex-grow 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
             overflow: hidden;
             z-index: 1;
+            will-change: flex-grow, filter;
         }
 
         .split::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0.08;
+            top: -10%; left: -10%; width: 120%; height: 120%;
+            opacity: 0.06;
             pointer-events: none;
-            transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), background-position 0s;
+            transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            will-change: transform, opacity;
         }
 
+        /* 滑鼠動態聚光燈背景特效 */
         .split::after {
             content: '';
             position: absolute;
-            width: 300px;
-            height: 300px;
+            width: 500px;
+            height: 500px;
             border-radius: 50%;
-            filter: blur(100px);
+            filter: blur(120px);
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.6s ease, transform 0.1s ease;
+            transition: opacity 0.5s ease;
             z-index: 2;
-        }
-
-        .split:hover {
-            flex: 1.6;
-        }
-        
-        .container:has(.split:hover) .split:not(:hover) {
-            flex: 0.6;
-            filter: blur(5px) brightness(0.25) grayscale(0.5);
-        }
-
-        .vn-side {
-            background: linear-gradient(135deg, #050714 0%, #010103 100%);
-        }
-        .vn-side::before {
-            background-image: linear-gradient(rgba(0, 242, 254, 0.15) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 242, 254, 0.15) 1px, transparent 1px);
-            background-size: 50px 50px;
-        }
-        .vn-side::after {
-            background: rgba(0, 242, 254, 0.2);
             left: var(--x, 50%);
             top: var(--y, 50%);
             transform: translate(-50%, -50%);
+            will-change: left, top, opacity;
+        }
+
+        .split:hover {
+            flex-grow: 1.5;
+        }
+        
+        .container:has(.split:hover) .split:not(:hover) {
+            flex-grow: 0.7;
+            filter: blur(6px) brightness(0.2) grayscale(0.7);
+        }
+
+        /* VN 科技藍風格 */
+        .vn-side {
+            background: linear-gradient(135deg, #040612 0%, #010102 100%);
+        }
+        .vn-side::before {
+            background-image: linear-gradient(rgba(0, 242, 254, 0.12) 1.5px, transparent 1.5px),
+                              linear-gradient(90deg, rgba(0, 242, 254, 0.12) 1.5px, transparent 1.5px);
+            background-size: 60px 60px;
+        }
+        .vn-side::after {
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.25) 0%, transparent 70%);
         }
         .vn-side:hover::before {
-            opacity: 0.25;
-            transform: scale(1.08);
-            animation: gridMove 20px linear infinite;
-            animation-duration: 2s;
+            opacity: 0.22;
+            transform: scale(1.05) translate(var(--bg-x, 0px), var(--bg-y, 0px));
         }
         .vn-side:hover::after {
             opacity: 1;
         }
 
-        @keyframes gridMove {
-            0% { background-position: 0 0; }
-            100% { background-position: 40px 40px; }
-        }
-
+        /* TY 奢華金風格 */
         .ty-side {
-            background: linear-gradient(135deg, #0f0d09 0%, #020202 100%);
+            background: linear-gradient(135deg, #0e0b07 0%, #010101 100%);
         }
         .ty-side::before {
-            background: repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.05) 15px, transparent 15px, transparent 30px);
+            background: repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.04), rgba(212, 175, 55, 0.04) 15px, transparent 15px, transparent 30px);
         }
         .ty-side::after {
-            background: rgba(212, 175, 55, 0.15);
-            left: var(--x, 50%);
-            top: var(--y, 50%);
-            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.18) 0%, transparent 70%);
         }
         .ty-side:hover::before {
-            opacity: 0.18;
-            transform: scale(1.08) rotate(2deg);
+            opacity: 0.15;
+            transform: scale(1.05) rotate(1deg) translate(var(--bg-x, 0px), var(--bg-y, 0px));
         }
         .ty-side:hover::after {
             opacity: 1;
         }
 
+        /* 中央隔離帶特效強化 */
         .middle-gap {
-            width: 90px;
-            background: #060608;
-            border-left: 1px solid rgba(0, 242, 254, 0.2);
-            border-right: 1px solid rgba(212, 175, 55, 0.2);
+            width: 85px;
+            background: #050507;
+            border-left: 1px solid rgba(0, 242, 254, 0.25);
+            border-right: 1px solid rgba(212, 175, 55, 0.25);
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             z-index: 10;
-            box-shadow: 0 0 40px rgba(0,0,0,0.9);
+            box-shadow: 0 0 50px rgba(0,0,0,0.95);
             overflow: hidden;
         }
 
+        /* 鐳射流光掃描線 */
         .middle-gap::before {
             content: '';
             position: absolute;
-            top: -50%;
+            top: -100%;
             left: 0;
             width: 100%;
-            height: 50%;
-            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.1), transparent);
-            animation: scanline 4s linear infinite;
+            height: 40%;
+            background: linear-gradient(to bottom, transparent, rgba(0, 242, 254, 0.2), rgba(212, 175, 55, 0.2), transparent);
+            animation: scanline 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
 
         @keyframes scanline {
-            0% { top: -50%; }
-            100% { top: 150%; }
+            0% { top: -100%; }
+            100% { top: 200%; }
         }
         
+        /* 合作中文字 3D 霓虹動效 */
         .coop-text {
             writing-mode: vertical-lr;
             text-orientation: upright;
-            font-size: 1.7rem;
+            font-size: 1.75rem;
             font-weight: 900;
-            letter-spacing: 15px;
-            background: linear-gradient(180deg, #00f2fe 0%, #7bf2b9 40%, #fcd667 70%, #ffe259 100%);
-            background-size: 100% 200%;
+            letter-spacing: 16px;
+            background: linear-gradient(180deg, #00f2fe 0%, #ffe259 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            animation: flowColors 4s ease-in-out infinite alternate, pulseGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes flowColors {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 0% 100%; }
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            animation: pulseGlow 1.8s ease-in-out infinite alternate;
+            will-change: transform, filter;
         }
 
         @keyframes pulseGlow {
-            0% { filter: drop-shadow(0 0 5px rgba(0, 242, 254, 0.5)) drop-shadow(0 0 10px rgba(212, 175, 55, 0.3)); }
-            100% { filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.7)) drop-shadow(0 0 20px rgba(212, 175, 55, 0.6)); transform: scale(0.98); }
+            0% { filter: drop-shadow(0 0 4px rgba(0, 242, 254, 0.5)) drop-shadow(0 0 8px rgba(212, 175, 55, 0.4)); transform: scale(0.97); }
+            100% { filter: drop-shadow(0 0 16px rgba(0, 242, 254, 0.8)) drop-shadow(0 0 16px rgba(212, 175, 55, 0.7)); transform: scale(1.03); }
         }
 
         .container:has(.vn-side:hover) .coop-text {
             filter: drop-shadow(0 0 25px #00f2fe);
-            transform: scale(1.08) rotate(-2deg);
+            transform: scale(1.1) rotate(-3deg);
         }
         .container:has(.ty-side:hover) .coop-text {
             filter: drop-shadow(0 0 25px #ffe259);
-            transform: scale(1.08) rotate(2deg);
+            transform: scale(1.1) rotate(3deg);
         }
 
+        /* 玻璃擬態卡片 3D 傾斜與炫光邊框 */
         .card {
             background: rgba(255, 255, 255, 0.01);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 32px;
-            padding: 50px 40px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 36px;
+            padding: 55px 45px;
             width: 100%;
-            max-width: 450px;
+            max-width: 440px;
             text-align: center;
-            transform: translateY(20px) rotateX(5px);
             transform-style: preserve-3d;
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.4s, box-shadow 0.4s;
             position: relative;
             z-index: 5;
+            will-change: transform;
         }
 
+        /* 卡片內部元素立體懸浮 */
         .card > * {
-            transform: translateZ(20px);
+            transform: translateZ(30px);
         }
 
         .vn-side .card {
-            border: 1px solid rgba(0, 242, 254, 0.1);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 242, 254, 0.02);
+            border: 1px solid rgba(0, 242, 254, 0.08);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
         }
         .vn-side:hover .card {
-            border-color: rgba(0, 242, 254, 0.6);
-            box-shadow: 0 40px 80px rgba(0, 242, 254, 0.25), inset 0 0 30px rgba(0, 242, 254, 0.1);
-            transform: translateY(0) rotateX(0deg) scale(1.02);
+            border-color: rgba(0, 242, 254, 0.7);
+            box-shadow: 0 40px 80px rgba(0, 242, 254, 0.3), inset 0 0 30px rgba(0, 242, 254, 0.15);
         }
 
         .ty-side .card {
-            border: 1px solid rgba(212, 175, 55, 0.08);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(212, 175, 55, 0.01);
+            border: 1px solid rgba(212, 175, 55, 0.06);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
         }
         .ty-side:hover .card {
-            border-color: rgba(212, 175, 55, 0.55);
-            box-shadow: 0 40px 80px rgba(212, 175, 55, 0.18), inset 0 0 30px rgba(212, 175, 55, 0.05);
-            transform: translateY(0) rotateX(0deg) scale(1.02);
+            border-color: rgba(212, 175, 55, 0.65);
+            box-shadow: 0 40px 80px rgba(212, 175, 55, 0.22), inset 0 0 30px rgba(212, 175, 55, 0.08);
         }
 
+        /* 文字流光特效 */
         .logo-text {
-            font-size: 5rem;
+            font-size: 5.5rem;
             font-weight: 900;
             letter-spacing: 6px;
-            margin-bottom: 2px;
+            margin-bottom: -5px;
             text-transform: uppercase;
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateZ(60px) scale(1);
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .split:hover .logo-text {
-            transform: translateZ(40px) scale(1.05);
+            transform: translateZ(80px) scale(1.08);
         }
         
         .vn-text {
@@ -242,14 +285,14 @@
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: shineText 3s linear infinite;
+            animation: shineText 2.5s linear infinite;
         }
         .ty-text {
             background: linear-gradient(45deg, #ffe259, #ffa751, #ffe259);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: shineText 3s linear infinite;
+            animation: shineText 2.5s linear infinite;
         }
 
         @keyframes shineText {
@@ -257,92 +300,98 @@
         }
 
         .sub-title {
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 800;
-            letter-spacing: 6px;
+            letter-spacing: 7px;
             text-transform: uppercase;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             position: relative;
             display: inline-block;
+            transform: translateZ(40px);
         }
         
         .sub-title::after {
             content: '';
             position: absolute;
-            bottom: -6px;
+            bottom: -8px;
             left: 50%;
             width: 0;
             height: 2px;
             transform: translateX(-50%);
-            transition: width 0.4s ease;
+            transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .vn-side:hover .sub-title::after { width: 80%; background: #00f2fe; }
-        .ty-side:hover .sub-title::after { width: 80%; background: #ffe259; }
+        .vn-side:hover .sub-title::after { width: 90%; background: #00f2fe; box-shadow: 0 0 8px #00f2fe; }
+        .ty-side:hover .sub-title::after { width: 90%; background: #ffe259; box-shadow: 0 0 8px #ffe259; }
 
-        .vn-side .sub-title { color: rgba(0, 242, 254, 0.8); text-shadow: 0 0 10px rgba(0,242,254,0.2); }
-        .ty-side .sub-title { color: rgba(212, 175, 55, 0.8); text-shadow: 0 0 10px rgba(212,175,55,0.2); }
+        .vn-side .sub-title { color: rgba(0, 242, 254, 0.85); text-shadow: 0 0 10px rgba(0,242,254,0.3); }
+        .ty-side .sub-title { color: rgba(212, 175, 55, 0.85); text-shadow: 0 0 10px rgba(212,175,55,0.3); }
 
         .desc {
-            font-size: 0.98rem;
-            line-height: 1.7;
-            color: #bcbcbc;
+            font-size: 1rem;
+            line-height: 1.75;
+            color: #b0b0b8;
             margin-bottom: 35px;
-            transition: color 0.4s ease;
+            transform: translateZ(35px);
+            transition: color 0.3s ease;
         }
         .split:hover .desc {
             color: #fff;
         }
 
+        /* 考核難度區塊特效強度升級 */
         .difficulty-box {
-            border-radius: 20px;
-            padding: 14px 24px;
-            font-size: 1.1rem;
+            border-radius: 24px;
+            padding: 15px 28px;
+            font-size: 1.15rem;
             font-weight: 800;
             letter-spacing: 4px;
             margin-bottom: 35px;
             display: inline-block;
             width: 100%;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
             position: relative;
             overflow: hidden;
+            transform: translateZ(45px);
         }
 
         .difficulty-box::before {
             content: '';
             position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            transition: none;
+            top: 0; left: -150%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
         }
         .split:hover .difficulty-box::before {
-            left: 100%;
-            transition: left 0.8s ease;
+            left: 150%;
+            transition: left 1s ease;
         }
 
         .vn-box {
-            background: rgba(0, 242, 254, 0.02);
-            border: 1px dashed rgba(0, 242, 254, 0.25);
+            background: rgba(0, 242, 254, 0.01);
+            border: 1px dashed rgba(0, 242, 254, 0.3);
             color: #00f2fe;
+            text-shadow: 0 0 8px rgba(0,242,254,0.3);
         }
         .vn-side:hover .vn-box {
-            background: rgba(0, 242, 254, 0.08);
+            background: rgba(0, 242, 254, 0.1);
             border: 1px solid #00f2fe;
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.3), inset 0 0 15px rgba(0, 242, 254, 0.1);
-            transform: scale(1.03) translateZ(30px);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.35), inset 0 0 15px rgba(0, 242, 254, 0.15);
+            transform: scale(1.03) translateZ(55px);
         }
 
         .ty-box {
             background: rgba(212, 175, 55, 0.01);
-            border: 1px dashed rgba(212, 175, 55, 0.2);
+            border: 1px dashed rgba(212, 175, 55, 0.25);
             color: #ffe259;
+            text-shadow: 0 0 8px rgba(212,175,55,0.3);
         }
         .ty-side:hover .ty-box {
-            background: rgba(212, 175, 55, 0.06);
+            background: rgba(212, 175, 55, 0.08);
             border: 1px solid #ffe259;
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.25), inset 0 0 15px rgba(212, 175, 55, 0.05);
-            transform: scale(1.03) translateZ(30px);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3), inset 0 0 15px rgba(212, 175, 55, 0.1);
+            transform: scale(1.03) translateZ(55px);
         }
 
+        /* 按鈕粒子發光特效 */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -352,20 +401,20 @@
             font-weight: 800;
             text-decoration: none;
             border-radius: 50px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2);
             width: 100%;
             letter-spacing: 3px;
-            position: relative;
+            transform: translateZ(50px);
         }
 
         .btn-vn {
             background: linear-gradient(45deg, #00f2fe, #4facfe);
             color: #010103;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
         }
         .btn-vn:hover {
-            transform: translateY(-5px) scale(1.02) translateZ(50px);
-            box-shadow: 0 15px 30px rgba(0, 242, 254, 0.5), 0 0 10px rgba(0, 242, 254, 0.3);
+            transform: translateY(-6px) scale(1.03) translateZ(75px);
+            box-shadow: 0 20px 35px rgba(0, 242, 254, 0.55), 0 0 15px rgba(0, 242, 254, 0.3);
         }
 
         .btn-ty {
@@ -375,14 +424,18 @@
         }
         .btn-ty:hover {
             background: linear-gradient(45deg, #ffe259, #ffa751);
-            color: #020202;
-            transform: translateY(-5px) scale(1.02) translateZ(50px);
-            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.4), 0 0 10px rgba(212, 175, 55, 0.2);
+            color: #010102;
+            transform: translateY(-6px) scale(1.03) translateZ(75px);
+            box-shadow: 0 20px 35px rgba(212, 175, 55, 0.45), 0 0 15px rgba(212, 175, 55, 0.25);
             border-color: transparent;
         }
     </style>
 </head>
 <body>
+
+    <!-- 橘色自訂滑鼠點與光圈 -->
+    <div id="custom-cursor"></div>
+    <div id="custom-cursor-blur"></div>
 
     <div class="container">
         
@@ -421,25 +474,100 @@
     </div>
 
     <script>
-        const handleMove = (e, side) => {
-            const rect = side.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            side.style.setProperty('--x', `${x}px`);
-            side.style.setProperty('--y', `${y}px`);
-        };
-
+        // --- 1. 高流暢度滑鼠追蹤與 3D 卡片傾斜效果 (使用 requestAnimationFrame 確保不卡頓) ---
+        const cursor = document.getElementById('custom-cursor');
+        const cursorBlur = document.getElementById('custom-cursor-blur');
         const vnSide = document.getElementById('vnSide');
         const tySide = document.getElementById('tySide');
+        
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let cursorX = mouseX;
+        let cursorY = mouseY;
 
-        vnSide.addEventListener('mousemove', (e) => handleMove(e, vnSide));
-        tySide.addEventListener('mousemove', (e) => handleMove(e, tySide));
+        // 滑鼠位置更新
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
 
+        // 點擊縮放動畫效果
+        window.addEventListener('mousedown', () => document.body.classList.add('cursor-clicking'));
+        window.addEventListener('mouseup', () => document.body.classList.remove('cursor-clicking'));
+
+        // 核心渲染迴圈：處理滑鼠平滑追蹤、動態聚光燈與 3D 傾斜
+        function updateVisuals() {
+            // 平滑跟隨效果 (橘色點與外圈)
+            cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+            
+            cursorX += (mouseX - cursorX) * 0.25;
+            cursorY += (mouseY - cursorY) * 0.25;
+            cursorBlur.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+
+            // 處理區塊內的動態特效與 3D 卡片傾斜
+            handleSideEffects(vnSide);
+            handleSideEffects(tySide);
+
+            requestAnimationFrame(updateVisuals);
+        }
+
+        function handleSideEffects(side) {
+            const rect = side.getBoundingClientRect();
+            // 判斷滑鼠是否在當前區塊內
+            if (mouseX >= rect.left && mouseX <= rect.right && mouseY >= rect.top && mouseY <= rect.bottom) {
+                const x = mouseX - rect.left;
+                const y = mouseY - rect.top;
+                
+                // 設定聚光燈 CSS 變數
+                side.style.setProperty('--x', `${x}px`);
+                side.style.setProperty('--y', `${y}px`);
+                
+                // 背景網格/線條隨著滑鼠微微位移的動態效果
+                const bgX = (x - rect.width / 2) * 0.04;
+                const bgY = (y - rect.height / 2) * 0.04;
+                side.style.setProperty('--bg-x', `${bgX}px`);
+                side.style.setProperty('--bg-y', `${bgY}px`);
+
+                // 3D 卡片傾斜計算
+                const card = side.querySelector('.card');
+                if (card) {
+                    const cardRect = card.getBoundingClientRect();
+                    const cardCenterX = cardRect.left + cardRect.width / 2;
+                    const cardCenterY = cardRect.top + cardRect.height / 2;
+                    // 限制傾斜角度在 12 度以內，防止過度穿模且更顯流暢
+                    const rotateX = -(mouseY - cardCenterY) / (cardRect.height / 2) * 12;
+                    const rotateY = (mouseX - cardCenterX) / (cardRect.width / 2) * 12;
+                    
+                    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+                }
+            } else {
+                // 滑鼠離開後復原卡片狀態
+                const card = side.querySelector('.card');
+                if (card && card.style.transform !== '') {
+                    card.style.transform = '';
+                }
+            }
+        }
+
+        // 啟動高效渲染
+        requestAnimationFrame(updateVisuals);
+
+        // --- 2. 點擊跳轉事件優化 (完美分離全域點擊與按鈕點擊) ---
         vnSide.addEventListener('click', () => window.open('https://discord.gg/UNRVAcKmD3', '_blank'));
         tySide.addEventListener('click', () => window.open('https://discord.gg/uVADKfqsWM', '_blank'));
 
         document.getElementById('vnBtn').addEventListener('click', (e) => e.stopPropagation());
         document.getElementById('tyBtn').addEventListener('click', (e) => e.stopPropagation());
+
+        // 如果滑鼠移出視窗則隱藏自訂游標
+        document.addEventListener('mouseleave', () => {
+            cursor.style.opacity = '0';
+            cursorBlur.style.opacity = '0';
+        });
+        document.addEventListener('mouseenter', () => {
+            cursor.style.opacity = '1';
+            cursorBlur.style.opacity = '1';
+        });
     </script>
 </body>
 </html>
