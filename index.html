@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VN CLAN × TY CLAN</title>
+    <title>VN CLAN × TY CLAN | 戰隊總部</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,6 @@
             color: #fff;
         }
 
-        /* 主容器 */
         .container {
             display: flex;
             height: 100vh;
@@ -28,7 +27,6 @@
             position: relative;
         }
 
-        /* 兩邊戰隊共用基本設定 */
         .split {
             flex: 1;
             display: flex;
@@ -43,7 +41,6 @@
             z-index: 1;
         }
 
-        /* 背景紋理 */
         .split::before {
             content: '';
             position: absolute;
@@ -53,7 +50,6 @@
             transition: opacity 0.5s ease, transform 0.6s ease;
         }
 
-        /* 動態伸縮特效 */
         .split:hover {
             flex: 1.4;
         }
@@ -62,9 +58,6 @@
             filter: blur(3px) brightness(0.3);
         }
 
-        /* ==================== 
-           左半邊：VN CLAN (賽博科技)
-        ==================== */
         .vn-side {
             background: linear-gradient(135deg, #070913 0%, #020205 100%);
         }
@@ -78,9 +71,6 @@
             transform: scale(1.05);
         }
 
-        /* ==================== 
-           右半邊：TY CLAN (暗金優雅)
-        ==================== */
         .ty-side {
             background: linear-gradient(135deg, #120f0a 0%, #040302 100%);
         }
@@ -92,9 +82,6 @@
             transform: scale(1.05);
         }
 
-        /* ==================== 
-           中間空隙飾條 (合作中)
-        ==================== */
         .middle-gap {
             width: 80px;
             background: #0a0a0a;
@@ -108,31 +95,38 @@
             box-shadow: 0 0 30px rgba(0,0,0,0.8);
         }
         
-        /* 合作中直書文字 */
         .coop-text {
             writing-mode: vertical-lr;
             text-orientation: upright;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 900;
             letter-spacing: 12px;
-            color: #888;
-            text-shadow: 0 0 10px rgba(255,255,255,0.05);
+            background: linear-gradient(180deg, #00f2fe, #ffe259);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(0, 242, 254, 0.3), 0 0 15px rgba(212, 175, 55, 0.3);
             transition: all 0.5s ease;
+            animation: rainbowGlow 3s ease-in-out infinite alternate;
         }
 
-        /* 當滑鼠移到左邊或右邊時，中間字體會跟著發出對應的光芒 */
+        @keyframes rainbowGlow {
+            0% {
+                filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.6));
+            }
+            100% {
+                filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
+            }
+        }
+
         .container:has(.vn-side:hover) .coop-text {
-            color: #00f2fe;
-            text-shadow: 0 0 20px rgba(0, 242, 254, 0.8), 0 0 40px rgba(0, 242, 254, 0.4);
+            filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.9));
+            transform: scale(1.05);
         }
         .container:has(.ty-side:hover) .coop-text {
-            color: #ffe259;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.8), 0 0 40px rgba(212, 175, 55, 0.4);
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.9));
+            transform: scale(1.05);
         }
 
-        /* ==================== 
-           卡片結構 (Glassmorphism)
-        ==================== */
         .card {
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(16px);
@@ -167,12 +161,11 @@
             transform: translateY(0);
         }
 
-        /* 大標題文字 */
         .logo-text {
             font-size: 4.5rem;
             font-weight: 900;
             letter-spacing: 4px;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
             text-transform: uppercase;
         }
         .vn-text {
@@ -187,14 +180,14 @@
         }
 
         .sub-title {
-            font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 6px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 5px;
             text-transform: uppercase;
             margin-bottom: 25px;
         }
-        .vn-side .sub-title { color: #00f2fe; opacity: 0.8; }
-        .ty-side .sub-title { color: #d4af37; opacity: 0.8; }
+        .vn-side .sub-title { color: rgba(0, 242, 254, 0.8); }
+        .ty-side .sub-title { color: rgba(212, 175, 55, 0.8); }
 
         .desc {
             font-size: 0.95rem;
@@ -203,9 +196,6 @@
             margin-bottom: 30px;
         }
 
-        /* ==================== 
-           難易度圓角框框 (高質感標籤)
-        ==================== */
         .difficulty-box {
             border-radius: 16px;
             padding: 12px 20px;
@@ -218,7 +208,6 @@
             transition: all 0.4s ease;
         }
 
-        /* VN: 比較難考 */
         .vn-box {
             background: rgba(0, 242, 254, 0.03);
             border: 1px dashed rgba(0, 242, 254, 0.3);
@@ -232,7 +221,6 @@
             transform: scale(1.02);
         }
 
-        /* TY: 比較簡單 */
         .ty-box {
             background: rgba(212, 175, 55, 0.02);
             border: 1px dashed rgba(212, 175, 55, 0.25);
@@ -246,9 +234,6 @@
             transform: scale(1.02);
         }
 
-        /* ==================== 
-           按鈕設定 
-        ==================== */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -291,29 +276,24 @@
 
     <div class="container">
         
-        <!-- 左半邊：VN CLAN -->
         <div class="split vn-side" onclick="window.open('https://discord.gg/UNRVAcKmD3', '_blank')">
             <div class="card">
                 <div class="logo-text vn-text">VN</div>
-                <div class="sub-title">CLAN PORTAL</div>
+                <div class="sub-title">EST 2026</div>
                 <p class="desc">
                     核心競爭、未來科技。頂尖技術與極致速度的完美交匯，屬於我的硬核戰隊。
                 </p>
-                <!-- 難易度框框 -->
                 <div class="difficulty-box vn-box">⚠️ 考核難度：比較難考</div>
-                
                 <a href="https://discord.gg/UNRVAcKmD3" target="_blank" class="btn btn-vn" onclick="event.stopPropagation();">
                     進入 DISCORD 伺服器
                 </a>
             </div>
         </div>
 
-        <!-- 中間空隙：合作中 -->
         <div class="middle-gap">
             <div class="coop-text">合作中</div>
         </div>
 
-        <!-- 右半邊：TY CLAN -->
         <div class="split ty-side" onclick="window.open('https://discord.gg/uVADKfqsWM', '_blank')">
             <div class="card">
                 <div class="logo-text ty-text">TY</div>
@@ -321,9 +301,7 @@
                 <p class="desc">
                     經典傳奇、極致優雅與夥伴並肩作戰的榮譽象徵，凝聚無限可能的高端合作戰隊。
                 </p>
-                <!-- 難易度框框 -->
                 <div class="difficulty-box ty-box">✨ 考核難度：比較簡單</div>
-                
                 <a href="https://discord.gg/uVADKfqsWM" target="_blank" class="btn btn-ty" onclick="event.stopPropagation();">
                     進入 DISCORD 伺服器
                 </a>
