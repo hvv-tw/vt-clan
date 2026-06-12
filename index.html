@@ -256,16 +256,17 @@
         }
 
         .logo-text {
-            font-size: 5.5rem;
+            font-size: 4.2rem; /* 稍微縮小字體以完美容納 CLAN 字樣 */
             font-weight: 900;
-            letter-spacing: 6px;
-            margin-bottom: -5px;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
             text-transform: uppercase;
             transform: translateZ(60px) scale(1);
             transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            white-space: nowrap;
         }
         .split:hover .logo-text {
-            transform: translateZ(80px) scale(1.08);
+            transform: translateZ(80px) scale(1.05);
         }
         
         .vn-text {
@@ -426,7 +427,7 @@
         
         <div class="split vn-side" id="vnSide">
             <div class="card">
-                <div class="logo-text vn-text">VN</div>
+                <div class="logo-text vn-text">VN CLAN</div>
                 <div class="sub-title">EST 2026</div>
                 <p class="desc">
                     不錯的戰對。適合給喜歡有挑戰性的Rivals玩家。每個成員都品行優良。
@@ -444,7 +445,7 @@
 
         <div class="split ty-side" id="tySide">
             <div class="card">
-                <div class="logo-text ty-text">TY</div>
+                <div class="logo-text ty-text">TY CLAN</div>
                 <div class="sub-title">EST 2026</div>
                 <p class="desc">
                     很棒的戰對。適合給想要考戰對可是又找不到好的戰對的Rivals玩家。每個成員都品行優良。
@@ -524,9 +525,7 @@
 
         requestAnimationFrame(updateVisuals);
 
-        vnSide.addEventListener('click', () => window.open('https://discord.gg/UNRVAcKmD3', '_blank'));
-        tySide.addEventListener('click', () => window.open('https://discord.gg/uVADKfqsWM', '_blank'));
-
+        // 移除全域點擊跳轉邏輯，現在只依靠 <a> 標籤按鈕點擊
         document.getElementById('vnBtn').addEventListener('click', (e) => e.stopPropagation());
         document.getElementById('tyBtn').addEventListener('click', (e) => e.stopPropagation());
 
