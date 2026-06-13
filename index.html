@@ -25,7 +25,7 @@
             cursor: none;
             position: relative;
         }
-        a, .split, .btn, .hud-toggle {
+        a, .split, .btn {
             cursor: none !important;
         }
 
@@ -94,15 +94,6 @@
         body:has(.middle-gap:hover) #custom-cursor-blur {
             animation: rainbow-blur 1.5s linear infinite;
             background: rgba(255, 255, 255, 0.03);
-        }
-
-        body:has(.hud-panel:hover) #custom-cursor {
-            background: #ffffff;
-            box-shadow: 0 0 10px #ffffff;
-        }
-        body:has(.hud-panel:hover) #custom-cursor-blur {
-            border-color: rgba(255, 255, 255, 0.3);
-            background: transparent;
         }
 
         @keyframes rainbow-dot {
@@ -648,58 +639,6 @@
             box-shadow: 0 20px 35px rgba(212, 175, 55, 0.45), 0 0 15px rgba(212, 175, 55, 0.25);
             border-color: transparent;
         }
-
-        .hud-panel {
-            position: fixed;
-            top: 25px;
-            right: 25px;
-            background: rgba(5, 5, 10, 0.65);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 14px 20px;
-            z-index: 10005;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            pointer-events: auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .hud-monitor {
-            font-family: monospace;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.6);
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            min-width: 105px;
-        }
-
-        .hud-value {
-            color: #00f2fe;
-            font-weight: bold;
-        }
-
-        .hud-toggle {
-            background: transparent;
-            border: 1px solid #ff7300;
-            color: #ff7300;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 8px rgba(255, 115, 0, 0.2);
-        }
-
-        .hud-toggle.audio-on {
-            border-color: #00ff66;
-            color: #00ff66;
-            box-shadow: 0 0 8px rgba(0, 255, 102, 0.2);
-        }
     </style>
 </head>
 <body>
@@ -707,15 +646,6 @@
     <div id="custom-cursor"></div>
     <div id="custom-cursor-blur"></div>
     <div id="impact-flash"></div>
-
-    <div class="hud-panel">
-        <div class="hud-monitor">
-            <div>SYS_STATUS: <span class="hud-value" style="color: #00ff66;">ONLINE</span></div>
-            <div>FPS: <span id="fpsVal" class="hud-value">--</span></div>
-            <div>PING: <span id="pingVal" class="hud-value">--</span> ms</div>
-        </div>
-        <button class="hud-toggle audio-on" id="audioToggle">AUDIO: ON</button>
-    </div>
 
     <div class="container" id="mainContainer">
         
@@ -769,9 +699,6 @@
         const tyCanvas = document.getElementById('tyCanvas');
         const vnBtn = document.getElementById('vnBtn');
         const tyBtn = document.getElementById('tyBtn');
-        const audioToggle = document.getElementById('audioToggle');
-        const fpsVal = document.getElementById('fpsVal');
-        const pingVal = document.getElementById('pingVal');
         
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
@@ -839,19 +766,6 @@
             } catch (e) {}
         }
 
-        audioToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            audioMuted = !audioMuted;
-            if (audioMuted) {
-                audioToggle.classList.remove('audio-on');
-                audioToggle.innerText = 'AUDIO: OFF';
-            } else {
-                audioToggle.classList.add('audio-on');
-                audioToggle.innerText = 'AUDIO: ON';
-                playSynthSound('hover');
-            }
-        });
-
         function resizeCanvases() {
             vnCanvas.width = vnSide.offsetWidth;
             vnCanvas.height = vnSide.offsetHeight;
@@ -869,355 +783,9 @@
                 vy: -(Math.random() * 0.8 + 0.4),
                 size: sideType === 'vn' ? Math.random() * 5 + 2 : Math.random() * 3.5 + 1.5,
                 opacity: Math.random() * 0.4 + 0.15,
-                maxLife: Math.random() * 250 + 150,
-                life: 0
+                maxLife: Math.random()
             };
         }
-
-        function initParticles() {
-            resizeCanvases();
-            for (let i = 0; i < 35; i++) {
-                let pVn = createParticle('vn');
-                pVn.y = Math.random() * vnCanvas.height;
-                vnParticles.push(pVn);
-
-                let pTy = createParticle('ty');
-                pTy.y = Math.random() * tyCanvas.height;
-                tyParticles.push(pTy);
-            }
-        }
-
-        function drawParticles(ctx, canvas, list, sideType) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const rect = canvas.getBoundingClientRect();
-            const mX = mouseX - rect.left;
-            const mY = mouseY - rect.top;
-
-            for (let i = 0; i < list.length; i++) {
-                let p = list[i];
-                
-                let dx = p.x - mX;
-                let dy = p.y - mY;
-                let dist = Math.hypot(dx, dy);
-                let pushX = 0;
-                let pushY = 0;
-
-                if (dist < 120 && mouseX >= rect.left && mouseX <= rect.right) {
-                    let force = (120 - dist) / 120;
-                    pushX = (dx / dist) * force * 1.8;
-                    pushY = (dy / dist) * force * 1.8;
-                }
-
-                shockwaves.forEach(wave => {
-                    let sdx = (wave.x - rect.left) - p.x;
-                    let sdy = wave.y - p.y;
-                    let sdist = Math.hypot(sdx, sdy);
-                    if (Math.abs(sdist - wave.currentRadius) < 30) {
-                        let waveForce = (1 - (wave.currentRadius / wave.maxRadius)) * 6;
-                        p.x -= (sdx / sdist) * waveForce;
-                        p.y -= (sdy / sdist) * waveForce;
-                    }
-                });
-
-                p.x += p.vx + pushX;
-                p.y += p.vy + pushY;
-                p.life++;
-
-                if (p.y < -10 || p.life > p.maxLife || p.x < -10 || p.x > canvas.width + 10) {
-                    list[i] = createParticle(sideType);
-                    p = list[i];
-                }
-
-                ctx.fillStyle = sideType === 'vn' ? `rgba(0, 242, 254, ${p.opacity})` : `rgba(255, 226, 89, ${p.opacity})`;
-                ctx.beginPath();
-                if (sideType === 'vn') {
-                    ctx.fillRect(p.x, p.y, p.size, p.size);
-                } else {
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-
-            shockwaves.forEach(wave => {
-                ctx.strokeStyle = sideType === 'vn' ? `rgba(0, 242, 254, ${1 - (wave.currentRadius / wave.maxRadius)})` : `rgba(255, 226, 89, ${1 - (wave.currentRadius / wave.maxRadius)})`;
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(wave.x - rect.left, wave.y, wave.currentRadius, 0, Math.PI * 2);
-                ctx.stroke();
-            });
-        }
-
-        const scrambleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+?";
-        function triggerScramble(el) {
-            if (!el) return;
-            const targetText = el.getAttribute('data-origin') || el.innerText;
-            if (!el.getAttribute('data-origin')) {
-                el.setAttribute('data-origin', targetText);
-            }
-            let currentIteration = 0;
-            clearInterval(el.scrambleTimer);
-            el.scrambleTimer = setInterval(() => {
-                el.innerText = targetText.split("").map((char, idx) => {
-                    if (char === " " || char === "：" || char === "X") return char;
-                    if (idx < currentIteration) return targetText[idx];
-                    return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
-                }).join("");
-                if (currentIteration >= targetText.length) {
-                    clearInterval(el.scrambleTimer);
-                }
-                currentIteration += targetText.length / 12;
-            }, 30);
-        }
-
-        function calculateMagnetic(btn, data) {
-            const rect = btn.getBoundingClientRect();
-            const bx = rect.left + rect.width / 2;
-            const by = rect.top + rect.height / 2;
-            const dist = Math.hypot(mouseX - bx, mouseY - by);
-            if (dist < 130) {
-                data.tx = (mouseX - bx) * 0.38;
-                data.ty = (mouseY - by) * 0.38;
-            } else {
-                data.tx = 0;
-                data.ty = 0;
-            }
-            data.cx += (data.tx - data.cx) * 0.12;
-            data.cy += (data.ty - data.cy) * 0.12;
-            btn.style.setProperty('--mag-x', `${data.cx}px`);
-            btn.style.setProperty('--mag-y', `${data.cy}px`);
-        }
-
-        function triggerFlashAndShake(side) {
-            flashOverlay.className = '';
-            void flashOverlay.offsetWidth;
-            flashOverlay.classList.add(side === 'vn' ? 'flash-vn' : 'flash-ty');
-
-            mainContainer.classList.remove('shake');
-            void mainContainer.offsetWidth;
-            mainContainer.classList.add('shake');
-            setTimeout(() => mainContainer.classList.remove('shake'), 350);
-            playSynthSound('switch');
-        }
-
-        function createClickBurst(x, y) {
-            let color = '#ff7300';
-            let shadow = '#ffaa00';
-            let isRainbow = false;
-
-            if (currentHash === '#VN-CLAN') {
-                color = '#00f2fe';
-                shadow = '#4facfe';
-            } else if (currentHash === '#TY-CLAN') {
-                color = '#ffe259';
-                shadow = '#ffa751';
-            } else {
-                const rect = middleGap.getBoundingClientRect();
-                if (x >= rect.left && x <= rect.right) {
-                    isRainbow = true;
-                }
-            }
-
-            shockwaves.push({
-                x: x,
-                y: y,
-                currentRadius: 0,
-                maxRadius: 280,
-                speed: 8
-            });
-
-            const count = 12;
-            const rainbowColors = ['#ff0055', '#00f2fe', '#00ff66', '#ffe259', '#ff00ff'];
-
-            for (let i = 0; i < count; i++) {
-                const p = document.createElement('div');
-                p.classList.add('click-burst-p');
-                
-                const size = Math.random() * 6 + 4;
-                p.style.width = `${size}px`;
-                p.style.height = `${size}px`;
-                
-                if (isRainbow) {
-                    const rc = rainbowColors[Math.floor(Math.random() * rainbowColors.length)];
-                    p.style.background = rc;
-                    p.style.boxShadow = `0 0 8px ${rc}`;
-                } else {
-                    p.style.background = color;
-                    p.style.boxShadow = `0 0 8px ${shadow}`;
-                }
-
-                p.style.left = `${x}px`;
-                p.style.top = `${y}px`;
-
-                const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
-                const speed = Math.random() * 55 + 45;
-                const dx = Math.cos(angle) * speed;
-                const dy = Math.sin(angle) * speed;
-
-                p.style.setProperty('--dx', `${dx}px`);
-                p.style.setProperty('--dy', `${dy}px`);
-
-                document.body.appendChild(p);
-                p.addEventListener('animationend', () => p.remove());
-            }
-            playSynthSound('click');
-        }
-
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            updateUrlHash();
-        });
-
-        window.addEventListener('click', (e) => {
-            createClickBurst(e.clientX, e.clientY);
-        });
-
-        window.addEventListener('resize', resizeCanvases);
-        window.addEventListener('mousedown', () => document.body.classList.add('cursor-clicking'));
-        window.addEventListener('mouseup', () => document.body.classList.remove('cursor-clicking'));
-
-        vnSide.addEventListener('mouseenter', () => {
-            triggerScramble(vnSide.querySelector('.vn-text'));
-            triggerScramble(vnSide.querySelector('.vn-box'));
-            playSynthSound('hover');
-        });
-        tySide.addEventListener('mouseenter', () => {
-            triggerScramble(tySide.querySelector('.ty-text'));
-            triggerScramble(tySide.querySelector('.ty-box'));
-            playSynthSound('hover');
-        });
-
-        function triggerTerminalGlitch() {
-            mainContainer.classList.add('terminal-glitch');
-            setTimeout(() => {
-                mainContainer.classList.remove('terminal-glitch');
-            }, 100);
-        }
-
-        setInterval(() => {
-            if (Math.random() > 0.4) {
-                triggerTerminalGlitch();
-            }
-        }, 4500);
-
-        setInterval(() => {
-            pingVal.innerText = Math.floor(Math.random() * 6) + 12;
-        }, 1500);
-
-        function updateVisuals() {
-            const now = performance.now();
-            frameCount++;
-            if (now >= lastFrameTime + 1000) {
-                fpsVal.innerText = frameCount;
-                frameCount = 0;
-                lastFrameTime = now;
-            }
-
-            for (let i = shockwaves.length - 1; i >= 0; i--) {
-                shockwaves[i].currentRadius += shockwaves[i].speed;
-                if (shockwaves[i].currentRadius > shockwaves[i].maxRadius) {
-                    shockwaves.splice(i, 1);
-                }
-            }
-
-            cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-            
-            cursorX += (mouseX - cursorX) * 0.25;
-            cursorY += (mouseY - cursorY) * 0.25;
-            cursorBlur.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
-
-            calculateMagnetic(vnBtn, vnBtnMag);
-            calculateMagnetic(tyBtn, tyBtnMag);
-
-            drawParticles(vnCtx, vnCanvas, vnParticles, 'vn');
-            drawParticles(tyCtx, tyCanvas, tyParticles, 'ty');
-
-            handleSideEffects(vnSide);
-            handleSideEffects(tySide);
-
-            requestAnimationFrame(updateVisuals);
-        }
-
-        function updateUrlHash() {
-            const vnRect = vnSide.getBoundingClientRect();
-            const tyRect = tySide.getBoundingClientRect();
-
-            if (mouseX >= vnRect.left && mouseX <= vnRect.right && mouseY >= vnRect.top && mouseY <= vnRect.bottom) {
-                if (currentHash !== '#VN-CLAN') {
-                    triggerFlashAndShake('vn');
-                    history.replaceState(null, '', '#VN-CLAN');
-                    currentHash = '#VN-CLAN';
-                }
-            } else if (mouseX >= tyRect.left && mouseX <= tyRect.right && mouseY >= tyRect.top && mouseY <= tyRect.bottom) {
-                if (currentHash !== '#TY-CLAN') {
-                    triggerFlashAndShake('ty');
-                    history.replaceState(null, '', '#TY-CLAN');
-                    currentHash = '#TY-CLAN';
-                }
-            } else {
-                if (currentHash !== '') {
-                    history.replaceState(null, '', window.location.pathname);
-                    currentHash = '';
-                }
-            }
-        }
-
-        function handleSideEffects(side) {
-            const rect = side.getBoundingClientRect();
-            if (mouseX >= rect.left && mouseX <= rect.right && mouseY >= rect.top && mouseY <= rect.bottom) {
-                const x = mouseX - rect.left;
-                const y = mouseY - rect.top;
-                
-                side.style.setProperty('--x', `${x}px`);
-                side.style.setProperty('--y', `${y}px`);
-                
-                const bgX = (x - rect.width / 2) * 0.04;
-                const bgY = (y - rect.height / 2) * 0.04;
-                side.style.setProperty('--bg-x', `${bgX}px`);
-                side.style.setProperty('--bg-y', `${bgY}px`);
-
-                const card = side.querySelector('.card');
-                if (card) {
-                    const cardRect = card.getBoundingClientRect();
-                    const cardCenterX = cardRect.left + cardRect.width / 2;
-                    const cardCenterY = cardRect.top + cardRect.height / 2;
-                    const rotateX = -(mouseY - cardCenterY) / (cardRect.height / 2) * 12;
-                    const rotateY = (mouseX - cardCenterX) / (cardRect.width / 2) * 12;
-                    
-                    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
-
-                    const clX = mouseX - cardRect.left;
-                    const clY = mouseY - cardRect.top;
-                    card.style.setProperty('--gloss-x', `${clX}px`);
-                    card.style.setProperty('--gloss-y', `${clY}px`);
-                }
-            } else {
-                const card = side.querySelector('.card');
-                if (card && card.style.transform !== '') {
-                    card.style.transform = '';
-                }
-            }
-        }
-
-        initParticles();
-        requestAnimationFrame(updateVisuals);
-
-        vnBtn.addEventListener('click', (e) => e.stopPropagation());
-        tyBtn.addEventListener('click', (e) => e.stopPropagation());
-        document.querySelector('.hud-panel').addEventListener('click', (e) => e.stopPropagation());
-
-        document.addEventListener('mouseleave', () => {
-            cursor.style.opacity = '0';
-            cursorBlur.style.opacity = '0';
-            if (currentHash !== '') {
-                history.replaceState(null, '', window.location.pathname);
-                currentHash = '';
-            }
-        });
-        document.addEventListener('mouseenter', () => {
-            cursor.style.opacity = '1';
-            cursorBlur.style.opacity = '1';
-        });
     </script>
 </body>
 </html>
