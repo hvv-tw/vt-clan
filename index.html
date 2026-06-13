@@ -25,7 +25,7 @@
             cursor: none;
             position: relative;
         }
-        a, .split, .btn {
+        a, .split, .btn, .hud-toggle {
             cursor: none !important;
         }
 
@@ -96,6 +96,15 @@
             background: rgba(255, 255, 255, 0.03);
         }
 
+        body:has(.hud-panel:hover) #custom-cursor {
+            background: #ffffff;
+            box-shadow: 0 0 10px #ffffff;
+        }
+        body:has(.hud-panel:hover) #custom-cursor-blur {
+            border-color: rgba(255, 255, 255, 0.3);
+            background: transparent;
+        }
+
         @keyframes rainbow-dot {
             0% { background: #ff0055; box-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055; }
             20% { background: #00f2fe; box-shadow: 0 0 10px #00f2fe, 0 0 20px #00f2fe; }
@@ -140,11 +149,23 @@
             animation: screenShake 0.35s cubic-bezier(.36,.07,.19,.97) both;
         }
 
+        .container.terminal-glitch {
+            animation: terminalDistort 0.12s linear infinite;
+        }
+
         @keyframes screenShake {
             10%, 90% { transform: translate3d(-2px, -1px, 0); }
             20%, 80% { transform: translate3d(3px, 1px, 0); }
             30%, 50%, 70% { transform: translate3d(-5px, -2px, 0); }
             40%, 60% { transform: translate3d(5px, 2px, 0); }
+        }
+
+        @keyframes terminalDistort {
+            0% { transform: skewX(0deg) scaleY(1); filter: hue-rotate(0deg) contrast(1); }
+            20% { transform: skewX(2deg) scaleY(1.02); filter: hue-rotate(10deg) contrast(1.2); opacity: 0.9; }
+            60% { transform: skewX(-2deg) scaleY(0.98); filter: clip-path(inset(10% 0 30% 0)); }
+            80% { transform: skewX(0deg) scaleY(1); filter: hue-rotate(-10deg); }
+            100% { transform: skewX(0deg) scaleY(1); filter: none; }
         }
 
         #impact-flash {
@@ -364,6 +385,43 @@
             opacity: 0;
         }
 
+        .border-glow-path {
+            position: absolute;
+            inset: 0;
+            border-radius: 36px;
+            pointer-events: none;
+            z-index: 7;
+            padding: 2px;
+            background: transparent;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .vn-side:hover .border-glow-path {
+            opacity: 1;
+            background: conic-gradient(from var(--border-angle, 0deg), transparent 40%, #00f2fe 70%, #4facfe 100%);
+            animation: borderRotate 2s linear infinite;
+        }
+        .ty-side:hover .border-glow-path {
+            opacity: 1;
+            background: conic-gradient(from var(--border-angle, 0deg), transparent 40%, #ffe259 70%, #ffa751 100%);
+            animation: borderRotate 2s linear infinite;
+        }
+
+        @property --border-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes borderRotate {
+            to { --border-angle: 360deg; }
+        }
+
         .vn-side:hover .card::before {
             opacity: 1;
             background: radial-gradient(circle at var(--gloss-x, 50%) var(--gloss-y, 50%), rgba(0, 242, 254, 0.15) 0%, transparent 60%);
@@ -398,8 +456,8 @@
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
         }
         .vn-side:hover .card {
-            border-color: rgba(0, 242, 254, 0.7);
-            box-shadow: 0 40px 80px rgba(0, 242, 254, 0.3), inset 0 0 30px rgba(0, 242, 254, 0.15);
+            border-color: transparent;
+            box-shadow: 0 40px 80px rgba(0, 242, 254, 0.35), inset 0 0 30px rgba(0, 242, 254, 0.15);
         }
 
         .ty-side .card {
@@ -407,8 +465,8 @@
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
         }
         .ty-side:hover .card {
-            border-color: rgba(212, 175, 55, 0.65);
-            box-shadow: 0 40px 80px rgba(212, 175, 55, 0.22), inset 0 0 30px rgba(212, 175, 55, 0.08);
+            border-color: transparent;
+            box-shadow: 0 40px 80px rgba(212, 175, 55, 0.26), inset 0 0 30px rgba(212, 175, 55, 0.08);
         }
 
         .logo-text {
@@ -590,6 +648,58 @@
             box-shadow: 0 20px 35px rgba(212, 175, 55, 0.45), 0 0 15px rgba(212, 175, 55, 0.25);
             border-color: transparent;
         }
+
+        .hud-panel {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: rgba(5, 5, 10, 0.65);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 14px 20px;
+            z-index: 10005;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            pointer-events: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .hud-monitor {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 105px;
+        }
+
+        .hud-value {
+            color: #00f2fe;
+            font-weight: bold;
+        }
+
+        .hud-toggle {
+            background: transparent;
+            border: 1px solid #ff7300;
+            color: #ff7300;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(255, 115, 0, 0.2);
+        }
+
+        .hud-toggle.audio-on {
+            border-color: #00ff66;
+            color: #00ff66;
+            box-shadow: 0 0 8px rgba(0, 255, 102, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -598,11 +708,21 @@
     <div id="custom-cursor-blur"></div>
     <div id="impact-flash"></div>
 
+    <div class="hud-panel">
+        <div class="hud-monitor">
+            <div>SYS_STATUS: <span class="hud-value" style="color: #00ff66;">ONLINE</span></div>
+            <div>FPS: <span id="fpsVal" class="hud-value">--</span></div>
+            <div>PING: <span id="pingVal" class="hud-value">--</span> ms</div>
+        </div>
+        <button class="hud-toggle audio-on" id="audioToggle">AUDIO: ON</button>
+    </div>
+
     <div class="container" id="mainContainer">
         
         <div class="split vn-side" id="vnSide">
             <canvas id="vnCanvas" class="particles-canvas"></canvas>
             <div class="card">
+                <div class="border-glow-path"></div>
                 <div class="logo-text vn-text">VN CLAN</div>
                 <div class="sub-title">EST 2026</div>
                 <p class="desc">
@@ -622,6 +742,7 @@
         <div class="split ty-side" id="tySide">
             <canvas id="tyCanvas" class="particles-canvas"></canvas>
             <div class="card">
+                <div class="border-glow-path"></div>
                 <div class="logo-text ty-text">TY CLAN</div>
                 <div class="sub-title">EST 2026</div>
                 <p class="desc">
@@ -648,6 +769,9 @@
         const tyCanvas = document.getElementById('tyCanvas');
         const vnBtn = document.getElementById('vnBtn');
         const tyBtn = document.getElementById('tyBtn');
+        const audioToggle = document.getElementById('audioToggle');
+        const fpsVal = document.getElementById('fpsVal');
+        const pingVal = document.getElementById('pingVal');
         
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
@@ -662,8 +786,13 @@
         const tyCtx = tyCanvas.getContext('2d');
         let vnParticles = [];
         let tyParticles = [];
+        let shockwaves = [];
 
         let audioCtx = null;
+        let audioMuted = false;
+
+        let lastFrameTime = performance.now();
+        let frameCount = 0;
 
         function initAudio() {
             if (!audioCtx) {
@@ -672,6 +801,7 @@
         }
 
         function playSynthSound(type) {
+            if (audioMuted) return;
             try {
                 initAudio();
                 if (!audioCtx) return;
@@ -708,6 +838,19 @@
                 }
             } catch (e) {}
         }
+
+        audioToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            audioMuted = !audioMuted;
+            if (audioMuted) {
+                audioToggle.classList.remove('audio-on');
+                audioToggle.innerText = 'AUDIO: OFF';
+            } else {
+                audioToggle.classList.add('audio-on');
+                audioToggle.innerText = 'AUDIO: ON';
+                playSynthSound('hover');
+            }
+        });
 
         function resizeCanvases() {
             vnCanvas.width = vnSide.offsetWidth;
@@ -765,6 +908,17 @@
                     pushY = (dy / dist) * force * 1.8;
                 }
 
+                shockwaves.forEach(wave => {
+                    let sdx = (wave.x - rect.left) - p.x;
+                    let sdy = wave.y - p.y;
+                    let sdist = Math.hypot(sdx, sdy);
+                    if (Math.abs(sdist - wave.currentRadius) < 30) {
+                        let waveForce = (1 - (wave.currentRadius / wave.maxRadius)) * 6;
+                        p.x -= (sdx / sdist) * waveForce;
+                        p.y -= (sdy / sdist) * waveForce;
+                    }
+                });
+
                 p.x += p.vx + pushX;
                 p.y += p.vy + pushY;
                 p.life++;
@@ -783,6 +937,14 @@
                     ctx.fill();
                 }
             }
+
+            shockwaves.forEach(wave => {
+                ctx.strokeStyle = sideType === 'vn' ? `rgba(0, 242, 254, ${1 - (wave.currentRadius / wave.maxRadius)})` : `rgba(255, 226, 89, ${1 - (wave.currentRadius / wave.maxRadius)})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(wave.x - rect.left, wave.y, wave.currentRadius, 0, Math.PI * 2);
+                ctx.stroke();
+            });
         }
 
         const scrambleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+?";
@@ -855,6 +1017,14 @@
                 }
             }
 
+            shockwaves.push({
+                x: x,
+                y: y,
+                currentRadius: 0,
+                maxRadius: 280,
+                speed: 8
+            });
+
             const count = 12;
             const rainbowColors = ['#ff0055', '#00f2fe', '#00ff66', '#ffe259', '#ff00ff'];
 
@@ -917,7 +1087,39 @@
             playSynthSound('hover');
         });
 
+        function triggerTerminalGlitch() {
+            mainContainer.classList.add('terminal-glitch');
+            setTimeout(() => {
+                mainContainer.classList.remove('terminal-glitch');
+            }, 100);
+        }
+
+        setInterval(() => {
+            if (Math.random() > 0.4) {
+                triggerTerminalGlitch();
+            }
+        }, 4500);
+
+        setInterval(() => {
+            pingVal.innerText = Math.floor(Math.random() * 6) + 12;
+        }, 1500);
+
         function updateVisuals() {
+            const now = performance.now();
+            frameCount++;
+            if (now >= lastFrameTime + 1000) {
+                fpsVal.innerText = frameCount;
+                frameCount = 0;
+                lastFrameTime = now;
+            }
+
+            for (let i = shockwaves.length - 1; i >= 0; i--) {
+                shockwaves[i].currentRadius += shockwaves[i].speed;
+                if (shockwaves[i].currentRadius > shockwaves[i].maxRadius) {
+                    shockwaves.splice(i, 1);
+                }
+            }
+
             cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
             
             cursorX += (mouseX - cursorX) * 0.25;
@@ -1002,6 +1204,7 @@
 
         vnBtn.addEventListener('click', (e) => e.stopPropagation());
         tyBtn.addEventListener('click', (e) => e.stopPropagation());
+        document.querySelector('.hud-panel').addEventListener('click', (e) => e.stopPropagation());
 
         document.addEventListener('mouseleave', () => {
             cursor.style.opacity = '0';
