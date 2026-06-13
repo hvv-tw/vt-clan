@@ -118,6 +118,40 @@
             width: 100vw;
             overflow: hidden;
             position: relative;
+            will-change: transform;
+        }
+
+        .container.shake {
+            animation: screenShake 0.35s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes screenShake {
+            10%, 90% { transform: translate3d(-2px, -1px, 0); }
+            20%, 80% { transform: translate3d(3px, 1px, 0); }
+            30%, 50%, 70% { transform: translate3d(-5px, -2px, 0); }
+            40%, 60% { transform: translate3d(5px, 2px, 0); }
+        }
+
+        #impact-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 10000;
+            opacity: 0;
+        }
+        #impact-flash.flash-vn { animation: flashBlue 0.45s ease-out; }
+        #impact-flash.flash-ty { animation: flashGold 0.45s ease-out; }
+
+        @keyframes flashBlue {
+            0% { opacity: 0.4; background: #00f2fe; filter: blur(15px); }
+            100% { opacity: 0; background: transparent; }
+        }
+        @keyframes flashGold {
+            0% { opacity: 0.35; background: #ffe259; filter: blur(15px); }
+            100% { opacity: 0; background: transparent; }
         }
 
         .split {
@@ -142,6 +176,17 @@
             pointer-events: none;
             transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
             will-change: transform, opacity;
+            z-index: 1;
+        }
+
+        .particles-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
         }
 
         .split::after {
@@ -154,7 +199,7 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.5s ease;
-            z-index: 2;
+            z-index: 3;
             left: var(--x, 50%);
             top: var(--y, 50%);
             transform: translate(-50%, -50%);
@@ -435,10 +480,12 @@
             font-weight: 800;
             text-decoration: none;
             border-radius: 50px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2);
             width: 100%;
             letter-spacing: 3px;
+            translate: var(--mag-x, 0px) var(--mag-y, 0px);
             transform: translateZ(50px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2), background 0.4s, color 0.4s, box-shadow 0.4s, border-color 0.4s;
+            will-change: translate, transform;
         }
 
         .btn-vn {
@@ -469,10 +516,12 @@
 
     <div id="custom-cursor"></div>
     <div id="custom-cursor-blur"></div>
+    <div id="impact-flash"></div>
 
-    <div class="container">
+    <div class="container" id="mainContainer">
         
         <div class="split vn-side" id="vnSide">
+            <canvas id="vnCanvas" class="particles-canvas"></canvas>
             <div class="card">
                 <div class="logo-text vn-text">VN CLAN</div>
                 <div class="sub-title">EST 2026</div>
@@ -491,6 +540,7 @@
         </div>
 
         <div class="split ty-side" id="tySide">
+            <canvas id="tyCanvas" class="particles-canvas"></canvas>
             <div class="card">
                 <div class="logo-text ty-text">TY CLAN</div>
                 <div class="sub-title">EST 2026</div>
@@ -512,6 +562,12 @@
         const vnSide = document.getElementById('vnSide');
         const tySide = document.getElementById('tySide');
         const middleGap = document.getElementById('middleGap');
+        const mainContainer = document.getElementById('mainContainer');
+        const flashOverlay = document.getElementById('impact-flash');
+        const vnCanvas = document.getElementById('vnCanvas');
+        const tyCanvas = document.getElementById('tyCanvas');
+        const vnBtn = document.getElementById('vnBtn');
+        const tyBtn = document.getElementById('tyBtn');
         
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
@@ -519,14 +575,142 @@
         let cursorY = mouseY;
         let currentHash = '';
 
+        let vnBtnMag = { cx: 0, cy: 0, tx: 0, ty: 0 };
+        let tyBtnMag = { cx: 0, cy: 0, tx: 0, ty: 0 };
+
+        const vnCtx = vnCanvas.getContext('2d');
+        const tyCtx = tyCanvas.getContext('2d');
+        let vnParticles = [];
+        let tyParticles = [];
+
+        function resizeCanvases() {
+            vnCanvas.width = vnSide.offsetWidth;
+            vnCanvas.height = vnSide.offsetHeight;
+            tyCanvas.width = tySide.offsetWidth;
+            tyCanvas.height = tySide.offsetHeight;
+        }
+
+        function createParticle(sideType) {
+            const w = sideType === 'vn' ? vnCanvas.width : tyCanvas.width;
+            const h = sideType === 'vn' ? vnCanvas.height : tyCanvas.height;
+            return {
+                x: Math.random() * w,
+                y: h + Math.random() * 30,
+                size: sideType === 'vn' ? Math.random() * 5 + 2 : Math.random() * 3.5 + 1.5,
+                speedY: -(Math.random() * 0.8 + 0.4),
+                speedX: (Math.random() - 0.5) * 0.4,
+                opacity: Math.random() * 0.4 + 0.15,
+                maxLife: Math.random() * 250 + 150,
+                life: 0
+            };
+        }
+
+        function initParticles() {
+            resizeCanvases();
+            for (let i = 0; i < 35; i++) {
+                let pVn = createParticle('vn');
+                pVn.y = Math.random() * vnCanvas.height;
+                vnParticles.push(pVn);
+
+                let pTy = createParticle('ty');
+                pTy.y = Math.random() * tyCanvas.height;
+                tyParticles.push(pTy);
+            }
+        }
+
+        function drawParticles(ctx, canvas, list, sideType) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < list.length; i++) {
+                let p = list[i];
+                p.y += p.speedY;
+                p.x += p.speedX;
+                p.life++;
+
+                if (p.y < -10 || p.life > p.maxLife || p.x < -10 || p.x > canvas.width + 10) {
+                    list[i] = createParticle(sideType);
+                    p = list[i];
+                }
+
+                ctx.fillStyle = sideType === 'vn' ? `rgba(0, 242, 254, ${p.opacity})` : `rgba(255, 226, 89, ${p.opacity})`;
+                ctx.beginPath();
+                if (sideType === 'vn') {
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                } else {
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        const scrambleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+?";
+        function triggerScramble(el) {
+            if (!el) return;
+            const targetText = el.getAttribute('data-origin') || el.innerText;
+            if (!el.getAttribute('data-origin')) {
+                el.setAttribute('data-origin', targetText);
+            }
+            let currentIteration = 0;
+            clearInterval(el.scrambleTimer);
+            el.scrambleTimer = setInterval(() => {
+                el.innerText = targetText.split("").map((char, idx) => {
+                    if (char === " " || char === "：" || char === "X") return char;
+                    if (idx < currentIteration) return targetText[idx];
+                    return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+                }).join("");
+                if (currentIteration >= targetText.length) {
+                    clearInterval(el.scrambleTimer);
+                }
+                currentIteration += targetText.length / 12;
+            }, 30);
+        }
+
+        function calculateMagnetic(btn, data) {
+            const rect = btn.getBoundingClientRect();
+            const bx = rect.left + rect.width / 2;
+            const by = rect.top + rect.height / 2;
+            const dist = Math.hypot(mouseX - bx, mouseY - by);
+            if (dist < 130) {
+                data.tx = (mouseX - bx) * 0.38;
+                data.ty = (mouseY - by) * 0.38;
+            } else {
+                data.tx = 0;
+                data.ty = 0;
+            }
+            data.cx += (data.tx - data.cx) * 0.12;
+            data.cy += (data.ty - data.cy) * 0.12;
+            btn.style.setProperty('--mag-x', `${data.cx}px`);
+            btn.style.setProperty('--mag-y', `${data.cy}px`);
+        }
+
+        function triggerFlashAndShake(side) {
+            flashOverlay.className = '';
+            void flashOverlay.offsetWidth;
+            flashOverlay.classList.add(side === 'vn' ? 'flash-vn' : 'flash-ty');
+
+            mainContainer.classList.remove('shake');
+            void mainContainer.offsetWidth;
+            mainContainer.classList.add('shake');
+            setTimeout(() => mainContainer.classList.remove('shake'), 350);
+        }
+
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
             updateUrlHash();
         });
 
+        window.addEventListener('resize', resizeCanvases);
         window.addEventListener('mousedown', () => document.body.classList.add('cursor-clicking'));
         window.addEventListener('mouseup', () => document.body.classList.remove('cursor-clicking'));
+
+        vnSide.addEventListener('mouseenter', () => {
+            triggerScramble(vnSide.querySelector('.vn-text'));
+            triggerScramble(vnSide.querySelector('.vn-box'));
+        });
+        tySide.addEventListener('mouseenter', () => {
+            triggerScramble(tySide.querySelector('.ty-text'));
+            triggerScramble(tySide.querySelector('.ty-box'));
+        });
 
         function updateVisuals() {
             cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
@@ -534,6 +718,12 @@
             cursorX += (mouseX - cursorX) * 0.25;
             cursorY += (mouseY - cursorY) * 0.25;
             cursorBlur.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+
+            calculateMagnetic(vnBtn, vnBtnMag);
+            calculateMagnetic(tyBtn, tyBtnMag);
+
+            drawParticles(vnCtx, vnCanvas, vnParticles, 'vn');
+            drawParticles(tyCtx, tyCanvas, tyParticles, 'ty');
 
             handleSideEffects(vnSide);
             handleSideEffects(tySide);
@@ -544,15 +734,16 @@
         function updateUrlHash() {
             const vnRect = vnSide.getBoundingClientRect();
             const tyRect = tySide.getBoundingClientRect();
-            const midRect = middleGap.getBoundingClientRect();
 
             if (mouseX >= vnRect.left && mouseX <= vnRect.right && mouseY >= vnRect.top && mouseY <= vnRect.bottom) {
                 if (currentHash !== '#VN-CLAN') {
+                    triggerFlashAndShake('vn');
                     history.replaceState(null, '', '#VN-CLAN');
                     currentHash = '#VN-CLAN';
                 }
             } else if (mouseX >= tyRect.left && mouseX <= tyRect.right && mouseY >= tyRect.top && mouseY <= tyRect.bottom) {
                 if (currentHash !== '#TY-CLAN') {
+                    triggerFlashAndShake('ty');
                     history.replaceState(null, '', '#TY-CLAN');
                     currentHash = '#TY-CLAN';
                 }
@@ -596,10 +787,11 @@
             }
         }
 
+        initParticles();
         requestAnimationFrame(updateVisuals);
 
-        document.getElementById('vnBtn').addEventListener('click', (e) => e.stopPropagation());
-        document.getElementById('tyBtn').addEventListener('click', (e) => e.stopPropagation());
+        vnBtn.addEventListener('click', (e) => e.stopPropagation());
+        tyBtn.addEventListener('click', (e) => e.stopPropagation());
 
         document.addEventListener('mouseleave', () => {
             cursor.style.opacity = '0';
