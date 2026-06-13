@@ -28,7 +28,6 @@
             cursor: none !important;
         }
 
-        /* 基礎滑鼠樣式與過渡動畫 */
         #custom-cursor {
             width: 8px;
             height: 8px;
@@ -57,7 +56,6 @@
             will-change: transform;
         }
 
-        /* 點擊時的縮放縮放特效 */
         body.cursor-clicking #custom-cursor {
             transform: translate(-50%, -50%) scale(0.7);
         }
@@ -65,7 +63,6 @@
             transform: translate(-50%, -50%) scale(1.6);
         }
 
-        /* 進入 VN CLAN 分頁時的游標顏色 */
         body:has(.vn-side:hover) #custom-cursor {
             background: #00f2fe;
             box-shadow: 0 0 10px #00f2fe, 0 0 20px #4facfe;
@@ -78,7 +75,6 @@
             background: rgba(0, 242, 254, 0.2);
         }
 
-        /* 進入 TY CLAN 分頁時的游標顏色 */
         body:has(.ty-side:hover) #custom-cursor {
             background: #ffe259;
             box-shadow: 0 0 10px #ffe259, 0 0 20px #ffa751;
@@ -91,7 +87,6 @@
             background: rgba(255, 226, 89, 0.15);
         }
 
-        /* 進入 中間區塊（合作中）時的彩虹霓虹流光特效 */
         body:has(.middle-gap:hover) #custom-cursor {
             animation: rainbow-dot 1.5s linear infinite;
         }
@@ -522,12 +517,12 @@
         let mouseY = window.innerHeight / 2;
         let cursorX = mouseX;
         let cursorY = mouseY;
-        let currentHash = ''; // 用來記錄與檢查當前的網址狀態
+        let currentHash = '';
 
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            updateUrlHash(); // 每次滑鼠移動時檢查位置並更新網址
+            updateUrlHash();
         });
 
         window.addEventListener('mousedown', () => document.body.classList.add('cursor-clicking'));
@@ -546,7 +541,6 @@
             requestAnimationFrame(updateVisuals);
         }
 
-        // 動態檢查滑鼠座標落點，並用 replaceState 優雅地修改網址 Hash
         function updateUrlHash() {
             const vnRect = vnSide.getBoundingClientRect();
             const tyRect = tySide.getBoundingClientRect();
@@ -563,7 +557,6 @@
                     currentHash = '#TY-CLAN';
                 }
             } else {
-                // 如果在中間或是移出網頁，把 Hash 清除還原
                 if (currentHash !== '') {
                     history.replaceState(null, '', window.location.pathname);
                     currentHash = '';
@@ -611,7 +604,6 @@
         document.addEventListener('mouseleave', () => {
             cursor.style.opacity = '0';
             cursorBlur.style.opacity = '0';
-            // 滑鼠移出網頁時同時還原網址
             if (currentHash !== '') {
                 history.replaceState(null, '', window.location.pathname);
                 currentHash = '';
