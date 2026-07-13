@@ -25,7 +25,7 @@
             cursor: none;
             position: relative;
         }
-        a, .split, .btn, .hud-toggle, .btn-ty-disabled {
+        a, .split, .btn, .hud-toggle {
             cursor: none !important;
         }
 
@@ -198,7 +198,7 @@
             justify-content: center;
             padding: 40px;
             position: relative;
-            transition: flex-grow 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
+            transition: flex-grow 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease, backdrop-filter 0.4s ease;
             overflow: hidden;
             z-index: 1;
             will-change: flex-grow, filter;
@@ -248,7 +248,7 @@
         
         .container:has(.split:hover) .split:not(:hover) {
             flex-grow: 0.7;
-            filter: blur(6px) brightness(0.2) grayscale(0.7);
+            filter: blur(8px) brightness(0.15) grayscale(0.9);
         }
 
         .vn-side {
@@ -272,12 +272,17 @@
 
         .ty-side {
             background: linear-gradient(135deg, #140505 0%, #020101 100%);
+            filter: blur(5px) grayscale(0.5);
+            transition: filter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), flex-grow 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .ty-side::before {
             background: repeating-linear-gradient(45deg, rgba(255, 59, 48, 0.04), rgba(255, 59, 48, 0.04) 15px, transparent 15px, transparent 30px);
         }
         .ty-side::after {
             background: radial-gradient(circle, rgba(255, 59, 48, 0.18) 0%, transparent 70%);
+        }
+        .ty-side:hover {
+            filter: blur(5px) grayscale(0.3) brightness(0.75);
         }
         .ty-side:hover::before {
             opacity: 0.15;
@@ -461,12 +466,14 @@
         }
 
         .ty-side .card {
-            border: 1px solid rgba(255, 59, 48, 0.08);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 59, 48, 0.04);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(35px) brightness(0.6);
+            -webkit-backdrop-filter: blur(35px) brightness(0.6);
+            background: rgba(10, 2, 2, 0.2);
         }
         .ty-side:hover .card {
-            border-color: transparent;
-            box-shadow: 0 40px 80px rgba(255, 59, 48, 0.35), inset 0 0 30px rgba(255, 59, 48, 0.15);
+            box-shadow: 0 40px 80px rgba(255, 59, 48, 0.2), inset 0 0 40px rgba(255, 59, 48, 0.05);
         }
 
         .logo-text {
@@ -487,7 +494,7 @@
             animation: shineText 2.5s linear infinite, glitchText 0.3s linear;
         }
         .ty-side:hover .ty-text {
-            animation: shineText 2.5s linear infinite, glitchTextRed 0.3s linear;
+            animation: shineText 2.5s linear infinite, glitchTextRed 0.4s linear infinite alternate;
         }
 
         @keyframes glitchText {
@@ -500,12 +507,9 @@
         }
 
         @keyframes glitchTextRed {
-            0% { transform: translateZ(80px) scale(1.05) skewX(0deg); text-shadow: 2px -1px 0 #ffaa00, -2px 1px 0 #ff3b30; }
-            20% { transform: translateZ(80px) scale(1.07) skewX(-3deg); text-shadow: -3px 2px 0 #ffaa00, 3px -2px 0 #ff3b30; }
-            40% { transform: translateZ(80px) scale(1.03) skewX(2deg); text-shadow: 1px -2px 0 #ffaa00, -1px 2px 0 #ff3b30; }
-            60% { transform: translateZ(80px) scale(1.05) skewX(-1deg); text-shadow: -1px 1px 0 #ffaa00, 2px -1px 0 #ff3b30; }
-            80% { transform: translateZ(80px) scale(1.04) skewX(0deg); text-shadow: 2px 1px 0 #ffaa00, -2px -1px 0 #ff3b30; }
-            100% { transform: translateZ(80px) scale(1.05) skewX(0deg); text-shadow: none; }
+            0% { transform: translateZ(80px) scale(1.02) skewX(0deg); text-shadow: 1px -1px 0 #ffaa00, -1px 1px 0 #ff3b30; opacity: 0.8; }
+            50% { transform: translateZ(80px) scale(1.01) skewX(1deg); text-shadow: -2px 1px 0 #ffaa00, 2px -1px 0 #ff3b30; opacity: 0.9; }
+            100% { transform: translateZ(80px) scale(1.02) skewX(-1deg); text-shadow: 1px 1px 0 #ffaa00, -1px -1px 0 #ff3b30; opacity: 0.7; }
         }
 
         .vn-text {
@@ -516,11 +520,11 @@
             animation: shineText 2.5s linear infinite;
         }
         .ty-text {
-            background: linear-gradient(45deg, #ff3b30, #ff453a, #ff3b30);
+            background: linear-gradient(45deg, #5c1e1a, #7a221c, #5c1e1a);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: shineText 2.5s linear infinite;
+            opacity: 0.5;
         }
 
         @keyframes shineText {
@@ -549,10 +553,9 @@
             transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .vn-side:hover .sub-title::after { width: 90%; background: #00f2fe; box-shadow: 0 0 8px #00f2fe; }
-        .ty-side:hover .sub-title::after { width: 90%; background: #ff3b30; box-shadow: 0 0 8px #ff3b30; }
 
         .vn-side .sub-title { color: rgba(0, 242, 254, 0.85); text-shadow: 0 0 10px rgba(0,242,254,0.3); }
-        .ty-side .sub-title { color: rgba(255, 59, 48, 0.85); text-shadow: 0 0 10px rgba(255,59,48,0.3); }
+        .ty-side .sub-title { color: rgba(255, 59, 48, 0.25); text-shadow: none; }
 
         .desc {
             font-size: 1rem;
@@ -562,8 +565,11 @@
             transform: translateZ(35px);
             transition: color 0.3s ease;
         }
-        .split:hover .desc {
+        .vn-side:hover .desc {
             color: #fff;
+        }
+        .ty-side .desc {
+            color: #4a3836;
         }
 
         .difficulty-box {
@@ -587,7 +593,7 @@
             top: 0; left: -150%; width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
         }
-        .split:hover .difficulty-box::before {
+        .vn-side:hover .difficulty-box::before {
             left: 150%;
             transition: left 1s ease;
         }
@@ -606,16 +612,9 @@
         }
 
         .ty-box {
-            background: rgba(255, 59, 48, 0.01);
-            border: 1px dashed rgba(255, 59, 48, 0.25);
-            color: #ff453a;
-            text-shadow: 0 0 8px rgba(255,59,48,0.3);
-        }
-        .ty-side:hover .ty-box {
-            background: rgba(255, 59, 48, 0.08);
-            border: 1px solid #ff3b30;
-            box-shadow: 0 0 30px rgba(255, 59, 48, 0.3), inset 0 0 15px rgba(255, 59, 48, 0.1);
-            transform: scale(1.03) translateZ(55px);
+            background: rgba(255, 59, 48, 0.005);
+            border: 1px dashed rgba(255, 59, 48, 0.1);
+            color: rgba(255, 69, 58, 0.3);
         }
 
         .btn {
@@ -645,90 +644,60 @@
             box-shadow: 0 20px 35px rgba(0, 242, 254, 0.55), 0 0 15px rgba(0, 242, 254, 0.3);
         }
 
-        .btn-ty-disabled {
-            display: inline-flex;
+        .ty-malware-container {
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 16px 32px;
-            font-size: 1.05rem;
-            font-weight: 800;
-            text-decoration: none;
-            border-radius: 50px;
             width: 100%;
-            letter-spacing: 3px;
-            transform: translateZ(50px);
-            background: rgba(255, 59, 48, 0.03);
-            color: rgba(255, 59, 48, 0.5);
-            border: 2px solid rgba(255, 59, 48, 0.3);
-            pointer-events: none;
+            transform: translateZ(70px);
             user-select: none;
-            box-shadow: 0 0 15px rgba(255, 59, 48, 0.1);
-            animation: techErrorFlash 2s infinite linear;
+            pointer-events: none;
+            margin-top: 5px;
         }
 
-        .ty-warning-text {
-            margin-top: 25px;
-            font-size: 0.95rem;
-            font-weight: 800;
-            letter-spacing: 2px;
+        .ty-huge-x {
+            font-size: 7rem;
+            font-weight: 900;
+            color: #ff3b30;
+            line-height: 1;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 25px rgba(255, 59, 48, 0.95));
+            animation: xGlitchFlash 1.8s infinite linear;
+        }
+
+        .ty-warning-text-huge {
+            font-size: 1.75rem;
+            font-weight: 900;
+            letter-spacing: 3px;
             line-height: 1.6;
             color: #ff453a;
-            text-shadow: 0 0 10px rgba(255, 69, 58, 0.6);
-            animation: textPulseGlow 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
-            transform: translateZ(40px);
+            text-shadow: 0 0 20px rgba(255, 69, 58, 0.95), 0 0 40px rgba(255, 69, 58, 0.5);
+            animation: massiveTextGlow 1.2s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            text-align: center;
         }
 
-        @keyframes techErrorFlash {
-            0% {
-                border-color: rgba(255, 59, 48, 0.3);
-                box-shadow: 0 0 12px rgba(255, 59, 48, 0.1);
-                color: rgba(255, 59, 48, 0.4);
-                filter: brightness(1);
-            }
-            48% {
-                border-color: rgba(255, 59, 48, 0.3);
-                box-shadow: 0 0 12px rgba(255, 59, 48, 0.1);
-                color: rgba(255, 59, 48, 0.4);
-            }
-            50% {
-                border-color: rgba(255, 59, 48, 0.9);
-                box-shadow: 0 0 30px rgba(255, 59, 48, 0.85), inset 0 0 15px rgba(255, 59, 48, 0.4);
-                color: rgba(255, 255, 255, 0.95);
-                filter: brightness(1.4);
-            }
-            54% {
-                border-color: rgba(255, 59, 48, 0.2);
-                box-shadow: 0 0 4px rgba(255, 59, 48, 0.05);
-                color: rgba(255, 59, 48, 0.2);
-                filter: brightness(0.8);
-            }
-            56% {
-                border-color: rgba(255, 59, 48, 1);
-                box-shadow: 0 0 35px rgba(255, 59, 48, 1), inset 0 0 20px rgba(255, 59, 48, 0.5);
-                color: rgba(255, 255, 255, 1);
-                filter: brightness(1.6);
-            }
-            60% {
-                border-color: rgba(255, 59, 48, 0.3);
-                box-shadow: 0 0 12px rgba(255, 59, 48, 0.1);
-                color: rgba(255, 59, 48, 0.4);
-                filter: brightness(1);
-            }
-            100% {
-                border-color: rgba(255, 59, 48, 0.3);
-                box-shadow: 0 0 12px rgba(255, 59, 48, 0.1);
-                color: rgba(255, 59, 48, 0.4);
-            }
+        @keyframes xGlitchFlash {
+            0% { transform: scale(1) skewX(0deg); filter: drop-shadow(0 0 25px rgba(255, 59, 48, 0.95)); opacity: 1; }
+            48% { transform: scale(1) skewX(0deg); opacity: 1; }
+            50% { transform: scale(1.1) skewX(-10deg) cubic-bezier(0.1, 0.8, 0.3, 1); filter: drop-shadow(0 0 40px #ff3b30) brightness(1.6); color: #fff; opacity: 0.9; }
+            53% { transform: scale(0.95) skewX(8deg); filter: drop-shadow(0 0 5px #ff3b30) brightness(0.5); color: #ff3b30; opacity: 0.4; }
+            55% { transform: scale(1.05) skewX(-3deg); filter: drop-shadow(0 0 30px #ff3b30) brightness(1.4); opacity: 1; }
+            58% { transform: scale(1) skewX(0deg); filter: drop-shadow(0 0 25px rgba(255, 59, 48, 0.95)); }
+            100% { transform: scale(1) skewX(0deg); }
         }
 
-        @keyframes textPulseGlow {
+        @keyframes massiveTextGlow {
             0% {
-                opacity: 0.5;
-                filter: drop-shadow(0 0 3px rgba(255, 69, 58, 0.4)) blur(0.3px);
+                transform: scale(0.98);
+                opacity: 0.75;
+                filter: drop-shadow(0 0 8px rgba(255, 69, 58, 0.5)) blur(0.4px);
             }
             100% {
+                transform: scale(1.02);
                 opacity: 1;
-                filter: drop-shadow(0 0 15px rgba(255, 69, 58, 0.9)) blur(0px);
+                filter: drop-shadow(0 0 30px rgba(255, 69, 58, 1)) blur(0px);
             }
         }
 
@@ -832,11 +801,11 @@
                     很棒的戰對。適合給想要考戰對可是又找不到好的戰對的Rivals玩家。每個成員都品行優良。
                 </p>
                 <div class="difficulty-box ty-box">考核難度：比較簡單</div>
-                <div class="btn-ty-disabled">
-                    🚫 連結停用中
-                </div>
-                <div class="ty-warning-text">
-                    此戰對遭到惡意人士破壞 目前停用中
+                <div class="ty-malware-container">
+                    <div class="ty-huge-x">❌</div>
+                    <div class="ty-warning-text-huge">
+                        此戰對遭到惡意人士破壞<br>目前停用中
+                    </div>
                 </div>
             </div>
         </div>
@@ -870,7 +839,6 @@
         const tyCtx = tyCanvas.getContext('2d');
         let vnParticles = [];
         let tyParticles = [];
-        let shockwaves = [];
 
         let audioCtx = null;
         let audioMuted = false;
@@ -950,9 +918,9 @@
                 x: Math.random() * w,
                 y: h + Math.random() * 30,
                 vx: (Math.random() - 0.5) * 0.4,
-                vy: -(Math.random() * 0.8 + 0.4),
-                size: sideType === 'vn' ? Math.random() * 5 + 2 : Math.random() * 3.5 + 1.5,
-                opacity: Math.random() * 0.4 + 0.15,
+                vy: sideType === 'vn' ? -(Math.random() * 0.8 + 0.4) : -(Math.random() * 0.4 + 0.15),
+                size: sideType === 'vn' ? Math.random() * 5 + 2 : Math.random() * 4 + 1.5,
+                opacity: sideType === 'vn' ? Math.random() * 0.4 + 0.15 : Math.random() * 0.15 + 0.05,
                 maxLife: Math.random() * 300 + 200,
                 life: 0
             };
@@ -1046,12 +1014,12 @@
                 const localY = mouseY - tyRect.top;
                 tySide.style.setProperty('--x', localX + 'px');
                 tySide.style.setProperty('--y', localY + 'px');
-                tySide.style.setProperty('--bg-x', ((localX / tyRect.width) - 0.5) * -15 + 'px');
-                tySide.style.setProperty('--bg-y', ((localY / tyRect.height) - 0.5) * -15 + 'px');
+                tySide.style.setProperty('--bg-x', ((localX / tyRect.width) - 0.5) * -8 + 'px');
+                tySide.style.setProperty('--bg-y', ((localY / tyRect.height) - 0.5) * -8 + 'px');
                 
                 const card = tySide.querySelector('.card');
-                const cx = (localX / tyRect.width - 0.5) * 15;
-                const cy = (localY / tyRect.height - 0.5) * -15;
+                const cx = (localX / tyRect.width - 0.5) * 8;
+                const cy = (localY / tyRect.height - 0.5) * -8;
                 card.style.transform = `rotateY(${cx}deg) rotateX(${cy}deg)`;
                 card.style.setProperty('--gloss-x', (localX / tyRect.width) * 100 + '%');
                 card.style.setProperty('--gloss-y', (localY / tyRect.height) * 100 + '%');
@@ -1114,7 +1082,7 @@
             vnBtn.style.setProperty('--mag-y', vnBtnMag.cy + 'px');
 
             updateParticles(vnCtx, vnParticles, 65, 'vn', 'rgba(0, 242, 254, ALPHA)');
-            updateParticles(tyCtx, tyParticles, 45, 'ty', 'rgba(255, 59, 48, ALPHA)');
+            updateParticles(tyCtx, tyParticles, 25, 'ty', 'rgba(255, 59, 48, ALPHA)');
 
             frameCount++;
             const now = performance.now();
