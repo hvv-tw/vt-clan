@@ -25,7 +25,7 @@
             cursor: none;
             position: relative;
         }
-        a, .split, .btn, .hud-toggle {
+        a, .split, .btn, .hud-toggle, .btn-ty-disabled {
             cursor: none !important;
         }
 
@@ -77,15 +77,15 @@
         }
 
         body:has(.ty-side:hover) #custom-cursor {
-            background: #ffe259;
-            box-shadow: 0 0 10px #ffe259, 0 0 20px #ffa751;
+            background: #ff3b30;
+            box-shadow: 0 0 10px #ff3b30, 0 0 20px #ff453a;
         }
         body:has(.ty-side:hover) #custom-cursor-blur {
-            border-color: rgba(255, 226, 89, 0.5);
-            background: rgba(255, 226, 89, 0.06);
+            border-color: rgba(255, 59, 48, 0.5);
+            background: rgba(255, 59, 48, 0.06);
         }
         body.cursor-clicking:has(.ty-side:hover) #custom-cursor-blur {
-            background: rgba(255, 226, 89, 0.15);
+            background: rgba(255, 59, 48, 0.15);
         }
 
         body:has(.middle-gap:hover) #custom-cursor {
@@ -179,14 +179,14 @@
             opacity: 0;
         }
         #impact-flash.flash-vn { animation: flashBlue 0.45s ease-out; }
-        #impact-flash.flash-ty { animation: flashGold 0.45s ease-out; }
+        #impact-flash.flash-ty { animation: flashRed 0.45s ease-out; }
 
         @keyframes flashBlue {
             0% { opacity: 0.4; background: #00f2fe; filter: blur(15px); }
             100% { opacity: 0; background: transparent; }
         }
-        @keyframes flashGold {
-            0% { opacity: 0.35; background: #ffe259; filter: blur(15px); }
+        @keyframes flashRed {
+            0% { opacity: 0.35; background: #ff3b30; filter: blur(15px); }
             100% { opacity: 0; background: transparent; }
         }
 
@@ -271,13 +271,13 @@
         }
 
         .ty-side {
-            background: linear-gradient(135deg, #0e0b07 0%, #010101 100%);
+            background: linear-gradient(135deg, #140505 0%, #020101 100%);
         }
         .ty-side::before {
-            background: repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.04), rgba(212, 175, 55, 0.04) 15px, transparent 15px, transparent 30px);
+            background: repeating-linear-gradient(45deg, rgba(255, 59, 48, 0.04), rgba(255, 59, 48, 0.04) 15px, transparent 15px, transparent 30px);
         }
         .ty-side::after {
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.18) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 59, 48, 0.18) 0%, transparent 70%);
         }
         .ty-side:hover::before {
             opacity: 0.15;
@@ -291,7 +291,7 @@
             width: 85px;
             background: #050507;
             border-left: 1px solid rgba(0, 242, 254, 0.25);
-            border-right: 1px solid rgba(212, 175, 55, 0.25);
+            border-right: 1px solid rgba(255, 59, 48, 0.25);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -308,7 +308,7 @@
             left: 0;
             width: 100%;
             height: 40%;
-            background: linear-gradient(to bottom, transparent, rgba(0, 242, 254, 0.2), rgba(212, 175, 55, 0.2), transparent);
+            background: linear-gradient(to bottom, transparent, rgba(0, 242, 254, 0.2), rgba(255, 59, 48, 0.2), transparent);
             animation: scanline 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
 
@@ -323,7 +323,7 @@
             font-size: 1.75rem;
             font-weight: 900;
             letter-spacing: 16px;
-            background: linear-gradient(180deg, #00f2fe 0%, #ffe259 100%);
+            background: linear-gradient(180deg, #00f2fe 0%, #ff3b30 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -332,8 +332,8 @@
         }
 
         @keyframes pulseGlow {
-            0% { filter: drop-shadow(0 0 4px rgba(0, 242, 254, 0.5)) drop-shadow(0 0 8px rgba(212, 175, 55, 0.4)); transform: scale(0.97); }
-            100% { filter: drop-shadow(0 0 16px rgba(0, 242, 254, 0.8)) drop-shadow(0 0 16px rgba(212, 175, 55, 0.7)); transform: scale(1.03); }
+            0% { filter: drop-shadow(0 0 4px rgba(0, 242, 254, 0.5)) drop-shadow(0 0 8px rgba(255, 59, 48, 0.4)); transform: scale(0.97); }
+            100% { filter: drop-shadow(0 0 16px rgba(0, 242, 254, 0.8)) drop-shadow(0 0 16px rgba(255, 59, 48, 0.7)); transform: scale(1.03); }
         }
 
         .container:has(.split:hover) .coop-text {
@@ -341,7 +341,7 @@
             transform: scale(1.1) rotate(-3deg);
         }
         .container:has(.ty-side:hover) .coop-text {
-            filter: drop-shadow(0 0 25px #ffe259);
+            filter: drop-shadow(0 0 25px #ff3b30);
             transform: scale(1.1) rotate(3deg);
         }
 
@@ -408,7 +408,7 @@
         }
         .ty-side:hover .border-glow-path {
             opacity: 1;
-            background: conic-gradient(from var(--border-angle, 0deg), transparent 40%, #ffe259 70%, #ffa751 100%);
+            background: conic-gradient(from var(--border-angle, 0deg), transparent 40%, #ff3b30 70%, #ff453a 100%);
             animation: borderRotate 2s linear infinite;
         }
 
@@ -428,7 +428,7 @@
         }
         .ty-side:hover .card::before {
             opacity: 1;
-            background: radial-gradient(circle at var(--gloss-x, 50%) var(--gloss-y, 50%), rgba(255, 226, 89, 0.12) 0%, transparent 60%);
+            background: radial-gradient(circle at var(--gloss-x, 50%) var(--gloss-y, 50%), rgba(255, 59, 48, 0.15) 0%, transparent 60%);
         }
 
         .vn-side:hover .card::after {
@@ -436,7 +436,7 @@
             animation: cardRadarScan 2.2s linear infinite;
         }
         .ty-side:hover .card::after {
-            background: linear-gradient(to bottom, transparent, rgba(255, 226, 89, 0.2), transparent);
+            background: linear-gradient(to bottom, transparent, rgba(255, 59, 48, 0.25), transparent);
             animation: cardRadarScan 2.2s linear infinite;
         }
 
@@ -461,12 +461,12 @@
         }
 
         .ty-side .card {
-            border: 1px solid rgba(212, 175, 55, 0.06);
+            border: 1px solid rgba(255, 59, 48, 0.08);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
         }
         .ty-side:hover .card {
             border-color: transparent;
-            box-shadow: 0 40px 80px rgba(212, 175, 55, 0.26), inset 0 0 30px rgba(212, 175, 55, 0.08);
+            box-shadow: 0 40px 80px rgba(255, 59, 48, 0.35), inset 0 0 30px rgba(255, 59, 48, 0.15);
         }
 
         .logo-text {
@@ -487,7 +487,7 @@
             animation: shineText 2.5s linear infinite, glitchText 0.3s linear;
         }
         .ty-side:hover .ty-text {
-            animation: shineText 2.5s linear infinite, glitchText 0.3s linear;
+            animation: shineText 2.5s linear infinite, glitchTextRed 0.3s linear;
         }
 
         @keyframes glitchText {
@@ -499,6 +499,15 @@
             100% { transform: translateZ(80px) scale(1.05) skewX(0deg); text-shadow: none; }
         }
 
+        @keyframes glitchTextRed {
+            0% { transform: translateZ(80px) scale(1.05) skewX(0deg); text-shadow: 2px -1px 0 #ffaa00, -2px 1px 0 #ff3b30; }
+            20% { transform: translateZ(80px) scale(1.07) skewX(-3deg); text-shadow: -3px 2px 0 #ffaa00, 3px -2px 0 #ff3b30; }
+            40% { transform: translateZ(80px) scale(1.03) skewX(2deg); text-shadow: 1px -2px 0 #ffaa00, -1px 2px 0 #ff3b30; }
+            60% { transform: translateZ(80px) scale(1.05) skewX(-1deg); text-shadow: -1px 1px 0 #ffaa00, 2px -1px 0 #ff3b30; }
+            80% { transform: translateZ(80px) scale(1.04) skewX(0deg); text-shadow: 2px 1px 0 #ffaa00, -2px -1px 0 #ff3b30; }
+            100% { transform: translateZ(80px) scale(1.05) skewX(0deg); text-shadow: none; }
+        }
+
         .vn-text {
             background: linear-gradient(45deg, #00f2fe, #4facfe, #00f2fe);
             background-size: 200% auto;
@@ -507,7 +516,7 @@
             animation: shineText 2.5s linear infinite;
         }
         .ty-text {
-            background: linear-gradient(45deg, #ffe259, #ffa751, #ffe259);
+            background: linear-gradient(45deg, #ff3b30, #ff453a, #ff3b30);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -540,10 +549,10 @@
             transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .vn-side:hover .sub-title::after { width: 90%; background: #00f2fe; box-shadow: 0 0 8px #00f2fe; }
-        .ty-side:hover .sub-title::after { width: 90%; background: #ffe259; box-shadow: 0 0 8px #ffe259; }
+        .ty-side:hover .sub-title::after { width: 90%; background: #ff3b30; box-shadow: 0 0 8px #ff3b30; }
 
         .vn-side .sub-title { color: rgba(0, 242, 254, 0.85); text-shadow: 0 0 10px rgba(0,242,254,0.3); }
-        .ty-side .sub-title { color: rgba(212, 175, 55, 0.85); text-shadow: 0 0 10px rgba(212,175,55,0.3); }
+        .ty-side .sub-title { color: rgba(255, 59, 48, 0.85); text-shadow: 0 0 10px rgba(255,59,48,0.3); }
 
         .desc {
             font-size: 1rem;
@@ -597,15 +606,15 @@
         }
 
         .ty-box {
-            background: rgba(212, 175, 55, 0.01);
-            border: 1px dashed rgba(212, 175, 55, 0.25);
-            color: #ffe259;
-            text-shadow: 0 0 8px rgba(212,175,55,0.3);
+            background: rgba(255, 59, 48, 0.01);
+            border: 1px dashed rgba(255, 59, 48, 0.25);
+            color: #ff453a;
+            text-shadow: 0 0 8px rgba(255,59,48,0.3);
         }
         .ty-side:hover .ty-box {
-            background: rgba(212, 175, 55, 0.08);
-            border: 1px solid #ffe259;
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3), inset 0 0 15px rgba(212, 175, 55, 0.1);
+            background: rgba(255, 59, 48, 0.08);
+            border: 1px solid #ff3b30;
+            box-shadow: 0 0 30px rgba(255, 59, 48, 0.3), inset 0 0 15px rgba(255, 59, 48, 0.1);
             transform: scale(1.03) translateZ(55px);
         }
 
@@ -636,17 +645,91 @@
             box-shadow: 0 20px 35px rgba(0, 242, 254, 0.55), 0 0 15px rgba(0, 242, 254, 0.3);
         }
 
-        .btn-ty {
-            background: transparent;
-            color: #ffe259;
-            border: 2px solid #ffe259;
+        .btn-ty-disabled {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            text-decoration: none;
+            border-radius: 50px;
+            width: 100%;
+            letter-spacing: 3px;
+            transform: translateZ(50px);
+            background: rgba(255, 59, 48, 0.03);
+            color: rgba(255, 59, 48, 0.5);
+            border: 2px solid rgba(255, 59, 48, 0.3);
+            pointer-events: none;
+            user-select: none;
+            box-shadow: 0 0 15px rgba(255, 59, 48, 0.1);
+            animation: techErrorFlash 2s infinite linear;
         }
-        .btn-ty:hover {
-            background: linear-gradient(45deg, #ffe259, #ffa751);
-            color: #010102;
-            transform: translateY(-6px) scale(1.03) translateZ(75px);
-            box-shadow: 0 20px 35px rgba(212, 175, 55, 0.45), 0 0 15px rgba(212, 175, 55, 0.25);
-            border-color: transparent;
+
+        .ty-warning-text {
+            margin-top: 25px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            line-height: 1.6;
+            color: #ff453a;
+            text-shadow: 0 0 10px rgba(255, 69, 58, 0.6);
+            animation: textPulseGlow 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+            transform: translateZ(40px);
+        }
+
+        @keyframes techErrorFlash {
+            0% {
+                border-color: rgba(255, 59, 48, 0.3);
+                box-shadow: 0 0 12px rgba(255, 59, 48, 0.1);
+                color: rgba(255, 59, 48, 0.4);
+                filter: brightness(1);
+            }
+            48% {
+                border-color: rgba(255, 59, 48, 0.3);
+                box-shadow: 0 0 12px rgba(255, 59, 48, 0.1);
+                color: rgba(255, 59, 48, 0.4);
+            }
+            50% {
+                border-color: rgba(255, 59, 48, 0.9);
+                box-shadow: 0 0 30px rgba(255, 59, 48, 0.85), inset 0 0 15px rgba(255, 59, 48, 0.4);
+                color: rgba(255, 255, 255, 0.95);
+                filter: brightness(1.4);
+            }
+            54% {
+                border-color: rgba(255, 59, 48, 0.2);
+                box-shadow: 0 0 4px rgba(255, 59, 48, 0.05);
+                color: rgba(255, 59, 48, 0.2);
+                filter: brightness(0.8);
+            }
+            56% {
+                border-color: rgba(255, 59, 48, 1);
+                box-shadow: 0 0 35px rgba(255, 59, 48, 1), inset 0 0 20px rgba(255, 59, 48, 0.5);
+                color: rgba(255, 255, 255, 1);
+                filter: brightness(1.6);
+            }
+            60% {
+                border-color: rgba(255, 59, 48, 0.3);
+                box-shadow: 0 0 12px rgba(255, 59, 48, 0.1);
+                color: rgba(255, 59, 48, 0.4);
+                filter: brightness(1);
+            }
+            100% {
+                border-color: rgba(255, 59, 48, 0.3);
+                box-shadow: 0 0 12px rgba(255, 59, 48, 0.1);
+                color: rgba(255, 59, 48, 0.4);
+            }
+        }
+
+        @keyframes textPulseGlow {
+            0% {
+                opacity: 0.5;
+                filter: drop-shadow(0 0 3px rgba(255, 69, 58, 0.4)) blur(0.3px);
+            }
+            100% {
+                opacity: 1;
+                filter: drop-shadow(0 0 15px rgba(255, 69, 58, 0.9)) blur(0px);
+            }
         }
 
         .hud-panel {
@@ -749,9 +832,12 @@
                     很棒的戰對。適合給想要考戰對可是又找不到好的戰對的Rivals玩家。每個成員都品行優良。
                 </p>
                 <div class="difficulty-box ty-box">考核難度：比較簡單</div>
-                <a href="https://discord.gg/uVADKfqsWM" target="_blank" class="btn btn-ty" id="tyBtn">
-                    進入 DISCORD 伺服器
-                </a>
+                <div class="btn-ty-disabled">
+                    🚫 連結停用中
+                </div>
+                <div class="ty-warning-text">
+                    此戰對遭到惡意人士破壞 目前停用中
+                </div>
             </div>
         </div>
 
@@ -768,7 +854,6 @@
         const vnCanvas = document.getElementById('vnCanvas');
         const tyCanvas = document.getElementById('tyCanvas');
         const vnBtn = document.getElementById('vnBtn');
-        const tyBtn = document.getElementById('tyBtn');
         const audioToggle = document.getElementById('audioToggle');
         const fpsVal = document.getElementById('fpsVal');
         const pingVal = document.getElementById('pingVal');
@@ -780,7 +865,6 @@
         let currentHash = '';
 
         let vnBtnMag = { cx: 0, cy: 0, tx: 0, ty: 0 };
-        let tyBtnMag = { cx: 0, cy: 0, tx: 0, ty: 0 };
 
         const vnCtx = vnCanvas.getContext('2d');
         const tyCtx = tyCanvas.getContext('2d');
@@ -869,355 +953,184 @@
                 vy: -(Math.random() * 0.8 + 0.4),
                 size: sideType === 'vn' ? Math.random() * 5 + 2 : Math.random() * 3.5 + 1.5,
                 opacity: Math.random() * 0.4 + 0.15,
-                maxLife: Math.random() * 250 + 150,
+                maxLife: Math.random() * 300 + 200,
                 life: 0
             };
         }
 
-        function initParticles() {
-            resizeCanvases();
-            for (let i = 0; i < 35; i++) {
-                let pVn = createParticle('vn');
-                pVn.y = Math.random() * vnCanvas.height;
-                vnParticles.push(pVn);
-
-                let pTy = createParticle('ty');
-                pTy.y = Math.random() * tyCanvas.height;
-                tyParticles.push(pTy);
-            }
-        }
-
-        function drawParticles(ctx, canvas, list, sideType) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const rect = canvas.getBoundingClientRect();
-            const mX = mouseX - rect.left;
-            const mY = mouseY - rect.top;
-
-            for (let i = 0; i < list.length; i++) {
-                let p = list[i];
-                
-                let dx = p.x - mX;
-                let dy = p.y - mY;
-                let dist = Math.hypot(dx, dy);
-                let pushX = 0;
-                let pushY = 0;
-
-                if (dist < 120 && mouseX >= rect.left && mouseX <= rect.right) {
-                    let force = (120 - dist) / 120;
-                    pushX = (dx / dist) * force * 1.8;
-                    pushY = (dy / dist) * force * 1.8;
-                }
-
-                shockwaves.forEach(wave => {
-                    let sdx = (wave.x - rect.left) - p.x;
-                    let sdy = wave.y - p.y;
-                    let sdist = Math.hypot(sdx, sdy);
-                    if (Math.abs(sdist - wave.currentRadius) < 30) {
-                        let waveForce = (1 - (wave.currentRadius / wave.maxRadius)) * 6;
-                        p.x -= (sdx / sdist) * waveForce;
-                        p.y -= (sdy / sdist) * waveForce;
-                    }
-                });
-
-                p.x += p.vx + pushX;
-                p.y += p.vy + pushY;
-                p.life++;
-
-                if (p.y < -10 || p.life > p.maxLife || p.x < -10 || p.x > canvas.width + 10) {
-                    list[i] = createParticle(sideType);
-                    p = list[i];
-                }
-
-                ctx.fillStyle = sideType === 'vn' ? `rgba(0, 242, 254, ${p.opacity})` : `rgba(255, 226, 89, ${p.opacity})`;
-                ctx.beginPath();
-                if (sideType === 'vn') {
-                    ctx.fillRect(p.x, p.y, p.size, p.size);
-                } else {
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-
-            shockwaves.forEach(wave => {
-                ctx.strokeStyle = sideType === 'vn' ? `rgba(0, 242, 254, ${1 - (wave.currentRadius / wave.maxRadius)})` : `rgba(255, 226, 89, ${1 - (wave.currentRadius / wave.maxRadius)})`;
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(wave.x - rect.left, wave.y, wave.currentRadius, 0, Math.PI * 2);
-                ctx.stroke();
-            });
-        }
-
-        const scrambleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+?";
-        function triggerScramble(el) {
-            if (!el) return;
-            const targetText = el.getAttribute('data-origin') || el.innerText;
-            if (!el.getAttribute('data-origin')) {
-                el.setAttribute('data-origin', targetText);
-            }
-            let currentIteration = 0;
-            clearInterval(el.scrambleTimer);
-            el.scrambleTimer = setInterval(() => {
-                el.innerText = targetText.split("").map((char, idx) => {
-                    if (char === " " || char === "：" || char === "X") return char;
-                    if (idx < currentIteration) return targetText[idx];
-                    return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
-                }).join("");
-                if (currentIteration >= targetText.length) {
-                    clearInterval(el.scrambleTimer);
-                }
-                currentIteration += targetText.length / 12;
-            }, 30);
-        }
-
-        function calculateMagnetic(btn, data) {
-            const rect = btn.getBoundingClientRect();
-            const bx = rect.left + rect.width / 2;
-            const by = rect.top + rect.height / 2;
-            const dist = Math.hypot(mouseX - bx, mouseY - by);
-            if (dist < 130) {
-                data.tx = (mouseX - bx) * 0.38;
-                data.ty = (mouseY - by) * 0.38;
-            } else {
-                data.tx = 0;
-                data.ty = 0;
-            }
-            data.cx += (data.tx - data.cx) * 0.12;
-            data.cy += (data.ty - data.cy) * 0.12;
-            btn.style.setProperty('--mag-x', `${data.cx}px`);
-            btn.style.setProperty('--mag-y', `${data.cy}px`);
-        }
-
-        function triggerFlashAndShake(side) {
-            flashOverlay.className = '';
-            void flashOverlay.offsetWidth;
-            flashOverlay.classList.add(side === 'vn' ? 'flash-vn' : 'flash-ty');
-
-            mainContainer.classList.remove('shake');
-            void mainContainer.offsetWidth;
-            mainContainer.classList.add('shake');
-            setTimeout(() => mainContainer.classList.remove('shake'), 350);
-            playSynthSound('switch');
-        }
-
-        function createClickBurst(x, y) {
-            let color = '#ff7300';
-            let shadow = '#ffaa00';
-            let isRainbow = false;
-
-            if (currentHash === '#VN-CLAN') {
-                color = '#00f2fe';
-                shadow = '#4facfe';
-            } else if (currentHash === '#TY-CLAN') {
-                color = '#ffe259';
-                shadow = '#ffa751';
-            } else {
-                const rect = middleGap.getBoundingClientRect();
-                if (x >= rect.left && x <= rect.right) {
-                    isRainbow = true;
-                }
-            }
-
-            shockwaves.push({
-                x: x,
-                y: y,
-                currentRadius: 0,
-                maxRadius: 280,
-                speed: 8
-            });
-
-            const count = 12;
-            const rainbowColors = ['#ff0055', '#00f2fe', '#00ff66', '#ffe259', '#ff00ff'];
-
-            for (let i = 0; i < count; i++) {
-                const p = document.createElement('div');
-                p.classList.add('click-burst-p');
-                
+        function spawnBurst(x, y, color) {
+            for (let i = 0; i < 12; i++) {
+                const el = document.createElement('div');
+                el.className = 'click-burst-p';
                 const size = Math.random() * 6 + 4;
-                p.style.width = `${size}px`;
-                p.style.height = `${size}px`;
+                el.style.width = size + 'px';
+                el.style.height = size + 'px';
+                el.style.background = color;
+                el.style.boxShadow = `0 0 10px ${color}`;
+                el.style.left = x + 'px';
+                el.style.top = y + 'px';
                 
-                if (isRainbow) {
-                    const rc = rainbowColors[Math.floor(Math.random() * rainbowColors.length)];
-                    p.style.background = rc;
-                    p.style.boxShadow = `0 0 8px ${rc}`;
-                } else {
-                    p.style.background = color;
-                    p.style.boxShadow = `0 0 8px ${shadow}`;
-                }
-
-                p.style.left = `${x}px`;
-                p.style.top = `${y}px`;
-
-                const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
-                const speed = Math.random() * 55 + 45;
-                const dx = Math.cos(angle) * speed;
-                const dy = Math.sin(angle) * speed;
-
-                p.style.setProperty('--dx', `${dx}px`);
-                p.style.setProperty('--dy', `${dy}px`);
-
-                document.body.appendChild(p);
-                p.addEventListener('animationend', () => p.remove());
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 120 + 60;
+                const dx = Math.cos(angle) * speed + 'px';
+                const dy = Math.sin(angle) * speed + 'px';
+                
+                el.style.setProperty('--dx', dx);
+                el.style.setProperty('--dy', dy);
+                
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 500);
             }
-            playSynthSound('click');
+        }
+
+        function updateParticles(ctx, list, count, sideType, colorStr) {
+            if (list.length < count && Math.random() < 0.4) {
+                list.push(createParticle(sideType));
+            }
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            for (let i = list.length - 1; i >= 0; i--) {
+                const p = list[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life++;
+                
+                let currentOpacity = p.opacity * (1 - (p.life / p.maxLife));
+                if (currentOpacity < 0) currentOpacity = 0;
+                
+                ctx.fillStyle = colorStr.replace('ALPHA', currentOpacity.toFixed(3));
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (p.y < -20 || p.life >= p.maxLife) {
+                    list.splice(i, 1);
+                }
+            }
         }
 
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            updateUrlHash();
-        });
 
-        window.addEventListener('click', (e) => {
-            createClickBurst(e.clientX, e.clientY);
-        });
-
-        window.addEventListener('resize', resizeCanvases);
-        window.addEventListener('mousedown', () => document.body.classList.add('cursor-clicking'));
-        window.addEventListener('mouseup', () => document.body.classList.remove('cursor-clicking'));
-
-        vnSide.addEventListener('mouseenter', () => {
-            triggerScramble(vnSide.querySelector('.vn-text'));
-            triggerScramble(vnSide.querySelector('.vn-box'));
-            playSynthSound('hover');
-        });
-        tySide.addEventListener('mouseenter', () => {
-            triggerScramble(tySide.querySelector('.ty-text'));
-            triggerScramble(tySide.querySelector('.ty-box'));
-            playSynthSound('hover');
-        });
-
-        function triggerTerminalGlitch() {
-            mainContainer.classList.add('terminal-glitch');
-            setTimeout(() => {
-                mainContainer.classList.remove('terminal-glitch');
-            }, 100);
-        }
-
-        setInterval(() => {
-            if (Math.random() > 0.4) {
-                triggerTerminalGlitch();
-            }
-        }, 4500);
-
-        setInterval(() => {
-            pingVal.innerText = Math.floor(Math.random() * 6) + 12;
-        }, 1500);
-
-        function updateVisuals() {
-            const now = performance.now();
-            frameCount++;
-            if (now >= lastFrameTime + 1000) {
-                fpsVal.innerText = frameCount;
-                frameCount = 0;
-                lastFrameTime = now;
-            }
-
-            for (let i = shockwaves.length - 1; i >= 0; i--) {
-                shockwaves[i].currentRadius += shockwaves[i].speed;
-                if (shockwaves[i].currentRadius > shockwaves[i].maxRadius) {
-                    shockwaves.splice(i, 1);
-                }
-            }
-
-            cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-            
-            cursorX += (mouseX - cursorX) * 0.25;
-            cursorY += (mouseY - cursorY) * 0.25;
-            cursorBlur.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
-
-            calculateMagnetic(vnBtn, vnBtnMag);
-            calculateMagnetic(tyBtn, tyBtnMag);
-
-            drawParticles(vnCtx, vnCanvas, vnParticles, 'vn');
-            drawParticles(tyCtx, tyCanvas, tyParticles, 'ty');
-
-            handleSideEffects(vnSide);
-            handleSideEffects(tySide);
-
-            requestAnimationFrame(updateVisuals);
-        }
-
-        function updateUrlHash() {
             const vnRect = vnSide.getBoundingClientRect();
             const tyRect = tySide.getBoundingClientRect();
 
             if (mouseX >= vnRect.left && mouseX <= vnRect.right && mouseY >= vnRect.top && mouseY <= vnRect.bottom) {
-                if (currentHash !== '#VN-CLAN') {
-                    triggerFlashAndShake('vn');
-                    history.replaceState(null, '', '#VN-CLAN');
-                    currentHash = '#VN-CLAN';
+                if (currentHash !== 'vn') {
+                    currentHash = 'vn';
+                    playSynthSound('hover');
                 }
-            } else if (mouseX >= tyRect.left && mouseX <= tyRect.right && mouseY >= tyRect.top && mouseY <= tyRect.bottom) {
-                if (currentHash !== '#TY-CLAN') {
-                    triggerFlashAndShake('ty');
-                    history.replaceState(null, '', '#TY-CLAN');
-                    currentHash = '#TY-CLAN';
-                }
+                const localX = mouseX - vnRect.left;
+                const localY = mouseY - vnRect.top;
+                vnSide.style.setProperty('--x', localX + 'px');
+                vnSide.style.setProperty('--y', localY + 'px');
+                vnSide.style.setProperty('--bg-x', ((localX / vnRect.width) - 0.5) * -15 + 'px');
+                vnSide.style.setProperty('--bg-y', ((localY / vnRect.height) - 0.5) * -15 + 'px');
+                
+                const card = vnSide.querySelector('.card');
+                const cx = (localX / vnRect.width - 0.5) * 20;
+                const cy = (localY / vnRect.height - 0.5) * -20;
+                card.style.transform = `rotateY(${cx}deg) rotateX(${cy}deg)`;
+                card.style.setProperty('--gloss-x', (localX / vnRect.width) * 100 + '%');
+                card.style.setProperty('--gloss-y', (localY / vnRect.height) * 100 + '%');
             } else {
-                if (currentHash !== '') {
-                    history.replaceState(null, '', window.location.pathname);
-                    currentHash = '';
+                vnSide.querySelector('.card').style.transform = 'rotateY(0deg) rotateX(0deg)';
+            }
+
+            if (mouseX >= tyRect.left && mouseX <= tyRect.right && mouseY >= tyRect.top && mouseY <= tyRect.bottom) {
+                if (currentHash !== 'ty') {
+                    currentHash = 'ty';
+                    playSynthSound('hover');
+                }
+                const localX = mouseX - tyRect.left;
+                const localY = mouseY - tyRect.top;
+                tySide.style.setProperty('--x', localX + 'px');
+                tySide.style.setProperty('--y', localY + 'px');
+                tySide.style.setProperty('--bg-x', ((localX / tyRect.width) - 0.5) * -15 + 'px');
+                tySide.style.setProperty('--bg-y', ((localY / tyRect.height) - 0.5) * -15 + 'px');
+                
+                const card = tySide.querySelector('.card');
+                const cx = (localX / tyRect.width - 0.5) * 15;
+                const cy = (localY / tyRect.height - 0.5) * -15;
+                card.style.transform = `rotateY(${cx}deg) rotateX(${cy}deg)`;
+                card.style.setProperty('--gloss-x', (localX / tyRect.width) * 100 + '%');
+                card.style.setProperty('--gloss-y', (localY / tyRect.height) * 100 + '%');
+            } else {
+                tySide.querySelector('.card').style.transform = 'rotateY(0deg) rotateX(0deg)';
+            }
+
+            if (mouseX >= middleGap.getBoundingClientRect().left && mouseX <= middleGap.getBoundingClientRect().right) {
+                if (currentHash !== 'gap') {
+                    currentHash = 'gap';
+                    playSynthSound('switch');
                 }
             }
-        }
 
-        function handleSideEffects(side) {
-            const rect = side.getBoundingClientRect();
-            if (mouseX >= rect.left && mouseX <= rect.right && mouseY >= rect.top && mouseY <= rect.bottom) {
-                const x = mouseX - rect.left;
-                const y = mouseY - rect.top;
-                
-                side.style.setProperty('--x', `${x}px`);
-                side.style.setProperty('--y', `${y}px`);
-                
-                const bgX = (x - rect.width / 2) * 0.04;
-                const bgY = (y - rect.height / 2) * 0.04;
-                side.style.setProperty('--bg-x', `${bgX}px`);
-                side.style.setProperty('--bg-y', `${bgY}px`);
-
-                const card = side.querySelector('.card');
-                if (card) {
-                    const cardRect = card.getBoundingClientRect();
-                    const cardCenterX = cardRect.left + cardRect.width / 2;
-                    const cardCenterY = cardRect.top + cardRect.height / 2;
-                    const rotateX = -(mouseY - cardCenterY) / (cardRect.height / 2) * 12;
-                    const rotateY = (mouseX - cardCenterX) / (cardRect.width / 2) * 12;
-                    
-                    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
-
-                    const clX = mouseX - cardRect.left;
-                    const clY = mouseY - cardRect.top;
-                    card.style.setProperty('--gloss-x', `${clX}px`);
-                    card.style.setProperty('--gloss-y', `${clY}px`);
-                }
+            const vnBtnRect = vnBtn.getBoundingClientRect();
+            if (mouseX >= vnBtnRect.left && mouseX <= vnBtnRect.right && mouseY >= vnBtnRect.top && mouseY <= vnBtnRect.bottom) {
+                vnBtnMag.tx = (mouseX - (vnBtnRect.left + vnBtnRect.width / 2)) * 0.35;
+                vnBtnMag.ty = (mouseY - (vnBtnRect.top + vnBtnRect.height / 2)) * 0.35;
             } else {
-                const card = side.querySelector('.card');
-                if (card && card.style.transform !== '') {
-                    card.style.transform = '';
-                }
-            }
-        }
-
-        initParticles();
-        requestAnimationFrame(updateVisuals);
-
-        vnBtn.addEventListener('click', (e) => e.stopPropagation());
-        tyBtn.addEventListener('click', (e) => e.stopPropagation());
-        document.querySelector('.hud-panel').addEventListener('click', (e) => e.stopPropagation());
-
-        document.addEventListener('mouseleave', () => {
-            cursor.style.opacity = '0';
-            cursorBlur.style.opacity = '0';
-            if (currentHash !== '') {
-                history.replaceState(null, '', window.location.pathname);
-                currentHash = '';
+                vnBtnMag.tx = 0;
+                vnBtnMag.ty = 0;
             }
         });
-        document.addEventListener('mouseenter', () => {
-            cursor.style.opacity = '1';
-            cursorBlur.style.opacity = '1';
+
+        window.addEventListener('mousedown', () => {
+            document.body.classList.add('cursor-clicking');
+            playSynthSound('click');
+
+            mainContainer.classList.add('shake');
+            setTimeout(() => mainContainer.classList.remove('shake'), 350);
+
+            if (currentHash === 'vn') {
+                spawnBurst(mouseX, mouseY, '#00f2fe');
+                flashOverlay.className = 'flash-vn';
+                setTimeout(() => flashOverlay.className = '', 450);
+            } else if (currentHash === 'ty') {
+                spawnBurst(mouseX, mouseY, '#ff3b30');
+                flashOverlay.className = 'flash-ty';
+                mainContainer.classList.add('terminal-glitch');
+                setTimeout(() => {
+                    flashOverlay.className = '';
+                    mainContainer.classList.remove('terminal-glitch');
+                }, 450);
+            }
         });
+
+        window.addEventListener('mouseup', () => {
+            document.body.classList.remove('cursor-clicking');
+        });
+
+        function loop() {
+            cursorX += (mouseX - cursorX) * 0.22;
+            cursorY += (mouseY - cursorY) * 0.22;
+            cursor.style.transform = `translate(-50%, -50%) translate3d(${mouseX}px, ${mouseY}px, 0)`;
+            cursorBlur.style.transform = `translate(-50%, -50%) translate3d(${cursorX}px, ${cursorY}px, 0)`;
+
+            vnBtnMag.cx += (vnBtnMag.tx - vnBtnMag.cx) * 0.15;
+            vnBtnMag.cy += (vnBtnMag.ty - vnBtnMag.cy) * 0.15;
+            vnBtn.style.setProperty('--mag-x', vnBtnMag.cx + 'px');
+            vnBtn.style.setProperty('--mag-y', vnBtnMag.cy + 'px');
+
+            updateParticles(vnCtx, vnParticles, 65, 'vn', 'rgba(0, 242, 254, ALPHA)');
+            updateParticles(tyCtx, tyParticles, 45, 'ty', 'rgba(255, 59, 48, ALPHA)');
+
+            frameCount++;
+            const now = performance.now();
+            if (now >= lastFrameTime + 1000) {
+                fpsVal.innerText = Math.round((frameCount * 1000) / (now - lastFrameTime));
+                frameCount = 0;
+                lastFrameTime = now;
+                pingVal.innerText = Math.floor(Math.random() * 12 + 18);
+            }
+
+            requestAnimationFrame(loop);
+        }
+
+        window.addEventListener('resize', resizeCanvases);
+        resizeCanvases();
+        loop();
     </script>
 </body>
 </html>
