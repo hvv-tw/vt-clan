@@ -248,7 +248,7 @@
         
         .container:has(.split:hover) .split:not(:hover) {
             flex-grow: 0.7;
-            filter: blur(8px) brightness(0.15) grayscale(0.9);
+            filter: brightness(0.15) grayscale(0.9);
         }
 
         .vn-side {
@@ -272,7 +272,6 @@
 
         .ty-side {
             background: linear-gradient(135deg, #140505 0%, #020101 100%);
-            filter: blur(5px) grayscale(0.5);
             transition: filter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), flex-grow 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .ty-side::before {
@@ -282,7 +281,7 @@
             background: radial-gradient(circle, rgba(255, 59, 48, 0.18) 0%, transparent 70%);
         }
         .ty-side:hover {
-            filter: blur(5px) grayscale(0.3) brightness(0.75);
+            filter: grayscale(0.2) brightness(0.85);
         }
         .ty-side:hover::before {
             opacity: 0.15;
@@ -290,6 +289,21 @@
         }
         .ty-side:hover::after {
             opacity: 1;
+        }
+
+        .ty-giant-x {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 65vh;
+            color: #ff3b30;
+            line-height: 1;
+            z-index: 2;
+            pointer-events: none;
+            user-select: none;
+            filter: drop-shadow(0 0 60px rgba(255, 59, 48, 0.75));
+            opacity: 0.85;
         }
 
         .middle-gap {
@@ -656,16 +670,6 @@
             margin-top: 5px;
         }
 
-        .ty-huge-x {
-            font-size: 7rem;
-            font-weight: 900;
-            color: #ff3b30;
-            line-height: 1;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 0 25px rgba(255, 59, 48, 0.95));
-            animation: xGlitchFlash 1.8s infinite linear;
-        }
-
         .ty-warning-text-huge {
             font-size: 1.75rem;
             font-weight: 900;
@@ -676,16 +680,6 @@
             animation: massiveTextGlow 1.2s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
             width: 100%;
             text-align: center;
-        }
-
-        @keyframes xGlitchFlash {
-            0% { transform: scale(1) skewX(0deg); filter: drop-shadow(0 0 25px rgba(255, 59, 48, 0.95)); opacity: 1; }
-            48% { transform: scale(1) skewX(0deg); opacity: 1; }
-            50% { transform: scale(1.1) skewX(-10deg) cubic-bezier(0.1, 0.8, 0.3, 1); filter: drop-shadow(0 0 40px #ff3b30) brightness(1.6); color: #fff; opacity: 0.9; }
-            53% { transform: scale(0.95) skewX(8deg); filter: drop-shadow(0 0 5px #ff3b30) brightness(0.5); color: #ff3b30; opacity: 0.4; }
-            55% { transform: scale(1.05) skewX(-3deg); filter: drop-shadow(0 0 30px #ff3b30) brightness(1.4); opacity: 1; }
-            58% { transform: scale(1) skewX(0deg); filter: drop-shadow(0 0 25px rgba(255, 59, 48, 0.95)); }
-            100% { transform: scale(1) skewX(0deg); }
         }
 
         @keyframes massiveTextGlow {
@@ -793,6 +787,7 @@
 
         <div class="split ty-side" id="tySide">
             <canvas id="tyCanvas" class="particles-canvas"></canvas>
+            <div class="ty-giant-x">❌</div>
             <div class="card">
                 <div class="border-glow-path"></div>
                 <div class="logo-text ty-text">TY CLAN</div>
@@ -802,7 +797,6 @@
                 </p>
                 <div class="difficulty-box ty-box">考核難度：比較簡單</div>
                 <div class="ty-malware-container">
-                    <div class="ty-huge-x">❌</div>
                     <div class="ty-warning-text-huge">
                         此戰對遭到惡意人士破壞<br>目前停用中
                     </div>
