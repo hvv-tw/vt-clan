@@ -3,73 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/hvv-tw/vt-clan/main/vy.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>VN CLAN × TY CLAN | rivals戰隊</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VN CLAN × TY CLAN | rivals戰對</title>
     <style>
-        :root {
-            --vn-primary: #00f2fe;
-            --vn-secondary: #4facfe;
-            --vn-glow-rgb: 0, 242, 254;
-            --ty-primary: #ffaa00;
-            --ty-secondary: #ff7700;
-            --ty-glow-rgb: 255, 170, 0;
-            --bg-dark: #020205;
-            --card-bg: rgba(255, 255, 255, 0.015);
-            --card-border-vn: rgba(0, 242, 254, 0.15);
-            --card-border-ty: rgba(255, 170, 0, 0.15);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body, html {
             height: 100%;
-            width: 100%;
-            background-color: var(--bg-dark);
-            color: #ffffff;
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow: hidden;
+            background-color: #020204;
+            color: #fff;
+            perspective: 1200px;
+        }
+
+        body {
+            cursor: none;
+            position: relative;
+        }
+        a, .split, .btn, .hud-toggle {
+            cursor: none !important;
+        }
+
+        #custom-cursor {
+            width: 8px;
+            height: 8px;
+            background: #ff7300;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #ff7300, 0 0 20px #ffaa00;
+            will-change: transform;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        #custom-cursor-blur {
+            width: 32px;
+            height: 32px;
+            border: 1.5px solid rgba(255, 115, 0, 0.5);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: transform 0.08s cubic-bezier(0.25, 1, 0.5, 1), width 0.2s, height 0.2s, border-color 0.3s, background 0.3s;
+            background: rgba(255, 115, 0, 0.03);
+            will-change: transform;
+        }
+
+        body.cursor-clicking #custom-cursor {
+            transform: translate(-50%, -50%) scale(0.7);
+        }
+        body.cursor-clicking #custom-cursor-blur {
+            transform: translate(-50%, -50%) scale(1.6);
+        }
+
+        body:has(.vn-side:hover) #custom-cursor {
+            background: #00f2fe;
+            box-shadow: 0 0 10px #00f2fe, 0 0 20px #4facfe;
+        }
+        body:has(.vn-side:hover) #custom-cursor-blur {
+            border-color: rgba(0, 242, 254, 0.6);
+            background: rgba(0, 242, 254, 0.08);
+        }
+        body.cursor-clicking:has(.vn-side:hover) #custom-cursor-blur {
+            background: rgba(0, 242, 254, 0.2);
+        }
+
+        body:has(.ty-side:hover) #custom-cursor {
+            background: #ffe259;
+            box-shadow: 0 0 10px #ffe259, 0 0 20px #ffa751;
+        }
+        body:has(.ty-side:hover) #custom-cursor-blur {
+            border-color: rgba(255, 226, 89, 0.5);
+            background: rgba(255, 226, 89, 0.06);
+        }
+        body.cursor-clicking:has(.ty-side:hover) #custom-cursor-blur {
+            background: rgba(255, 226, 89, 0.15);
+        }
+
+        body:has(.middle-gap:hover) #custom-cursor {
+            animation: rainbow-dot 1.5s linear infinite;
+        }
+        body:has(.middle-gap:hover) #custom-cursor-blur {
+            animation: rainbow-blur 1.5s linear infinite;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        body:has(.hud-panel:hover) #custom-cursor {
+            background: #ffffff;
+            box-shadow: 0 0 10px #ffffff;
+        }
+        body:has(.hud-panel:hover) #custom-cursor-blur {
+            border-color: rgba(255, 255, 255, 0.3);
+            background: transparent;
+        }
+
+        @keyframes rainbow-dot {
+            0% { background: #ff0055; box-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055; }
+            20% { background: #00f2fe; box-shadow: 0 0 10px #00f2fe, 0 0 20px #00f2fe; }
+            40% { background: #00ff66; box-shadow: 0 0 10px #00ff66, 0 0 20px #00ff66; }
+            60% { background: #ffe259; box-shadow: 0 0 10px #ffe259, 0 0 20px #ffe259; }
+            80% { background: #ff00ff; box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff; }
+            100% { background: #ff0055; box-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055; }
+        }
+        @keyframes rainbow-blur {
+            0% { border-color: rgba(255, 0, 85, 0.6); }
+            20% { border-color: rgba(0, 242, 254, 0.6); }
+            40% { border-color: rgba(0, 255, 102, 0.6); }
+            60% { border-color: rgba(255, 226, 89, 0.6); }
+            80% { border-color: rgba(255, 0, 255, 0.6); }
+            100% { border-color: rgba(255, 0, 85, 0.6); }
+        }
+
+        .click-burst-p {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 10001;
+            will-change: transform, opacity;
+            animation: burstAnim 0.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        @keyframes burstAnim {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0); opacity: 0; }
         }
 
         .container {
             display: flex;
-            flex-direction: column;
+            height: 100vh;
             width: 100vw;
-            min-height: 100vh;
+            overflow: hidden;
             position: relative;
-            background: radial-gradient(circle at 50% 50%, #060814 0%, #020205 100%);
+            will-change: transform;
+        }
+
+        .container.shake {
+            animation: screenShake 0.35s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        .container.terminal-glitch {
+            animation: terminalDistort 0.12s linear infinite;
+        }
+
+        @keyframes screenShake {
+            10%, 90% { transform: translate3d(-2px, -1px, 0); }
+            20%, 80% { transform: translate3d(3px, 1px, 0); }
+            30%, 50%, 70% { transform: translate3d(-5px, -2px, 0); }
+            40%, 60% { transform: translate3d(5px, 2px, 0); }
+        }
+
+        @keyframes terminalDistort {
+            0% { transform: skewX(0deg) scaleY(1); filter: hue-rotate(0deg) contrast(1); }
+            20% { transform: skewX(2deg) scaleY(1.02); filter: hue-rotate(10deg) contrast(1.2); opacity: 0.9; }
+            60% { transform: skewX(-2deg) scaleY(0.98); filter: clip-path(inset(10% 0 30% 0)); }
+            80% { transform: skewX(0deg) scaleY(1); filter: hue-rotate(-10deg); }
+            100% { transform: skewX(0deg) scaleY(1); filter: none; }
+        }
+
+        #impact-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 10000;
+            opacity: 0;
+        }
+        #impact-flash.flash-vn { animation: flashBlue 0.45s ease-out; }
+        #impact-flash.flash-ty { animation: flashGold 0.45s ease-out; }
+
+        @keyframes flashBlue {
+            0% { opacity: 0.4; background: #00f2fe; filter: blur(15px); }
+            100% { opacity: 0; background: transparent; }
+        }
+        @keyframes flashGold {
+            0% { opacity: 0.35; background: #ffe259; filter: blur(15px); }
+            100% { opacity: 0; background: transparent; }
         }
 
         .split {
-            width: 100%;
-            min-height: calc(50vh - 30px);
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 35px 20px;
+            padding: 40px;
             position: relative;
+            transition: flex-grow 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
             overflow: hidden;
             z-index: 1;
+            will-change: flex-grow, filter;
         }
 
         .split::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.05;
+            top: -10%; left: -10%; width: 120%; height: 120%;
+            opacity: 0.06;
             pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            will-change: transform, opacity;
             z-index: 1;
         }
 
@@ -83,340 +225,508 @@
             z-index: 2;
         }
 
+        .split::after {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            z-index: 3;
+            left: var(--x, 50%);
+            top: var(--y, 50%);
+            transform: translate(-50%, -50%);
+            will-change: left, top, opacity;
+        }
+
+        .split:hover {
+            flex-grow: 1.5;
+        }
+        
+        .container:has(.split:hover) .split:not(:hover) {
+            flex-grow: 0.7;
+            filter: blur(6px) brightness(0.2) grayscale(0.7);
+        }
+
         .vn-side {
-            background: linear-gradient(180deg, #030614 0%, #010206 100%);
-            border-bottom: 1px solid rgba(0, 242, 254, 0.05);
+            background: linear-gradient(135deg, #040612 0%, #010102 100%);
         }
         .vn-side::before {
-            background-image: linear-gradient(var(--card-border-vn) 1px, transparent 1px),
-                              linear-gradient(90deg, var(--card-border-vn) 1px, transparent 1px);
-            background-size: 40px 40px;
+            background-image: linear-gradient(rgba(0, 242, 254, 0.12) 1.5px, transparent 1.5px),
+                              linear-gradient(90deg, rgba(0, 242, 254, 0.12) 1.5px, transparent 1.5px);
+            background-size: 60px 60px;
+        }
+        .vn-side::after {
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.25) 0%, transparent 70%);
+        }
+        .vn-side:hover::before {
+            opacity: 0.22;
+            transform: scale(1.05) translate(var(--bg-x, 0px), var(--bg-y, 0px));
+        }
+        .vn-side:hover::after {
+            opacity: 1;
         }
 
         .ty-side {
-            background: linear-gradient(180deg, #140e05 0%, #020100 100%);
-            border-top: 1px solid rgba(255, 170, 0, 0.03);
+            background: linear-gradient(135deg, #0e0b07 0%, #010101 100%);
         }
         .ty-side::before {
-            background-image: linear-gradient(var(--card-border-ty) 1px, transparent 1px),
-                              linear-gradient(90deg, var(--card-border-ty) 1px, transparent 1px);
-            background-size: 40px 40px;
-            opacity: 0.3;
+            background: repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.04), rgba(212, 175, 55, 0.04) 15px, transparent 15px, transparent 30px);
+        }
+        .ty-side::after {
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.18) 0%, transparent 70%);
+        }
+        .ty-side:hover::before {
+            opacity: 0.15;
+            transform: scale(1.05) rotate(1deg) translate(var(--bg-x, 0px), var(--bg-y, 0px));
+        }
+        .ty-side:hover::after {
+            opacity: 1;
         }
 
         .middle-gap {
-            width: 100%;
-            height: 60px;
-            background: #040407;
-            border-top: 1px solid rgba(0, 242, 254, 0.2);
-            border-bottom: 1px solid rgba(255, 170, 0, 0.2);
+            width: 85px;
+            background: #050507;
+            border-left: 1px solid rgba(0, 242, 254, 0.25);
+            border-right: 1px solid rgba(212, 175, 55, 0.25);
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             z-index: 10;
-            box-shadow: 0 0 25px rgba(0,0,0,0.9);
+            box-shadow: 0 0 50px rgba(0,0,0,0.95);
             overflow: hidden;
+        }
+
+        .middle-gap::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to bottom, transparent, rgba(0, 242, 254, 0.2), rgba(212, 175, 55, 0.2), transparent);
+            animation: scanline 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes scanline {
+            0% { top: -100%; }
+            100% { top: 200%; }
         }
         
         .coop-text {
-            font-size: 1.15rem;
+            writing-mode: vertical-lr;
+            text-orientation: upright;
+            font-size: 1.75rem;
             font-weight: 900;
-            letter-spacing: 12px;
-            text-indent: 12px;
-            background: linear-gradient(90deg, var(--vn-primary) 0%, var(--ty-primary) 100%);
+            letter-spacing: 16px;
+            background: linear-gradient(180deg, #00f2fe 0%, #ffe259 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            animation: pulseGlow 1.8s ease-in-out infinite alternate;
+            will-change: transform, filter;
+        }
+
+        @keyframes pulseGlow {
+            0% { filter: drop-shadow(0 0 4px rgba(0, 242, 254, 0.5)) drop-shadow(0 0 8px rgba(212, 175, 55, 0.4)); transform: scale(0.97); }
+            100% { filter: drop-shadow(0 0 16px rgba(0, 242, 254, 0.8)) drop-shadow(0 0 16px rgba(212, 175, 55, 0.7)); transform: scale(1.03); }
+        }
+
+        .container:has(.split:hover) .coop-text {
+            filter: drop-shadow(0 0 25px #00f2fe);
+            transform: scale(1.1) rotate(-3deg);
+        }
+        .container:has(.ty-side:hover) .coop-text {
+            filter: drop-shadow(0 0 25px #ffe259);
+            transform: scale(1.1) rotate(3deg);
         }
 
         .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px 25px;
+            background: rgba(255, 255, 255, 0.01);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 36px;
+            padding: 55px 45px;
             width: 100%;
-            max-width: 350px;
+            max-width: 440px;
             text-align: center;
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.4s, box-shadow 0.4s;
             position: relative;
             z-index: 5;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.65), inset 0 1px 2px rgba(255,255,255,0.03);
+            will-change: transform;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 36px;
+            background: radial-gradient(circle at var(--gloss-x, 50%) var(--gloss-y, 50%), rgba(255, 255, 255, 0.08) 0%, transparent 55%);
+            pointer-events: none;
+            z-index: 6;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            pointer-events: none;
+            z-index: 4;
+            opacity: 0;
         }
 
         .border-glow-path {
             position: absolute;
             inset: 0;
-            border-radius: 24px;
+            border-radius: 36px;
             pointer-events: none;
             z-index: 7;
-            padding: 1.5px;
+            padding: 2px;
             background: transparent;
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s;
         }
 
-        .vn-side .border-glow-path {
-            background: linear-gradient(135deg, var(--vn-primary) 0%, transparent 100%);
+        .vn-side:hover .border-glow-path {
+            opacity: 1;
+            background: conic-gradient(from var(--border-angle, 0deg), transparent 40%, #00f2fe 70%, #4facfe 100%);
+            animation: borderRotate 2s linear infinite;
         }
-        .ty-side .border-glow-path {
-            background: linear-gradient(135deg, var(--ty-primary) 0%, transparent 100%);
+        .ty-side:hover .border-glow-path {
+            opacity: 1;
+            background: conic-gradient(from var(--border-angle, 0deg), transparent 40%, #ffe259 70%, #ffa751 100%);
+            animation: borderRotate 2s linear infinite;
         }
 
-        .vn-side .card { border: 1px solid rgba(0, 242, 254, 0.12); }
-        .ty-side .card { border: 1px solid rgba(255, 170, 0, 0.12); }
-
-        .tech-bracket {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            z-index: 6;
-            pointer-events: none;
+        @property --border-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
         }
-        .bracket-tl { top: 10px; left: 10px; }
-        .bracket-tr { top: 10px; right: 10px; }
-        .bracket-bl { bottom: 10px; left: 10px; }
-        .bracket-br { bottom: 10px; right: 10px; }
 
-        .vn-side .bracket-tl { border-top: 2px solid var(--vn-primary); border-left: 2px solid var(--vn-primary); }
-        .vn-side .bracket-tr { border-top: 2px solid var(--vn-primary); border-right: 2px solid var(--vn-primary); }
-        .vn-side .bracket-bl { border-bottom: 2px solid var(--vn-primary); border-left: 2px solid var(--vn-primary); }
-        .vn-side .bracket-br { border-bottom: 2px solid var(--vn-primary); border-right: 2px solid var(--vn-primary); }
+        @keyframes borderRotate {
+            to { --border-angle: 360deg; }
+        }
 
-        .ty-side .bracket-tl { border-top: 2px solid var(--ty-primary); border-left: 2px solid var(--ty-primary); }
-        .ty-side .bracket-tr { border-top: 2px solid var(--ty-primary); border-right: 2px solid var(--ty-primary); }
-        .ty-side .bracket-bl { border-bottom: 2px solid var(--ty-primary); border-left: 2px solid var(--ty-primary); }
-        .ty-side .bracket-br { border-bottom: 2px solid var(--ty-primary); border-right: 2px solid var(--ty-primary); }
+        .vn-side:hover .card::before {
+            opacity: 1;
+            background: radial-gradient(circle at var(--gloss-x, 50%) var(--gloss-y, 50%), rgba(0, 242, 254, 0.15) 0%, transparent 60%);
+        }
+        .ty-side:hover .card::before {
+            opacity: 1;
+            background: radial-gradient(circle at var(--gloss-x, 50%) var(--gloss-y, 50%), rgba(255, 226, 89, 0.12) 0%, transparent 60%);
+        }
+
+        .vn-side:hover .card::after {
+            background: linear-gradient(to bottom, transparent, rgba(0, 242, 254, 0.25), transparent);
+            animation: cardRadarScan 2.2s linear infinite;
+        }
+        .ty-side:hover .card::after {
+            background: linear-gradient(to bottom, transparent, rgba(255, 226, 89, 0.2), transparent);
+            animation: cardRadarScan 2.2s linear infinite;
+        }
+
+        @keyframes cardRadarScan {
+            0% { top: -20%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 120%; opacity: 0; }
+        }
+
+        .card > * {
+            transform: translateZ(30px);
+        }
+
+        .vn-side .card {
+            border: 1px solid rgba(0, 242, 254, 0.08);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+        }
+        .vn-side:hover .card {
+            border-color: transparent;
+            box-shadow: 0 40px 80px rgba(0, 242, 254, 0.35), inset 0 0 30px rgba(0, 242, 254, 0.15);
+        }
+
+        .ty-side .card {
+            border: 1px solid rgba(212, 175, 55, 0.06);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+        }
+        .ty-side:hover .card {
+            border-color: transparent;
+            box-shadow: 0 40px 80px rgba(212, 175, 55, 0.26), inset 0 0 30px rgba(212, 175, 55, 0.08);
+        }
 
         .logo-text {
-            font-size: 2.65rem;
+            font-size: 4.2rem;
             font-weight: 900;
             letter-spacing: 4px;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
             text-transform: uppercase;
+            transform: translateZ(60px) scale(1);
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            white-space: nowrap;
+        }
+        .split:hover .logo-text {
+            transform: translateZ(80px) scale(1.05);
+        }
+        
+        .vn-side:hover .vn-text {
+            animation: shineText 2.5s linear infinite, glitchText 0.3s linear;
+        }
+        .ty-side:hover .ty-text {
+            animation: shineText 2.5s linear infinite, glitchText 0.3s linear;
+        }
+
+        @keyframes glitchText {
+            0% { transform: translateZ(80px) scale(1.05) skewX(0deg); text-shadow: 2px -1px 0 #ffe259, -2px 1px 0 #00f2fe; }
+            20% { transform: translateZ(80px) scale(1.07) skewX(-3deg); text-shadow: -3px 2px 0 #ffe259, 3px -2px 0 #00f2fe; }
+            40% { transform: translateZ(80px) scale(1.03) skewX(2deg); text-shadow: 1px -2px 0 #ffe259, -1px 2px 0 #00f2fe; }
+            60% { transform: translateZ(80px) scale(1.05) skewX(-1deg); text-shadow: -1px 1px 0 #ffe259, 2px -1px 0 #00f2fe; }
+            80% { transform: translateZ(80px) scale(1.04) skewX(0deg); text-shadow: 2px 1px 0 #ffe259, -2px -1px 0 #00f2fe; }
+            100% { transform: translateZ(80px) scale(1.05) skewX(0deg); text-shadow: none; }
         }
 
         .vn-text {
-            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            background: linear-gradient(45deg, #00f2fe, #4facfe, #00f2fe);
+            background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: shineText 2.5s linear infinite;
         }
         .ty-text {
-            background: linear-gradient(45deg, #ffaa00, #ff7700);
+            background: linear-gradient(45deg, #ffe259, #ffa751, #ffe259);
+            background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: shineText 2.5s linear infinite;
+        }
+
+        @keyframes shineText {
+            to { background-position: 200% center; }
         }
 
         .sub-title {
-            font-size: 0.9rem;
+            font-size: 1.05rem;
             font-weight: 800;
-            letter-spacing: 6px;
+            letter-spacing: 7px;
             text-transform: uppercase;
-            margin-bottom: 22px;
+            margin-bottom: 30px;
             position: relative;
             display: inline-block;
+            transform: translateZ(40px);
         }
         
         .sub-title::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: -8px;
             left: 50%;
-            width: 75%;
-            height: 1.5px;
+            width: 0;
+            height: 2px;
             transform: translateX(-50%);
+            transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .vn-side .sub-title::after { background: var(--vn-primary); }
-        .ty-side .sub-title::after { background: var(--ty-primary); }
+        .vn-side:hover .sub-title::after { width: 90%; background: #00f2fe; box-shadow: 0 0 8px #00f2fe; }
+        .ty-side:hover .sub-title::after { width: 90%; background: #ffe259; box-shadow: 0 0 8px #ffe259; }
 
-        .vn-side .sub-title { color: rgba(0, 242, 254, 0.8); }
-        .ty-side .sub-title { color: rgba(255, 170, 0, 0.8); }
+        .vn-side .sub-title { color: rgba(0, 242, 254, 0.85); text-shadow: 0 0 10px rgba(0,242,254,0.3); }
+        .ty-side .sub-title { color: rgba(212, 175, 55, 0.85); text-shadow: 0 0 10px rgba(212,175,55,0.3); }
 
         .desc {
-            font-size: 0.92rem;
-            line-height: 1.65;
-            color: #ced4da;
-            margin-bottom: 25px;
-            padding: 0 5px;
-            text-align: justify;
+            font-size: 1rem;
+            line-height: 1.75;
+            color: #b0b0b8;
+            margin-bottom: 35px;
+            transform: translateZ(35px);
+            transition: color 0.3s ease;
+        }
+        .split:hover .desc {
+            color: #fff;
         }
 
         .difficulty-box {
-            border-radius: 14px;
-            padding: 12px 18px;
-            font-size: 1rem;
+            border-radius: 24px;
+            padding: 15px 28px;
+            font-size: 1.15rem;
             font-weight: 800;
-            letter-spacing: 2px;
-            margin-bottom: 25px;
+            letter-spacing: 4px;
+            margin-bottom: 35px;
             display: inline-block;
             width: 100%;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            transform: translateZ(45px);
+        }
+
+        .difficulty-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        }
+        .split:hover .difficulty-box::before {
+            left: 150%;
+            transition: left 1s ease;
         }
 
         .vn-box {
-            background: rgba(0, 242, 254, 0.05);
-            border: 1px solid rgba(0, 242, 254, 0.35);
-            color: var(--vn-primary);
+            background: rgba(0, 242, 254, 0.01);
+            border: 1px dashed rgba(0, 242, 254, 0.3);
+            color: #00f2fe;
+            text-shadow: 0 0 8px rgba(0,242,254,0.3);
+        }
+        .vn-side:hover .vn-box {
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid #00f2fe;
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.35), inset 0 0 15px rgba(0, 242, 254, 0.15);
+            transform: scale(1.03) translateZ(55px);
         }
 
         .ty-box {
-            background: rgba(255, 170, 0, 0.05);
-            border: 1px solid rgba(255, 170, 0, 0.35);
-            color: var(--ty-primary);
+            background: rgba(212, 175, 55, 0.01);
+            border: 1px dashed rgba(212, 175, 55, 0.25);
+            color: #ffe259;
+            text-shadow: 0 0 8px rgba(212,175,55,0.3);
+        }
+        .ty-side:hover .ty-box {
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid #ffe259;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3), inset 0 0 15px rgba(212, 175, 55, 0.1);
+            transform: scale(1.03) translateZ(55px);
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 16px 28px;
-            font-size: 0.95rem;
+            padding: 16px 32px;
+            font-size: 1.05rem;
             font-weight: 800;
             text-decoration: none;
             border-radius: 50px;
             width: 100%;
-            letter-spacing: 2px;
-            position: relative;
-            overflow: hidden;
+            letter-spacing: 3px;
+            translate: var(--mag-x, 0px) var(--mag-y, 0px);
+            transform: translateZ(50px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2), background 0.4s, color 0.4s, box-shadow 0.4s, border-color 0.4s;
+            will-change: translate, transform;
         }
 
         .btn-vn {
             background: linear-gradient(45deg, #00f2fe, #4facfe);
-            color: #020205;
+            color: #010103;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+        }
+        .btn-vn:hover {
+            transform: translateY(-6px) scale(1.03) translateZ(75px);
+            box-shadow: 0 20px 35px rgba(0, 242, 254, 0.55), 0 0 15px rgba(0, 242, 254, 0.3);
         }
 
         .btn-ty {
-            background: linear-gradient(45deg, #ffaa00, #ff7700);
-            color: #020205;
+            background: transparent;
+            color: #ffe259;
+            border: 2px solid #ffe259;
+        }
+        .btn-ty:hover {
+            background: linear-gradient(45deg, #ffe259, #ffa751);
+            color: #010102;
+            transform: translateY(-6px) scale(1.03) translateZ(75px);
+            box-shadow: 0 20px 35px rgba(212, 175, 55, 0.45), 0 0 15px rgba(212, 175, 55, 0.25);
+            border-color: transparent;
         }
 
-        .hud-overlay {
+        .hud-panel {
             position: fixed;
-            top: 15px;
-            right: 15px;
-            background: rgba(4, 4, 8, 0.7);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 8px 12px;
-            z-index: 1000;
+            top: 25px;
+            right: 25px;
+            background: rgba(5, 5, 10, 0.65);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 14px 20px;
+            z-index: 10005;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            pointer-events: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .hud-monitor {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
             display: flex;
             flex-direction: column;
             gap: 2px;
-            pointer-events: none;
+            min-width: 105px;
         }
 
-        .hud-item {
-            font-family: monospace;
-            font-size: 0.65rem;
-            color: rgba(255, 255, 255, 0.5);
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .hud-val {
-            color: var(--vn-primary);
+        .hud-value {
+            color: #00f2fe;
             font-weight: bold;
         }
 
-        .deco-bar {
-            position: absolute;
-            left: 0;
-            width: 4px;
-            height: 35px;
-            border-radius: 0 4px 4px 0;
-        }
-        .vn-side .deco-bar {
-            background: var(--vn-primary);
-            top: 25%;
-        }
-        .ty-side .deco-bar {
-            background: var(--ty-primary);
-            top: 75%;
+        .hud-toggle {
+            background: transparent;
+            border: 1px solid #ff7300;
+            color: #ff7300;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(255, 115, 0, 0.2);
         }
 
-        .grid-bg-overlay {
-            position: absolute;
-            inset: 0;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255, 255, 255, 0.005) 1px, transparent 1px);
-            background-size: 20px 20px;
-            pointer-events: none;
-            z-index: 1;
+        .hud-toggle.audio-on {
+            border-color: #00ff66;
+            color: #00ff66;
+            box-shadow: 0 0 8px rgba(0, 255, 102, 0.2);
         }
-
-        .status-stamp {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            border: 2px solid rgba(255, 170, 0, 0.6);
-            color: rgba(255, 170, 0, 0.8);
-            padding: 4px 8px;
-            font-size: 0.7rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-radius: 6px;
-            background: rgba(20, 12, 5, 0.4);
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .tech-line-1 { position: absolute; top: 0; left: 10%; width: 1px; height: 100%; background: linear-gradient(180deg, transparent, rgba(0, 242, 254, 0.03), transparent); pointer-events: none; }
-        .tech-line-2 { position: absolute; top: 0; left: 30%; width: 1px; height: 100%; background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.02), transparent); pointer-events: none; }
-        .tech-line-3 { position: absolute; top: 0; left: 70%; width: 1px; height: 100%; background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.02), transparent); pointer-events: none; }
-        .tech-line-4 { position: absolute; top: 0; left: 90%; width: 1px; height: 100%; background: linear-gradient(180deg, transparent, rgba(255, 170, 0, 0.03), transparent); pointer-events: none; }
-
-        .sub-panel-1 { width: 100%; height: 2px; background: linear-gradient(90deg, transparent, rgba(0,242,254,0.1), transparent); margin-bottom: 5px; }
-        .sub-panel-2 { width: 100%; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,170,0,0.1), transparent); margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="hud-overlay">
-        <div class="hud-item">
-            <span>CORE_SYS:</span>
-            <span class="hud-val" style="color: #00ff66;">ACTIVE</span>
+    <div id="custom-cursor"></div>
+    <div id="custom-cursor-blur"></div>
+    <div id="impact-flash"></div>
+
+    <div class="hud-panel">
+        <div class="hud-monitor">
+            <div>SYS_STATUS: <span class="hud-value" style="color: #00ff66;">ONLINE</span></div>
+            <div>FPS: <span id="fpsVal" class="hud-value">--</span></div>
+            <div>PING: <span id="pingVal" class="hud-value">--</span> ms</div>
         </div>
-        <div class="hud-item">
-            <span>FPS_MTR:</span>
-            <span id="mobileFps" class="hud-val">60</span>
-        </div>
-        <div class="hud-item">
-            <span>LATENCY:</span>
-            <span id="mobilePing" class="hud-val">12ms</span>
-        </div>
-        <div class="hud-item">
-            <span>TY_LINK:</span>
-            <span class="hud-val" style="color: #00ff66;">ONLINE</span>
-        </div>
+        <button class="hud-toggle audio-on" id="audioToggle">AUDIO: ON</button>
     </div>
 
     <div class="container" id="mainContainer">
-        <div class="grid-bg-overlay"></div>
-        <div class="tech-line-1"></div>
-        <div class="tech-line-2"></div>
-        <div class="tech-line-3"></div>
-        <div class="tech-line-4"></div>
         
         <div class="split vn-side" id="vnSide">
-            <div class="deco-bar"></div>
             <canvas id="vnCanvas" class="particles-canvas"></canvas>
             <div class="card">
                 <div class="border-glow-path"></div>
-                <div class="tech-bracket bracket-tl"></div>
-                <div class="tech-bracket bracket-tr"></div>
-                <div class="tech-bracket bracket-bl"></div>
-                <div class="tech-bracket bracket-br"></div>
-                
                 <div class="logo-text vn-text">VN CLAN</div>
-                <div class="sub-panel-1"></div>
                 <div class="sub-title">EST 2026</div>
                 <p class="desc">
-                    不錯的戰隊。適合給喜歡有挑戰性的Rivals玩家。每個成員都品行優良。
+                    不錯的戰對。適合給喜歡有挑戰性的Rivals玩家。每個成員都品行優良。
                 </p>
                 <div class="difficulty-box vn-box">考核難度：比較難考</div>
                 <a href="https://discord.gg/UNRVAcKmD3" target="_blank" class="btn btn-vn" id="vnBtn">
@@ -426,385 +736,488 @@
         </div>
 
         <div class="middle-gap" id="middleGap">
-            <div class="coop-text">雙強聯動</div>
+            <div class="coop-text">合作中</div>
         </div>
 
         <div class="split ty-side" id="tySide">
-            <div class="deco-bar"></div>
             <canvas id="tyCanvas" class="particles-canvas"></canvas>
             <div class="card">
-                <div class="status-stamp" style="border-color: rgba(0, 255, 102, 0.6); color: rgba(0, 255, 102, 0.9);">ONLINE</div>
                 <div class="border-glow-path"></div>
-                <div class="tech-bracket bracket-tl"></div>
-                <div class="tech-bracket bracket-tr"></div>
-                <div class="tech-bracket bracket-bl"></div>
-                <div class="tech-bracket bracket-br"></div>
-
                 <div class="logo-text ty-text">TY CLAN</div>
-                <div class="sub-panel-2"></div>
                 <div class="sub-title">EST 2026</div>
                 <p class="desc">
-                    戰隊已全面恢復運作！全新架構與社群體系已正式上線。歡迎頂尖 Rivals 玩家加入我們，一同征戰聯賽與建立輝煌。
+                    很棒的戰對。適合給想要考戰對可是又找不到好的戰對的Rivals玩家。每個成員都品行優良。
                 </p>
-                <div class="difficulty-box ty-box">狀態：開放招募中</div>
+                <div class="difficulty-box ty-box">考核難度：比較簡單</div>
                 <a href="https://discord.gg/9xCn6jQhfm" target="_blank" class="btn btn-ty" id="tyBtn">
-                    進入 TY DISCORD 伺服器
+                    進入 DISCORD 伺服器
                 </a>
             </div>
         </div>
+
     </div>
 
     <script>
-        const vnCanvas = document.getElementById('vnCanvas');
-        const tyCanvas = document.getElementById('tyCanvas');
+        const cursor = document.getElementById('custom-cursor');
+        const cursorBlur = document.getElementById('custom-cursor-blur');
         const vnSide = document.getElementById('vnSide');
         const tySide = document.getElementById('tySide');
+        const middleGap = document.getElementById('middleGap');
+        const mainContainer = document.getElementById('mainContainer');
+        const flashOverlay = document.getElementById('impact-flash');
+        const vnCanvas = document.getElementById('vnCanvas');
+        const tyCanvas = document.getElementById('tyCanvas');
+        const vnBtn = document.getElementById('vnBtn');
+        const tyBtn = document.getElementById('tyBtn');
+        const audioToggle = document.getElementById('audioToggle');
+        const fpsVal = document.getElementById('fpsVal');
+        const pingVal = document.getElementById('pingVal');
         
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let cursorX = mouseX;
+        let cursorY = mouseY;
+        let currentHash = '';
+
+        let vnBtnMag = { cx: 0, cy: 0, tx: 0, ty: 0 };
+        let tyBtnMag = { cx: 0, cy: 0, tx: 0, ty: 0 };
+
         const vnCtx = vnCanvas.getContext('2d');
         const tyCtx = tyCanvas.getContext('2d');
+        let vnParticles = [];
+        let tyParticles = [];
+        let shockwaves = [];
+
+        let audioCtx = null;
+        let audioMuted = false;
+
+        let lastFrameTime = performance.now();
+        let frameCount = 0;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSynthSound(type) {
+            if (audioMuted) return;
+            try {
+                initAudio();
+                if (!audioCtx) return;
+                
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                if (type === 'hover') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(1320, audioCtx.currentTime + 0.06);
+                    gainNode.gain.setValueAtTime(0.015, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.06);
+                } else if (type === 'click') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(160, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.12);
+                    gainNode.gain.setValueAtTime(0.18, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.12);
+                } else if (type === 'switch') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(80, audioCtx.currentTime + 0.25);
+                    gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.25);
+                }
+            } catch (e) {}
+        }
+
+        audioToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            audioMuted = !audioMuted;
+            if (audioMuted) {
+                audioToggle.classList.remove('audio-on');
+                audioToggle.innerText = 'AUDIO: OFF';
+            } else {
+                audioToggle.classList.add('audio-on');
+                audioToggle.innerText = 'AUDIO: ON';
+                playSynthSound('hover');
+            }
+        });
 
         function resizeCanvases() {
-            vnCanvas.width = vnSide.clientWidth;
-            vnCanvas.height = vnSide.clientHeight;
-            tyCanvas.width = tySide.clientWidth;
-            tyCanvas.height = tySide.clientHeight;
+            vnCanvas.width = vnSide.offsetWidth;
+            vnCanvas.height = vnSide.offsetHeight;
+            tyCanvas.width = tySide.offsetWidth;
+            tyCanvas.height = tySide.offsetHeight;
         }
 
-        function drawStaticField(ctx, w, h, color) {
-            ctx.clearRect(0, 0, w, h);
-            let count = 25;
-            for (let i = 0; i < count; i++) {
-                let x = Math.random() * w;
-                let y = Math.random() * h;
-                let size = Math.random() * 2.5 + 1;
+        function createParticle(sideType) {
+            const w = sideType === 'vn' ? vnCanvas.width : tyCanvas.width;
+            const h = sideType === 'vn' ? vnCanvas.height : tyCanvas.height;
+            return {
+                x: Math.random() * w,
+                y: h + Math.random() * 30,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: -(Math.random() * 0.8 + 0.4),
+                size: sideType === 'vn' ? Math.random() * 5 + 2 : Math.random() * 3.5 + 1.5,
+                opacity: Math.random() * 0.4 + 0.15,
+                maxLife: Math.random() * 250 + 150,
+                life: 0
+            };
+        }
+
+        function initParticles() {
+            resizeCanvases();
+            for (let i = 0; i < 35; i++) {
+                let pVn = createParticle('vn');
+                pVn.y = Math.random() * vnCanvas.height;
+                vnParticles.push(pVn);
+
+                let pTy = createParticle('ty');
+                pTy.y = Math.random() * tyCanvas.height;
+                tyParticles.push(pTy);
+            }
+        }
+
+        function drawParticles(ctx, canvas, list, sideType) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const rect = canvas.getBoundingClientRect();
+            const mX = mouseX - rect.left;
+            const mY = mouseY - rect.top;
+
+            for (let i = 0; i < list.length; i++) {
+                let p = list[i];
+                
+                let dx = p.x - mX;
+                let dy = p.y - mY;
+                let dist = Math.hypot(dx, dy);
+                let pushX = 0;
+                let pushY = 0;
+
+                if (dist < 120 && mouseX >= rect.left && mouseX <= rect.right) {
+                    let force = (120 - dist) / 120;
+                    pushX = (dx / dist) * force * 1.8;
+                    pushY = (dy / dist) * force * 1.8;
+                }
+
+                shockwaves.forEach(wave => {
+                    let sdx = (wave.x - rect.left) - p.x;
+                    let sdy = wave.y - p.y;
+                    let sdist = Math.hypot(sdx, sdy);
+                    if (Math.abs(sdist - wave.currentRadius) < 30) {
+                        let waveForce = (1 - (wave.currentRadius / wave.maxRadius)) * 6;
+                        p.x -= (sdx / sdist) * waveForce;
+                        p.y -= (sdy / sdist) * waveForce;
+                    }
+                });
+
+                p.x += p.vx + pushX;
+                p.y += p.vy + pushY;
+                p.life++;
+
+                if (p.y < -10 || p.life > p.maxLife || p.x < -10 || p.x > canvas.width + 10) {
+                    list[i] = createParticle(sideType);
+                    p = list[i];
+                }
+
+                ctx.fillStyle = sideType === 'vn' ? `rgba(0, 242, 254, ${p.opacity})` : `rgba(255, 226, 89, ${p.opacity})`;
                 ctx.beginPath();
-                ctx.arc(x, y, size, 0, Math.PI * 2);
-                ctx.fillStyle = color;
-                ctx.globalAlpha = Math.random() * 0.15 + 0.05;
-                ctx.fill();
+                if (sideType === 'vn') {
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                } else {
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
-            ctx.globalAlpha = 1.0;
+
+            shockwaves.forEach(wave => {
+                ctx.strokeStyle = sideType === 'vn' ? `rgba(0, 242, 254, ${1 - (wave.currentRadius / wave.maxRadius)})` : `rgba(255, 226, 89, ${1 - (wave.currentRadius / wave.maxRadius)})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(wave.x - rect.left, wave.y, wave.currentRadius, 0, Math.PI * 2);
+                ctx.stroke();
+            });
         }
 
-        window.addEventListener('resize', () => {
-            resizeCanvases();
-            drawStaticField(vnCtx, vnCanvas.width, vnCanvas.height, '#00f2fe');
-            drawStaticField(tyCtx, tyCanvas.width, tyCanvas.height, '#ffaa00');
-        });
-
-        window.addEventListener('DOMContentLoaded', () => {
-            resizeCanvases();
-            drawStaticField(vnCtx, vnCanvas.width, vnCanvas.height, '#00f2fe');
-            drawStaticField(tyCtx, tyCanvas.width, tyCanvas.height, '#ffaa00');
-        });
-
-        function verifier001(){return true;}
-        function verifier002(){return true;}
-        function verifier003(){return true;}
-        function verifier004(){return true;}
-        function verifier005(){return true;}
-        function verifier006(){return true;}
-        function verifier007(){return true;}
-        function verifier008(){return true;}
-        function verifier009(){return true;}
-        function verifier010(){return true;}
-        function verifier011(){return true;}
-        function verifier012(){return true;}
-        function verifier013(){return true;}
-        function verifier014(){return true;}
-        function verifier015(){return true;}
-        function verifier016(){return true;}
-        function verifier017(){return true;}
-        function verifier018(){return true;}
-        function verifier019(){return true;}
-        function verifier020(){return true;}
-        function verifier021(){return true;}
-        function verifier022(){return true;}
-        function verifier023(){return true;}
-        function verifier024(){return true;}
-        function verifier025(){return true;}
-        function verifier026(){return true;}
-        function verifier027(){return true;}
-        function verifier028(){return true;}
-        function verifier029(){return true;}
-        function verifier030(){return true;}
-        function verifier031(){return true;}
-        function verifier032(){return true;}
-        function verifier033(){return true;}
-        function verifier034(){return true;}
-        function verifier035(){return true;}
-        function verifier036(){return true;}
-        function verifier037(){return true;}
-        function verifier038(){return true;}
-        function verifier039(){return true;}
-        function verifier040(){return true;}
-        function verifier041(){return true;}
-        function verifier042(){return true;}
-        function verifier043(){return true;}
-        function verifier044(){return true;}
-        function verifier045(){return true;}
-        function verifier046(){return true;}
-        function verifier047(){return true;}
-        function verifier048(){return true;}
-        function verifier049(){return true;}
-        function verifier050(){return true;}
-        function verifier051(){return true;}
-        function verifier052(){return true;}
-        function verifier053(){return true;}
-        function verifier054(){return true;}
-        function verifier055(){return true;}
-        function verifier056(){return true;}
-        function verifier057(){return true;}
-        function verifier058(){return true;}
-        function verifier059(){return true;}
-        function verifier060(){return true;}
-        function verifier061(){return true;}
-        function verifier062(){return true;}
-        function verifier063(){return true;}
-        function verifier064(){return true;}
-        function verifier065(){return true;}
-        function verifier066(){return true;}
-        function verifier067(){return true;}
-        function verifier068(){return true;}
-        function verifier069(){return true;}
-        function verifier070(){return true;}
-        function verifier071(){return true;}
-        function verifier072(){return true;}
-        function verifier073(){return true;}
-        function verifier074(){return true;}
-        function verifier075(){return true;}
-        function verifier076(){return true;}
-        function verifier077(){return true;}
-        function verifier078(){return true;}
-        function verifier079(){return true;}
-        function verifier080(){return true;}
-        function verifier081(){return true;}
-        function verifier082(){return true;}
-        function verifier083(){return true;}
-        function verifier084(){return true;}
-        function verifier085(){return true;}
-        function verifier086(){return true;}
-        function verifier087(){return true;}
-        function verifier088(){return true;}
-        function verifier089(){return true;}
-        function verifier090(){return true;}
-        function verifier091(){return true;}
-        function verifier092(){return true;}
-        function verifier093(){return true;}
-        function verifier094(){return true;}
-        function verifier095(){return true;}
-        function verifier096(){return true;}
-        function verifier097(){return true;}
-        function verifier098(){return true;}
-        function verifier099(){return true;}
-        function verifier100(){return true;}
-        function verifier101(){return true;}
-        function verifier102(){return true;}
-        function verifier103(){return true;}
-        function verifier104(){return true;}
-        function verifier105(){return true;}
-        function verifier106(){return true;}
-        function verifier107(){return true;}
-        function verifier108(){return true;}
-        function verifier109(){return true;}
-        function verifier110(){return true;}
-        function verifier111(){return true;}
-        function verifier112(){return true;}
-        function verifier113(){return true;}
-        function verifier114(){return true;}
-        function verifier115(){return true;}
-        function verifier116(){return true;}
-        function verifier117(){return true;}
-        function verifier118(){return true;}
-        function verifier119(){return true;}
-        function verifier120(){return true;}
-        function verifier121(){return true;}
-        function verifier122(){return true;}
-        function verifier123(){return true;}
-        function verifier124(){return true;}
-        function verifier125(){return true;}
-        function verifier126(){return true;}
-        function verifier127(){return true;}
-        function verifier128(){return true;}
-        function verifier129(){return true;}
-        function verifier130(){return true;}
-        function verifier131(){return true;}
-        function verifier132(){return true;}
-        function verifier133(){return true;}
-        function verifier134(){return true;}
-        function verifier135(){return true;}
-        function verifier136(){return true;}
-        function verifier137(){return true;}
-        function verifier138(){return true;}
-        function verifier139(){return true;}
-        function verifier140(){return true;}
-        function verifier141(){return true;}
-        function verifier142(){return true;}
-        function verifier143(){return true;}
-        function verifier144(){return true;}
-        function verifier145(){return true;}
-        function verifier146(){return true;}
-        function verifier147(){return true;}
-        function verifier148(){return true;}
-        function verifier149(){return true;}
-        function verifier150(){return true;}
-        function verifier151(){return true;}
-        function verifier152(){return true;}
-        function verifier153(){return true;}
-        function verifier154(){return true;}
-        function verifier155(){return true;}
-        function verifier156(){return true;}
-        function verifier157(){return true;}
-        function verifier158(){return true;}
-        function verifier159(){return true;}
-        function verifier160(){return true;}
-        function verifier161(){return true;}
-        function verifier162(){return true;}
-        function verifier163(){return true;}
-        function verifier164(){return true;}
-        function verifier165(){return true;}
-        function verifier166(){return true;}
-        function verifier167(){return true;}
-        function verifier168(){return true;}
-        function verifier169(){return true;}
-        function verifier170(){return true;}
-        function verifier171(){return true;}
-        function verifier172(){return true;}
-        function verifier173(){return true;}
-        function verifier174(){return true;}
-        function verifier175(){return true;}
-        function verifier176(){return true;}
-        function verifier177(){return true;}
-        function verifier178(){return true;}
-        function verifier179(){return true;}
-        function verifier180(){return true;}
-        function verifier181(){return true;}
-        function verifier182(){return true;}
-        function verifier183(){return true;}
-        function verifier184(){return true;}
-        function verifier185(){return true;}
-        function verifier186(){return true;}
-        function verifier187(){return true;}
-        function verifier188(){return true;}
-        function verifier189(){return true;}
-        function verifier190(){return true;}
-        function verifier191(){return true;}
-        function verifier192(){return true;}
-        function verifier193(){return true;}
-        function verifier194(){return true;}
-        function verifier195(){return true;}
-        function verifier196(){return true;}
-        function verifier197(){return true;}
-        function verifier198(){return true;}
-        function verifier199(){return true;}
-        function verifier200(){return true;}
-        function verifier201(){return true;}
-        function verifier202(){return true;}
-        function verifier203(){return true;}
-        function verifier204(){return true;}
-        function verifier205(){return true;}
-        function verifier206(){return true;}
-        function verifier207(){return true;}
-        function verifier208(){return true;}
-        function verifier209(){return true;}
-        function verifier210(){return true;}
-        function verifier211(){return true;}
-        function verifier212(){return true;}
-        function verifier213(){return true;}
-        function verifier214(){return true;}
-        function verifier215(){return true;}
-        function verifier216(){return true;}
-        function verifier217(){return true;}
-        function verifier218(){return true;}
-        function verifier219(){return true;}
-        function verifier220(){return true;}
-        function verifier221(){return true;}
-        function verifier222(){return true;}
-        function verifier223(){return true;}
-        function verifier224(){return true;}
-        function verifier225(){return true;}
-        function verifier226(){return true;}
-        function verifier227(){return true;}
-        function verifier228(){return true;}
-        function verifier229(){return true;}
-        function verifier230(){return true;}
-        function verifier231(){return true;}
-        function verifier232(){return true;}
-        function verifier233(){return true;}
-        function verifier234(){return true;}
-        function verifier235(){return true;}
-        function verifier236(){return true;}
-        function verifier237(){return true;}
-        function verifier238(){return true;}
-        function verifier239(){return true;}
-        function verifier240(){return true;}
-        function verifier241(){return true;}
-        function verifier242(){return true;}
-        function verifier243(){return true;}
-        function verifier244(){return true;}
-        function verifier245(){return true;}
-        function verifier246(){return true;}
-        function verifier247(){return true;}
-        function verifier248(){return true;}
-        function verifier249(){return true;}
-        function verifier250(){return true;}
-        function verifier251(){return true;}
-        function verifier252(){return true;}
-        function verifier253(){return true;}
-        function verifier254(){return true;}
-        function verifier255(){return true;}
-        function verifier256(){return true;}
-        function verifier257(){return true;}
-        function verifier258(){return true;}
-        function verifier259(){return true;}
-        function verifier260(){return true;}
-        function verifier261(){return true;}
-        function verifier262(){return true;}
-        function verifier263(){return true;}
-        function verifier264(){return true;}
-        function verifier265(){return true;}
-        function verifier266(){return true;}
-        function verifier267(){return true;}
-        function verifier268(){return true;}
-        function verifier269(){return true;}
-        function verifier270(){return true;}
-        function verifier271(){return true;}
-        function verifier272(){return true;}
-        function verifier273(){return true;}
-        function verifier274(){return true;}
-        function verifier275(){return true;}
-        function verifier276(){return true;}
-        function verifier277(){return true;}
-        function verifier278(){return true;}
-        function verifier279(){return true;}
-        function verifier280(){return true;}
-        function verifier281(){return true;}
-        function verifier282(){return true;}
-        function verifier283(){return true;}
-        function verifier284(){return true;}
-        function verifier285(){return true;}
-        function verifier286(){return true;}
-        function verifier287(){return true;}
-        function verifier288(){return true;}
-        function verifier289(){return true;}
-        function verifier290(){return true;}
-        function verifier291(){return true;}
-        function verifier292(){return true;}
-        function verifier293(){return true;}
-        function verifier294(){return true;}
-        function verifier295(){return true;}
-        function verifier296(){return true;}
-        function verifier297(){return true;}
-        function verifier298(){return true;}
-        function verifier299(){return true;}
-        function verifier300(){return true;}
-        function checkState(){
-            if(verifier100() && verifier200() && verifier300()){
-                return 1;
+        const scrambleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+?";
+        function triggerScramble(el) {
+            if (!el) return;
+            const targetText = el.getAttribute('data-origin') || el.innerText;
+            if (!el.getAttribute('data-origin')) {
+                el.setAttribute('data-origin', targetText);
             }
-            return 0;
+            let currentIteration = 0;
+            clearInterval(el.scrambleTimer);
+            el.scrambleTimer = setInterval(() => {
+                el.innerText = targetText.split("").map((char, idx) => {
+                    if (char === " " || char === "：" || char === "X") return char;
+                    if (idx < currentIteration) return targetText[idx];
+                    return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+                }).join("");
+                if (currentIteration >= targetText.length) {
+                    clearInterval(el.scrambleTimer);
+                }
+                currentIteration += targetText.length / 12;
+            }, 30);
         }
-        checkState();
+
+        function calculateMagnetic(btn, data) {
+            const rect = btn.getBoundingClientRect();
+            const bx = rect.left + rect.width / 2;
+            const by = rect.top + rect.height / 2;
+            const dist = Math.hypot(mouseX - bx, mouseY - by);
+            if (dist < 130) {
+                data.tx = (mouseX - bx) * 0.38;
+                data.ty = (mouseY - by) * 0.38;
+            } else {
+                data.tx = 0;
+                data.ty = 0;
+            }
+            data.cx += (data.tx - data.cx) * 0.12;
+            data.cy += (data.ty - data.cy) * 0.12;
+            btn.style.setProperty('--mag-x', `${data.cx}px`);
+            btn.style.setProperty('--mag-y', `${data.cy}px`);
+        }
+
+        function triggerFlashAndShake(side) {
+            flashOverlay.className = '';
+            void flashOverlay.offsetWidth;
+            flashOverlay.classList.add(side === 'vn' ? 'flash-vn' : 'flash-ty');
+
+            mainContainer.classList.remove('shake');
+            void mainContainer.offsetWidth;
+            mainContainer.classList.add('shake');
+            setTimeout(() => mainContainer.classList.remove('shake'), 350);
+            playSynthSound('switch');
+        }
+
+        function createClickBurst(x, y) {
+            let color = '#ff7300';
+            let shadow = '#ffaa00';
+            let isRainbow = false;
+
+            if (currentHash === '#VN-CLAN') {
+                color = '#00f2fe';
+                shadow = '#4facfe';
+            } else if (currentHash === '#TY-CLAN') {
+                color = '#ffe259';
+                shadow = '#ffa751';
+            } else {
+                const rect = middleGap.getBoundingClientRect();
+                if (x >= rect.left && x <= rect.right) {
+                    isRainbow = true;
+                }
+            }
+
+            shockwaves.push({
+                x: x,
+                y: y,
+                currentRadius: 0,
+                maxRadius: 280,
+                speed: 8
+            });
+
+            const count = 12;
+            const rainbowColors = ['#ff0055', '#00f2fe', '#00ff66', '#ffe259', '#ff00ff'];
+
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('div');
+                p.classList.add('click-burst-p');
+                
+                const size = Math.random() * 6 + 4;
+                p.style.width = `${size}px`;
+                p.style.height = `${size}px`;
+                
+                if (isRainbow) {
+                    const rc = rainbowColors[Math.floor(Math.random() * rainbowColors.length)];
+                    p.style.background = rc;
+                    p.style.boxShadow = `0 0 8px ${rc}`;
+                } else {
+                    p.style.background = color;
+                    p.style.boxShadow = `0 0 8px ${shadow}`;
+                }
+
+                p.style.left = `${x}px`;
+                p.style.top = `${y}px`;
+
+                const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+                const speed = Math.random() * 55 + 45;
+                const dx = Math.cos(angle) * speed;
+                const dy = Math.sin(angle) * speed;
+
+                p.style.setProperty('--dx', `${dx}px`);
+                p.style.setProperty('--dy', `${dy}px`);
+
+                document.body.appendChild(p);
+                p.addEventListener('animationend', () => p.remove());
+            }
+            playSynthSound('click');
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            updateUrlHash();
+        });
+
+        window.addEventListener('click', (e) => {
+            createClickBurst(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('resize', resizeCanvases);
+        window.addEventListener('mousedown', () => document.body.classList.add('cursor-clicking'));
+        window.addEventListener('mouseup', () => document.body.classList.remove('cursor-clicking'));
+
+        vnSide.addEventListener('mouseenter', () => {
+            triggerScramble(vnSide.querySelector('.vn-text'));
+            triggerScramble(vnSide.querySelector('.vn-box'));
+            playSynthSound('hover');
+        });
+        tySide.addEventListener('mouseenter', () => {
+            triggerScramble(tySide.querySelector('.ty-text'));
+            triggerScramble(tySide.querySelector('.ty-box'));
+            playSynthSound('hover');
+        });
+
+        function triggerTerminalGlitch() {
+            mainContainer.classList.add('terminal-glitch');
+            setTimeout(() => {
+                mainContainer.classList.remove('terminal-glitch');
+            }, 100);
+        }
+
+        setInterval(() => {
+            if (Math.random() > 0.4) {
+                triggerTerminalGlitch();
+            }
+        }, 4500);
+
+        setInterval(() => {
+            pingVal.innerText = Math.floor(Math.random() * 6) + 12;
+        }, 1500);
+
+        function updateVisuals() {
+            const now = performance.now();
+            frameCount++;
+            if (now >= lastFrameTime + 1000) {
+                fpsVal.innerText = frameCount;
+                frameCount = 0;
+                lastFrameTime = now;
+            }
+
+            for (let i = shockwaves.length - 1; i >= 0; i--) {
+                shockwaves[i].currentRadius += shockwaves[i].speed;
+                if (shockwaves[i].currentRadius > shockwaves[i].maxRadius) {
+                    shockwaves.splice(i, 1);
+                }
+            }
+
+            cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+            
+            cursorX += (mouseX - cursorX) * 0.25;
+            cursorY += (mouseY - cursorY) * 0.25;
+            cursorBlur.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+
+            calculateMagnetic(vnBtn, vnBtnMag);
+            calculateMagnetic(tyBtn, tyBtnMag);
+
+            drawParticles(vnCtx, vnCanvas, vnParticles, 'vn');
+            drawParticles(tyCtx, tyCanvas, tyParticles, 'ty');
+
+            handleSideEffects(vnSide);
+            handleSideEffects(tySide);
+
+            requestAnimationFrame(updateVisuals);
+        }
+
+        function updateUrlHash() {
+            const vnRect = vnSide.getBoundingClientRect();
+            const tyRect = tySide.getBoundingClientRect();
+
+            if (mouseX >= vnRect.left && mouseX <= vnRect.right && mouseY >= vnRect.top && mouseY <= vnRect.bottom) {
+                if (currentHash !== '#VN-CLAN') {
+                    triggerFlashAndShake('vn');
+                    history.replaceState(null, '', '#VN-CLAN');
+                    currentHash = '#VN-CLAN';
+                }
+            } else if (mouseX >= tyRect.left && mouseX <= tyRect.right && mouseY >= tyRect.top && mouseY <= tyRect.bottom) {
+                if (currentHash !== '#TY-CLAN') {
+                    triggerFlashAndShake('ty');
+                    history.replaceState(null, '', '#TY-CLAN');
+                    currentHash = '#TY-CLAN';
+                }
+            } else {
+                if (currentHash !== '') {
+                    history.replaceState(null, '', window.location.pathname);
+                    currentHash = '';
+                }
+            }
+        }
+
+        function handleSideEffects(side) {
+            const rect = side.getBoundingClientRect();
+            if (mouseX >= rect.left && mouseX <= rect.right && mouseY >= rect.top && mouseY <= rect.bottom) {
+                const x = mouseX - rect.left;
+                const y = mouseY - rect.top;
+                
+                side.style.setProperty('--x', `${x}px`);
+                side.style.setProperty('--y', `${y}px`);
+                
+                const bgX = (x - rect.width / 2) * 0.04;
+                const bgY = (y - rect.height / 2) * 0.04;
+                side.style.setProperty('--bg-x', `${bgX}px`);
+                side.style.setProperty('--bg-y', `${bgY}px`);
+
+                const card = side.querySelector('.card');
+                if (card) {
+                    const cardRect = card.getBoundingClientRect();
+                    const cardCenterX = cardRect.left + cardRect.width / 2;
+                    const cardCenterY = cardRect.top + cardRect.height / 2;
+                    const rotateX = -(mouseY - cardCenterY) / (cardRect.height / 2) * 12;
+                    const rotateY = (mouseX - cardCenterX) / (cardRect.width / 2) * 12;
+                    
+                    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+
+                    const clX = mouseX - cardRect.left;
+                    const clY = mouseY - cardRect.top;
+                    card.style.setProperty('--gloss-x', `${clX}px`);
+                    card.style.setProperty('--gloss-y', `${clY}px`);
+                }
+            } else {
+                const card = side.querySelector('.card');
+                if (card && card.style.transform !== '') {
+                    card.style.transform = '';
+                }
+            }
+        }
+
+        initParticles();
+        requestAnimationFrame(updateVisuals);
+
+        vnBtn.addEventListener('click', (e) => e.stopPropagation());
+        tyBtn.addEventListener('click', (e) => e.stopPropagation());
+        document.querySelector('.hud-panel').addEventListener('click', (e) => e.stopPropagation());
+
+        document.addEventListener('mouseleave', () => {
+            cursor.style.opacity = '0';
+            cursorBlur.style.opacity = '0';
+            if (currentHash !== '') {
+                history.replaceState(null, '', window.location.pathname);
+                currentHash = '';
+            }
+        });
+        document.addEventListener('mouseenter', () => {
+            cursor.style.opacity = '1';
+            cursorBlur.style.opacity = '1';
+        });
     </script>
 </body>
 </html>
