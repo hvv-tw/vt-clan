@@ -3,671 +3,1395 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VN CLAN | ROBLOX RIVALS OFFICIAL</title>
+    <title>AETHERIS - Modern Aurora Glass Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-base: #030712;
-            --primary: #00f2fe;
-            --secondary: #4facfe;
-            --accent: #ff007f;
-            --purple: #7928ca;
+            --bg-base: #060812;
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #06b6d4;
+            --secondary-glow: rgba(6, 182, 212, 0.4);
+            --accent: #ec4899;
+            --accent-glow: rgba(236, 72, 153, 0.4);
+            --success: #10b981;
+            --warning: #f59e0b;
             --glass-bg: rgba(15, 23, 42, 0.55);
             --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-glow: rgba(0, 242, 254, 0.3);
+            --glass-border-hover: rgba(255, 255, 255, 0.25);
             --text-main: #f8fafc;
-            --text-sub: #94a3b8;
+            --text-muted: #94a3b8;
+            --sidebar-width: 260px;
+            --header-height: 70px;
+            --card-radius: 20px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             user-select: none;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
+            font-family: 'Outfit', sans-serif;
             background-color: var(--bg-base);
             color: var(--text-main);
-            overflow-x: hidden;
-            position: relative;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
         }
 
-        #bg-canvas {
+        #particle-canvas {
             position: fixed;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .ambient-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(140px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: pulseGlow 12s infinite alternate ease-in-out;
+        }
+
+        .glow-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+        }
+
+        .glow-2 {
+            bottom: -15%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            animation-delay: -6s;
+        }
+
+        .glow-3 {
+            top: 40%;
+            left: 30%;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, var(--secondary-glow) 0%, transparent 70%);
+            animation-delay: -3s;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
+            50% { transform: scale(1.15) translate(30px, -20px); opacity: 0.7; }
+            100% { transform: scale(0.95) translate(-20px, 30px); opacity: 0.4; }
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 2;
+            display: flex;
             width: 100vw;
             height: 100vh;
-            z-index: -2;
-            pointer-events: none;
+            backdrop-filter: blur(8px);
         }
 
-        .cursor-glow {
-            position: fixed;
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, rgba(0,242,254,0.18) 0%, rgba(121,40,202,0.08) 50%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-            transition: width 0.3s, height 0.3s;
-        }
-
-        header {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 1200px;
-            z-index: 1000;
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
+        .glass-panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            border-radius: var(--card-radius);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .glass-panel:hover {
+            border-color: var(--glass-border-hover);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5), 0 0 20px var(--primary-glow);
         }
 
-        .nav-links {
-            display: flex;
-            gap: 25px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 5px 10px;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            transition: width 0.3s ease;
-            box-shadow: 0 0 10px var(--primary);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .btn-discord {
-            background: linear-gradient(135deg, #5865F2, #4752C4);
-            color: #fff;
-            padding: 10px 22px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 0 15px rgba(88, 101, 242, 0.4);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .btn-discord:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 0 25px rgba(88, 101, 242, 0.8);
-        }
-
-        .hero {
-            min-height: 100vh;
+        .sidebar {
+            width: var(--sidebar-width);
+            height: calc(100vh - 40px);
+            margin: 20px 0 20px 20px;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
+            padding: 24px 16px;
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 0 12px 20px 12px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 120px 20px 60px;
-            position: relative;
+            font-size: 20px;
+            color: white;
+            box-shadow: 0 0 15px var(--primary-glow);
+            animation: float 4s ease-in-out infinite;
         }
 
-        .badge {
-            padding: 8px 18px;
-            background: rgba(0, 242, 254, 0.1);
-            border: 1px solid var(--primary);
-            border-radius: 30px;
-            color: var(--primary);
-            font-size: 0.9rem;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .brand-text h2 {
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 25px;
-            letter-spacing: 1.5px;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
-            animation: pulse 2s infinite;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(0, 242, 254, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 242, 254, 0); }
-        }
-
-        .hero-title {
-            font-size: 5.5rem;
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 20px;
+        .brand-text span {
+            font-size: 11px;
+            color: var(--secondary);
+            letter-spacing: 2px;
             text-transform: uppercase;
-            background: linear-gradient(180deg, #ffffff 0%, var(--text-sub) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 3px;
         }
 
-        .hero-title span {
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 35px rgba(0, 242, 254, 0.6);
-        }
-
-        .hero-subtitle {
-            font-size: 1.3rem;
-            color: var(--text-sub);
-            max-width: 700px;
-            margin-bottom: 40px;
-            line-height: 1.6;
-        }
-
-        .hero-btns {
+        .nav-menu {
             display: flex;
-            gap: 20px;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 20px;
+            flex-grow: 1;
         }
 
-        .btn-primary {
-            padding: 16px 36px;
-            border-radius: 14px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: #000;
-            font-weight: 800;
-            text-decoration: none;
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.5);
-            transition: all 0.3s ease;
+        .nav-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 40px rgba(0, 242, 254, 0.9);
-        }
-
-        .btn-secondary {
-            padding: 16px 36px;
-            border-radius: 14px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: #fff;
-            font-weight: 700;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--text-muted);
             text-decoration: none;
-            backdrop-filter: blur(10px);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
             transition: all 0.3s ease;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--primary);
-            transform: translateY(-5px);
-        }
-
-        .section {
-            padding: 100px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-title {
-            font-size: 2.8rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #fff, var(--text-sub));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .section-desc {
-            color: var(--primary);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .glass-card::before {
+        .nav-item i {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.06);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav-item:hover i, .nav-item.active i {
+            transform: scale(1.15);
+            color: var(--secondary);
+        }
+
+        .nav-item::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-            transition: 0.6s;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
         }
 
-        .glass-card:hover::before {
+        .nav-item:hover::before {
             left: 100%;
         }
 
-        .glass-card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 10px 40px rgba(0, 242, 254, 0.25);
-            transform: translateY(-8px);
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-top: 1px solid var(--glass-border);
+            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.2);
         }
 
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+        .avatar-container {
+            position: relative;
         }
 
-        .feature-box {
-            text-align: left;
-            padding: 35px;
-        }
-
-        .feature-icon {
-            width: 65px;
-            height: 65px;
-            border-radius: 18px;
-            background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(255, 0, 127, 0.2));
-            border: 1px solid var(--primary);
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 22px;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.35);
+            font-weight: 700;
         }
 
-        .feature-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 12px;
-            color: #fff;
+        .status-indicator {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--success);
+            border: 2px solid var(--bg-base);
+            box-shadow: 0 0 8px var(--success);
         }
 
-        .feature-text {
-            color: var(--text-sub);
-            line-height: 1.7;
-            font-size: 1.05rem;
+        .user-info h4 {
+            font-size: 14px;
+            font-weight: 600;
         }
 
-        .req-list {
-            list-style: none;
+        .user-info p {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .main-wrapper {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+            gap: 20px;
         }
 
-        .req-item {
+        .header {
+            height: var(--header-height);
             display: flex;
             align-items: center;
-            gap: 15px;
-            font-size: 1.15rem;
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            justify-content: space-between;
+            padding: 0 28px;
         }
 
-        .req-item i {
-            color: var(--primary);
-            font-size: 1.4rem;
+        .header-title h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
-        .cta-box {
-            text-align: center;
-            background: linear-gradient(135deg, rgba(0, 242, 254, 0.12), rgba(121, 40, 202, 0.12));
-            border: 1px solid var(--primary);
-            padding: 60px 20px;
+        .header-title p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box input {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--glass-border);
+            padding: 10px 16px 10px 40px;
             border-radius: 30px;
-            margin-top: 60px;
-            box-shadow: 0 0 50px rgba(0, 242, 254, 0.25);
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+            width: 220px;
+            transition: all 0.3s ease;
         }
 
-        footer {
-            border-top: 1px solid var(--glass-border);
-            background: rgba(3, 7, 18, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 40px 20px;
-            text-align: center;
-            color: var(--text-sub);
-            font-size: 0.9rem;
+        .search-box input:focus {
+            width: 280px;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
         }
 
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .icon-btn .badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        .dashboard-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            gap: 20px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .dashboard-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .dashboard-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .card-stat {
+            grid-column: span 3;
+            grid-row: span 2;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 20px;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
         }
 
-        .socials {
+        .card-stat::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .stat-header {
             display: flex;
-            gap: 20px;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .socials a {
-            color: var(--text-sub);
-            font-size: 1.6rem;
-            transition: color 0.3s ease, transform 0.3s ease;
+        .stat-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
         }
 
-        .socials a:hover {
-            color: var(--primary);
-            transform: translateY(-3px);
+        .stat-icon.purple { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); }
+        .stat-icon.cyan { background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.3); }
+        .stat-icon.pink { background: rgba(236, 72, 153, 0.15); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.3); }
+        .stat-icon.green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 12px 0 4px 0;
+            letter-spacing: -0.5px;
         }
 
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 3.2rem;
-            }
-            .nav-links {
-                display: none;
-            }
-            .hero-btns {
-                flex-direction: column;
-                width: 100%;
-            }
-            .btn-primary, .btn-secondary {
-                width: 100%;
-                justify-content: center;
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        .stat-trend.up { color: var(--success); }
+        .stat-trend.down { color: var(--accent); }
+
+        .card-chart-large {
+            grid-column: span 8;
+            grid-row: span 4;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header-actions h3 {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-container {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        #mainChartCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .card-audio {
+            grid-column: span 4;
+            grid-row: span 4;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .audio-visualizer-box {
+            width: 100%;
+            height: 140px;
+            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            position: relative;
+        }
+
+        #audioCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 14px;
+        }
+
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--primary-glow);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .card-tasks {
+            grid-column: span 5;
+            grid-row: span 4;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 14px;
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 4px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .task-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(4px);
+        }
+
+        .task-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            border: 2px solid var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .task-item.completed .checkbox-custom {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .task-item.completed .task-title {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .card-terminal {
+            grid-column: span 7;
+            grid-row: span 4;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            background: rgba(5, 8, 22, 0.85);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--glass-border);
+            margin-bottom: 12px;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background-color: #ef4444; }
+        .dot.yellow { background-color: #f59e0b; }
+        .dot.green { background-color: #10b981; }
+
+        .terminal-body {
+            flex: 1;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #38bdf8;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .terminal-line {
+            display: flex;
+            gap: 8px;
+        }
+
+        .terminal-prompt {
+            color: var(--accent);
+        }
+
+        .terminal-input-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .terminal-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            flex: 1;
+        }
+
+        .custom-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--secondary);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--secondary-glow);
+            transition: all 0.2s ease;
+        }
+
+        .custom-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+        }
+
+        .particle-control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: rippleEffect 0.6s linear;
+            background: rgba(255, 255, 255, 0.3);
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
             }
         }
     </style>
 </head>
 <body>
+    <canvas id="particle-canvas"></canvas>
+    
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
 
-    <canvas id="bg-canvas"></canvas>
-    <div class="cursor-glow" id="cursor-glow"></div>
-
-    <header>
-        <nav class="navbar">
-            <div class="logo">
-                <i class="fa-solid fa-shield-halved"></i> VN CLAN
-            </div>
-            <ul class="nav-links">
-                <li><a href="#home">首頁</a></li>
-                <li><a href="#about">關於我們</a></li>
-                <li><a href="#features">戰隊特色</a></li>
-                <li><a href="#recruitment">招募要求</a></li>
-                <li><a href="#rules">戰隊規章</a></li>
-            </ul>
-            <a href="https://discord.gg/bysBDQBqN2" target="_blank" class="btn-discord">
-                <i class="fa-brands fa-discord"></i> 加入 DISCORD
-            </a>
-        </nav>
-    </header>
-
-    <section id="home" class="hero">
-        <div class="badge">ROBLOX RIVALS COMPETITIVE CLAN</div>
-        <h1 class="hero-title">DOMINATE THE <span>RIVALS</span></h1>
-        <p class="hero-subtitle">我們是 VN 戰隊。專注於 Roblox Rivals 的頂尖競賽隊伍，結合絕對的操作、精準的戰術與無可摧毀的團隊默契。</p>
-        <div class="hero-btns">
-            <a href="https://discord.gg/bysBDQBqN2" target="_blank" class="btn-primary">
-                <i class="fa-solid fa-bolt"></i> 立即加入戰隊
-            </a>
-            <a href="#about" class="btn-secondary">探索戰隊資訊</a>
-        </div>
-    </section>
-
-    <section id="about" class="section">
-        <div class="section-header">
-            <div class="section-desc">ABOUT VN CLAN</div>
-            <h2 class="section-title">關於 VN 戰隊</h2>
-        </div>
-        <div class="glass-card">
-            <h3 style="font-size: 1.8rem; margin-bottom: 15px; color: var(--primary);">精準 • 快速 • 統治力</h3>
-            <p style="line-height: 1.8; color: var(--text-sub); font-size: 1.1rem; margin-bottom: 20px;">
-                VN 戰隊成立於 Roblox Rivals 競賽熱潮的核心。我們由最頂尖的射擊好手組成，目標是在每一場對局中展現強大的控制力。我們不只追求個人的完美戰績，更重視團隊間的動態掩護與戰術聯動。
-            </p>
-            <p style="line-height: 1.8; color: var(--text-sub); font-size: 1.1rem;">
-                無論你是極具天賦的狙擊手、果斷的突破手，還是精通對局觀念的指揮官，VN 戰隊都是你證明實力、登上排行榜頂峰的最終舞台。
-            </p>
-        </div>
-    </section>
-
-    <section id="features" class="section">
-        <div class="section-header">
-            <div class="section-desc">CLAN ADVANTAGES</div>
-            <h2 class="section-title">戰隊特色</h2>
-        </div>
-        <div class="grid-3">
-            <div class="glass-card feature-box">
-                <div class="feature-icon"><i class="fa-solid fa-heart"></i></div>
-                <div class="feature-title">友善禮貌氛圍</div>
-                <div class="feature-text">隊內成員皆具備極佳個人素養與禮貌，溝通互相尊重、和善熱情，絕無極端氣氛與暴躁言論。</div>
-            </div>
-
-            <div class="glass-card feature-box">
-                <div class="feature-icon"><i class="fa-solid fa-crosshair"></i></div>
-                <div class="feature-title">堅實頂尖技術</div>
-                <div class="feature-text">全員經過實力考核，技術基礎紮實、觀念極佳，無論單兵作戰還是團隊配合皆具備強大戰力。</div>
-            </div>
-
-            <div class="glass-card feature-box">
-                <div class="feature-icon"><i class="fa-solid fa-user-shield"></i></div>
-                <div class="feature-title">滿分防護安全</div>
-                <div class="feature-text">Discord 伺服器配置最高等級防護機制與嚴格審核，絕對不存在炸群、翻群或惡意騷擾問題。</div>
-            </div>
-        </div>
-    </section>
-
-    <section id="recruitment" class="section">
-        <div class="section-header">
-            <div class="section-desc">JOIN THE LEGEND</div>
-            <h2 class="section-title">招募條件</h2>
-        </div>
-        <div class="glass-card">
-            <ul class="req-list">
-                <li class="req-item">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <span>Roblox Rivals 個人 K/D 必須達到 3.0 以上。</span>
-                </li>
-                <li class="req-item">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <span>具備 Discord 語音通話能力，團戰中能清晰溝通。</span>
-                </li>
-                <li class="req-item">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <span>擁有良好的心態，嚴禁對內發脾氣或使用極端不正當軟體。</span>
-                </li>
-                <li class="req-item">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <span>每週能至少參加 2 次隊伍練習賽或內部測驗。</span>
-                </li>
-            </ul>
-
-            <div class="cta-box">
-                <h3 style="font-size: 2rem; margin-bottom: 15px;">準備好接受考核了嗎？</h3>
-                <p style="color: var(--text-sub); margin-bottom: 25px;">點擊下方按鈕加入官方 Discord Server，至 #apply 頻道提交你的遊戲數據截圖！</p>
-                <a href="https://discord.gg/bysBDQBqN2" target="_blank" class="btn-primary" style="display: inline-flex;">
-                    <i class="fa-brands fa-discord"></i> 立即進入 Discord 申請
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section id="rules" class="section">
-        <div class="section-header">
-            <div class="section-desc">CODE OF CONDUCT</div>
-            <h2 class="section-title">戰隊規章</h2>
-        </div>
-        <div class="glass-card">
-            <div class="grid-3" style="gap: 20px;">
-                <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
-                    <h4 style="color: var(--primary); margin-bottom: 10px; font-size: 1.2rem;"><i class="fa-solid fa-handshake"></i> 尊重隊友</h4>
-                    <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.5;">任何形式的言語攻擊、挑釁或對內抱怨皆不被允許，保持良好對局氣氛。</p>
+    <div class="app-container">
+        <aside class="sidebar glass-panel">
+            <div>
+                <div class="brand">
+                    <div class="brand-logo">
+                        <i class="fa-solid fa-cube"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h2>AETHERIS</h2>
+                        <span>v4.0 OS ENGINE</span>
+                    </div>
                 </div>
-                <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
-                    <h4 style="color: var(--accent); margin-bottom: 10px; font-size: 1.2rem;"><i class="fa-solid fa-ban"></i> 零容忍作弊</h4>
-                    <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.5;">嚴禁使用任何腳本、外掛或不正當手段，一經發現立即開除隊籍。</p>
+                <nav class="nav-menu">
+                    <a class="nav-item active"><i class="fa-solid fa-chart-pie"></i> 控制總覽</a>
+                    <a class="nav-item"><i class="fa-solid fa-wave-square"></i> 聲波動態</a>
+                    <a class="nav-item"><i class="fa-solid fa-microchip"></i> 核心效能</a>
+                    <a class="nav-item"><i class="fa-solid fa-sliders"></i> 物理引擎</a>
+                    <a class="nav-item"><i class="fa-solid fa-terminal"></i> 系統控制台</a>
+                    <a class="nav-item"><i class="fa-solid fa-gear"></i> 全域設定</a>
+                </nav>
+            </div>
+            <div class="user-profile">
+                <div class="avatar-container">
+                    <div class="avatar">RX</div>
+                    <div class="status-indicator"></div>
                 </div>
-                <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
-                    <h4 style="color: var(--secondary); margin-bottom: 10px; font-size: 1.2rem;"><i class="fa-solid fa-shield"></i> 維護隊徽</h4>
-                    <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.5;">代表 VN 戰隊參賽或遊玩時，請保持良好的競技風範與禮貌。</p>
+                <div class="user-info">
+                    <h4>Dev Core</h4>
+                    <p>系統最高權限</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </aside>
 
-    <footer>
-        <div class="footer-content">
-            <div class="logo">
-                <i class="fa-solid fa-shield-halved"></i> VN CLAN
+        <main class="main-wrapper">
+            <header class="header glass-panel">
+                <div class="header-title">
+                    <h1>系統即時狀態面板</h1>
+                    <p>極光矩陣渲染架構 - 即時節點連線中</p>
+                </div>
+                <div class="header-controls">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="搜尋指令或數據...">
+                    </div>
+                    <button class="icon-btn" id="audioToggleBtn">
+                        <i class="fa-solid fa-music"></i>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="badge"></span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <div class="glass-panel card-stat tilt-card">
+                    <div class="stat-header">
+                        <span class="stat-label">CPU 運算負載</span>
+                        <div class="stat-icon purple"><i class="fa-solid fa-cpu"></i></div>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="cpuValue">34.2%</div>
+                        <div class="stat-trend up"><i class="fa-solid fa-arrow-up"></i> 2.4% 較上小時</div>
+                    </div>
+                </div>
+
+                <div class="glass-panel card-stat tilt-card">
+                    <div class="stat-header">
+                        <span class="stat-label">記憶體動態占用</span>
+                        <div class="stat-icon cyan"><i class="fa-solid fa-memory"></i></div>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="memValue">11.8 GB</div>
+                        <div class="stat-trend down"><i class="fa-solid fa-arrow-down"></i> 0.8% 穩定流暢</div>
+                    </div>
+                </div>
+
+                <div class="glass-panel card-stat tilt-card">
+                    <div class="stat-header">
+                        <span class="stat-label">GPU 渲染幀率</span>
+                        <div class="stat-icon pink"><i class="fa-solid fa-bolt"></i></div>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="fpsValue">144 FPS</div>
+                        <div class="stat-trend up"><i class="fa-solid fa-arrow-up"></i> 極致順暢</div>
+                    </div>
+                </div>
+
+                <div class="glass-panel card-stat tilt-card">
+                    <div class="stat-header">
+                        <span class="stat-label">網路傳輸吞吐</span>
+                        <div class="stat-icon green"><i class="fa-solid fa-network-wired"></i></div>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="netValue">892 MB/s</div>
+                        <div class="stat-trend up"><i class="fa-solid fa-arrow-up"></i> 高速吞吐</div>
+                    </div>
+                </div>
+
+                <div class="glass-panel card-chart-large tilt-card">
+                    <div class="card-header-actions">
+                        <h3><i class="fa-solid fa-chart-line" style="color: var(--primary);"></i> 核心數據流即時視覺化</h3>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="icon-btn" style="width: 32px; height: 32px; font-size: 12px;"><i class="fa-solid fa-rotate-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="mainChartCanvas"></canvas>
+                    </div>
+                </div>
+
+                <div class="glass-panel card-audio tilt-card">
+                    <div class="card-header-actions">
+                        <h3><i class="fa-solid fa-compact-disc" style="color: var(--accent);"></i> WebAudio 頻譜分析</h3>
+                    </div>
+                    <div class="audio-visualizer-box">
+                        <canvas id="audioCanvas"></canvas>
+                    </div>
+                    <div class="audio-controls">
+                        <button class="icon-btn"><i class="fa-solid fa-backward-step"></i></button>
+                        <button class="play-btn" id="playAudioSynth"><i class="fa-solid fa-play"></i></button>
+                        <button class="icon-btn"><i class="fa-solid fa-forward-step"></i></button>
+                    </div>
+                    <div class="particle-control-panel">
+                        <div class="control-group">
+                            <span>背景粒子數量</span>
+                            <input type="range" class="custom-slider" id="particleCountSlider" min="20" max="150" value="70">
+                        </div>
+                        <div class="control-group">
+                            <span>粒子引力速度</span>
+                            <input type="range" class="custom-slider" id="particleSpeedSlider" min="1" max="10" value="3">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel card-tasks tilt-card">
+                    <div class="card-header-actions">
+                        <h3><i class="fa-solid fa-list-check" style="color: var(--secondary);"></i> 待辦任務隊列</h3>
+                        <button class="icon-btn" style="width: 32px; height: 32px; font-size: 12px;" id="addTaskBtn"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <div class="task-list" id="taskListContainer">
+                        <div class="task-item">
+                            <div class="task-left">
+                                <div class="checkbox-custom"><i class="fa-solid fa-check" style="font-size: 10px; color: white;"></i></div>
+                                <span class="task-title">優化 Canvas 2D 渲染性能</span>
+                            </div>
+                            <span style="font-size: 11px; color: var(--text-muted);">核心</span>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-left">
+                                <div class="checkbox-custom"></div>
+                                <span class="task-title">修復 3D Perspective Tilt 卡頓</span>
+                            </div>
+                            <span style="font-size: 11px; color: var(--text-muted);">UI</span>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-left">
+                                <div class="checkbox-custom"></div>
+                                <span class="task-title">串接系統硬體動態監控模組</span>
+                            </div>
+                            <span style="font-size: 11px; color: var(--text-muted);">後端</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel card-terminal tilt-card">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <div class="dot red"></div>
+                            <div class="dot yellow"></div>
+                            <div class="dot green"></div>
+                        </div>
+                        <span style="font-size: 11px; color: var(--text-muted);">system_kernel_shell.sh</span>
+                    </div>
+                    <div class="terminal-body" id="terminalOutput">
+                        <div class="terminal-line"><span class="terminal-prompt">[AETHERIS OS]:</span> 系統內核初始化中...</div>
+                        <div class="terminal-line"><span class="terminal-prompt">[AETHERIS OS]:</span> Canvas 物理引擎與 WebAudio 合成器已就緒。</div>
+                        <div class="terminal-line"><span class="terminal-prompt">[AETHERIS OS]:</span> 請輸入 "help" 檢視可用指令。</div>
+                    </div>
+                    <div class="terminal-input-line">
+                        <span class="terminal-prompt">></span>
+                        <input type="text" class="terminal-input" id="terminalInput" placeholder="輸入指令..." autocomplete="off">
+                    </div>
+                </div>
             </div>
-            <p>Roblox Rivals Competitive Gaming Clan. All rights reserved.</p>
-            <div class="socials">
-                <a href="https://discord.gg/bysBDQBqN2" target="_blank"><i class="fa-brands fa-discord"></i></a>
-                <a href="#"><i class="fa-brands fa-youtube"></i></a>
-                <a href="#"><i class="fa-brands fa-twitter"></i></a>
-            </div>
-        </div>
-    </footer>
+        </main>
+    </div>
 
     <script>
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        const particles = [];
-        const particleCount = 85;
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 1.2;
-                this.vy = (Math.random() - 0.5) * 1.2;
-                this.size = Math.random() * 2 + 1;
-                this.color = Math.random() > 0.5 ? '#00f2fe' : '#ff007f';
+        class ParticleEngine {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.count = 70;
+                this.speed = 1.5;
+                this.mouse = { x: null, y: null, radius: 150 };
+                this.init();
             }
 
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
+            init() {
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                window.addEventListener('mousemove', (e) => {
+                    this.mouse.x = e.clientX;
+                    this.mouse.y = e.clientY;
+                });
+                this.createParticles();
+                this.animate();
+            }
 
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            setCount(newCount) {
+                this.count = newCount;
+                this.createParticles();
+            }
+
+            setSpeed(newSpeed) {
+                this.speed = newSpeed;
+                this.particles.forEach(p => {
+                    p.vx = (Math.random() - 0.5) * this.speed;
+                    p.vy = (Math.random() - 0.5) * this.speed;
+                });
+            }
+
+            createParticles() {
+                this.particles = [];
+                for (let i = 0; i < this.count; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        radius: Math.random() * 2.5 + 1,
+                        vx: (Math.random() - 0.5) * this.speed,
+                        vy: (Math.random() - 0.5) * this.speed,
+                        color: Math.random() > 0.5 ? 'rgba(99, 102, 241, ' : 'rgba(6, 182, 212, ',
+                        alpha: Math.random() * 0.6 + 0.2
+                    });
+                }
             }
 
             draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = this.color;
-                ctx.fill();
-            }
-        }
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
+                for (let i = 0; i < this.particles.length; i++) {
+                    let p = this.particles[i];
 
-        function animateCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    p.x += p.vx;
+                    p.y += p.vy;
 
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
+                    if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
 
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (this.mouse.x && this.mouse.y) {
+                        let dx = this.mouse.x - p.x;
+                        let dy = this.mouse.y - p.y;
+                        let dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < this.mouse.radius) {
+                            let angle = Math.atan2(dy, dx);
+                            let force = (this.mouse.radius - dist) / this.mouse.radius;
+                            p.x -= Math.cos(angle) * force * 3;
+                            p.y -= Math.sin(angle) * force * 3;
+                        }
+                    }
 
-                    if (dist < 120) {
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = `rgba(0, 242, 254, ${1 - dist / 120})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.stroke();
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    this.ctx.fillStyle = p.color + p.alpha + ')';
+                    this.ctx.shadowBlur = 10;
+                    this.ctx.shadowColor = p.color + '0.8)';
+                    this.ctx.fill();
+
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        let p2 = this.particles[j];
+                        let dx = p.x - p2.x;
+                        let dy = p.y - p2.y;
+                        let dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 120) {
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(p.x, p.y);
+                            this.ctx.lineTo(p2.x, p2.y);
+                            this.ctx.strokeStyle = `rgba(99, 102, 241, ${0.2 * (1 - dist / 120)})`;
+                            this.ctx.lineWidth = 0.8;
+                            this.ctx.stroke();
+                        }
                     }
                 }
             }
-            requestAnimationFrame(animateCanvas);
+
+            animate() {
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
         }
-        animateCanvas();
 
-        const glow = document.getElementById('cursor-glow');
-        window.addEventListener('mousemove', (e) => {
-            glow.style.left = e.clientX + 'px';
-            glow.style.top = e.clientY + 'px';
-        });
+        class ChartEngine {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.dataPoints = Array.from({ length: 30 }, () => Math.random() * 50 + 20);
+                this.init();
+            }
 
-        const cards = document.querySelectorAll('.glass-card');
-        cards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
+            init() {
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                setInterval(() => this.updateData(), 1000);
+                this.animate();
+            }
+
+            resize() {
+                const rect = this.canvas.parentElement.getBoundingClientRect();
+                this.canvas.width = rect.width;
+                this.canvas.height = rect.height;
+            }
+
+            updateData() {
+                this.dataPoints.shift();
+                this.dataPoints.push(Math.random() * 60 + 20);
+            }
+
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                const step = width / (this.dataPoints.length - 1);
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(0, height);
+
+                for (let i = 0; i < this.dataPoints.length; i++) {
+                    const x = i * step;
+                    const y = height - (this.dataPoints[i] / 100) * height;
+
+                    if (i === 0) {
+                        this.ctx.lineTo(x, y);
+                    } else {
+                        const prevX = (i - 1) * step;
+                        const prevY = height - (this.dataPoints[i - 1] / 100) * height;
+                        const cpX1 = prevX + step / 2;
+                        const cpY1 = prevY;
+                        const cpX2 = prevX + step / 2;
+                        const cpY2 = y;
+                        this.ctx.bezierCurveTo(cpX1, cpY1, cpX2, cpY2, x, y);
+                    }
+                }
+
+                this.ctx.lineTo(width, height);
+                this.ctx.closePath();
+
+                const gradient = this.ctx.createLinearGradient(0, 0, 0, height);
+                gradient.addColorStop(0, 'rgba(99, 102, 241, 0.4)');
+                gradient.addColorStop(1, 'rgba(99, 102, 241, 0.0)');
+                this.ctx.fillStyle = gradient;
+                this.ctx.fill();
+
+                this.ctx.beginPath();
+                for (let i = 0; i < this.dataPoints.length; i++) {
+                    const x = i * step;
+                    const y = height - (this.dataPoints[i] / 100) * height;
+
+                    if (i === 0) {
+                        this.ctx.moveTo(x, y);
+                    } else {
+                        const prevX = (i - 1) * step;
+                        const prevY = height - (this.dataPoints[i - 1] / 100) * height;
+                        const cpX1 = prevX + step / 2;
+                        const cpY1 = prevY;
+                        const cpX2 = prevX + step / 2;
+                        const cpY2 = y;
+                        this.ctx.bezierCurveTo(cpX1, cpY1, cpX2, cpY2, x, y);
+                    }
+                }
+                this.ctx.strokeStyle = '#6366f1';
+                this.ctx.lineWidth = 3;
+                this.ctx.shadowBlur = 15;
+                this.ctx.shadowColor = 'rgba(99, 102, 241, 0.8)';
+                this.ctx.stroke();
+
+                for (let i = 0; i < this.dataPoints.length; i += 3) {
+                    const x = i * step;
+                    const y = height - (this.dataPoints[i] / 100) * height;
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, 5, 0, Math.PI * 2);
+                    this.ctx.fillStyle = '#06b6d4';
+                    this.ctx.shadowBlur = 10;
+                    this.ctx.shadowColor = '#06b6d4';
+                    this.ctx.fill();
+                }
+            }
+
+            animate() {
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        class AudioSynthEngine {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.audioCtx = null;
+                this.oscillator = null;
+                this.analyser = null;
+                this.isPlaying = false;
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                this.drawEmptyState();
+            }
+
+            resize() {
+                const rect = this.canvas.parentElement.getBoundingClientRect();
+                this.canvas.width = rect.width;
+                this.canvas.height = rect.height;
+            }
+
+            togglePlay() {
+                if (!this.isPlaying) {
+                    this.start();
+                } else {
+                    this.stop();
+                }
+            }
+
+            start() {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                this.audioCtx = new AudioContext();
+                this.oscillator = this.audioCtx.createOscillator();
+                this.analyser = this.audioCtx.createAnalyser();
+
+                this.oscillator.type = 'sawtooth';
+                this.oscillator.frequency.setValueAtTime(220, this.audioCtx.currentTime);
+
+                const gainNode = this.audioCtx.createGain();
+                gainNode.gain.setValueAtTime(0.08, this.audioCtx.currentTime);
+
+                this.oscillator.connect(gainNode);
+                gainNode.connect(this.analyser);
+                this.analyser.connect(this.audioCtx.destination);
+
+                this.analyser.fftSize = 64;
+                this.oscillator.start();
+                this.isPlaying = true;
+
+                this.animate();
+            }
+
+            stop() {
+                if (this.oscillator) {
+                    this.oscillator.stop();
+                    this.audioCtx.close();
+                }
+                this.isPlaying = false;
+                this.drawEmptyState();
+            }
+
+            drawEmptyState() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                this.ctx.beginPath();
+                this.ctx.moveTo(0, this.canvas.height / 2);
+                this.ctx.lineTo(this.canvas.width, this.canvas.height / 2);
+                this.ctx.stroke();
+            }
+
+            animate() {
+                if (!this.isPlaying) return;
+
+                const bufferLength = this.analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                this.analyser.getByteFrequencyData(dataArray);
+
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                const barWidth = (this.canvas.width / bufferLength) * 1.5;
+                let x = 0;
+
+                for (let i = 0; i < bufferLength; i++) {
+                    const barHeight = (dataArray[i] / 255) * this.canvas.height;
+
+                    const gradient = this.ctx.createLinearGradient(0, this.canvas.height, 0, 0);
+                    gradient.addColorStop(0, '#ec4899');
+                    gradient.addColorStop(1, '#6366f1');
+
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.fillRect(x, this.canvas.height - barHeight, barWidth - 2, barHeight);
+
+                    x += barWidth;
+                }
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        class TiltController {
+            constructor() {
+                this.cards = document.querySelectorAll('.tilt-card');
+                this.init();
+            }
+
+            init() {
+                this.cards.forEach(card => {
+                    card.addEventListener('mousemove', (e) => this.handleMove(e, card));
+                    card.addEventListener('mouseleave', () => this.handleLeave(card));
+                });
+            }
+
+            handleMove(e, card) {
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                card.style.transform = `perspective(1000px) rotateX(${-y / 20}deg) rotateY(${x / 20}deg) translateY(-8px)`;
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = ((y - centerY) / centerY) * -8;
+                const rotateY = ((x - centerX) / centerX) * 8;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            }
+
+            handleLeave(card) {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            }
+        }
+
+        class TerminalEngine {
+            constructor() {
+                this.input = document.getElementById('terminalInput');
+                this.output = document.getElementById('terminalOutput');
+                this.init();
+            }
+
+            init() {
+                this.input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        const cmd = this.input.value.trim();
+                        if (cmd) {
+                            this.processCommand(cmd);
+                            this.input.value = '';
+                        }
+                    }
+                });
+            }
+
+            print(text, type = 'normal') {
+                const line = document.createElement('div');
+                line.className = 'terminal-line';
+                let color = '#38bdf8';
+                if (type === 'error') color = '#ef4444';
+                if (type === 'success') color = '#10b981';
+
+                line.innerHTML = `<span class="terminal-prompt">[AETHERIS]:</span> <span style="color:${color}">${text}</span>`;
+                this.output.appendChild(line);
+                this.output.scrollTop = this.output.scrollHeight;
+            }
+
+            processCommand(cmd) {
+                const command = cmd.toLowerCase();
+                this.print(`> ${cmd}`);
+
+                switch (command) {
+                    case 'help':
+                        this.print('可用指令集: status, clear, reboot, theme, audio, ping');
+                        break;
+                    case 'status':
+                        this.print('系統狀態: 核心運作正常 | CPU 34% | GPU 144 FPS', 'success');
+                        break;
+                    case 'clear':
+                        this.output.innerHTML = '';
+                        break;
+                    case 'reboot':
+                        this.print('正在重啟 AETHERIS 核心模組...', 'error');
+                        setTimeout(() => this.print('重啟完成，系統已全面恢復。', 'success'), 1200);
+                        break;
+                    case 'ping':
+                        this.print('Pong! 延遲 2ms [極速遠程節點連線]', 'success');
+                        break;
+                    default:
+                        this.print(`未知指令 "${cmd}"，請輸入 "help" 檢視說明。`, 'error');
+                }
+            }
+        }
+
+        function setupInteractions() {
+            document.querySelectorAll('.task-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    item.classList.toggle('completed');
+                });
             });
 
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+            document.querySelectorAll('.icon-btn, .nav-item, .play-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    ripple.className = 'ripple';
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    ripple.style.width = ripple.style.height = `${size}px`;
+                    ripple.style.left = `${e.clientX - rect.left - size/2}px`;
+                    ripple.style.top = `${e.clientY - rect.top - size/2}px`;
+                    this.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 600);
+                });
+            });
+
+            setInterval(() => {
+                document.getElementById('cpuValue').innerText = (Math.random() * 15 + 25).toFixed(1) + '%';
+                document.getElementById('fpsValue').innerText = Math.floor(Math.random() * 10 + 138) + ' FPS';
+            }, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const particles = new ParticleEngine('particle-canvas');
+            const mainChart = new ChartEngine('mainChartCanvas');
+            const audioSynth = new AudioSynthEngine('audioCanvas');
+            const tilt = new TiltController();
+            const terminal = new TerminalEngine();
+
+            setupInteractions();
+
+            document.getElementById('particleCountSlider').addEventListener('input', (e) => {
+                particles.setCount(parseInt(e.target.value));
+            });
+
+            document.getElementById('particleSpeedSlider').addEventListener('input', (e) => {
+                particles.setSpeed(parseFloat(e.target.value) / 2);
+            });
+
+            const playBtn = document.getElementById('playAudioSynth');
+            playBtn.addEventListener('click', () => {
+                audioSynth.togglePlay();
+                const icon = playBtn.querySelector('i');
+                if (audioSynth.isPlaying) {
+                    icon.className = 'fa-solid fa-pause';
+                } else {
+                    icon.className = 'fa-solid fa-play';
+                }
             });
         });
     </script>
