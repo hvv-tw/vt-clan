@@ -7,13 +7,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-base: #02040a;
+            --bg-base: #010307;
             --primary: #00f2fe;
             --secondary: #4facfe;
             --accent: #ff007f;
             --purple: #7928ca;
-            --glass-bg: rgba(8, 14, 28, 0.72);
-            --glass-border: rgba(0, 242, 254, 0.25);
+            --green: #00ff88;
+            --glass-bg: rgba(5, 11, 24, 0.78);
+            --glass-border: rgba(0, 242, 254, 0.28);
             --glass-glow: rgba(0, 242, 254, 0.5);
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
@@ -32,6 +33,7 @@
             color: var(--text-main);
             overflow-x: hidden;
             position: relative;
+            min-height: 100vh;
         }
 
         .scanline-overlay {
@@ -40,11 +42,11 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
             background-size: 100% 4px, 6px 100%;
             z-index: 999;
             pointer-events: none;
-            opacity: 0.75;
+            opacity: 0.7;
         }
 
         .cyber-grid {
@@ -54,17 +56,17 @@
             width: 100vw;
             height: 100vh;
             background-image: 
-                linear-gradient(to right, rgba(0, 242, 254, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 242, 254, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
+                linear-gradient(to right, rgba(0, 242, 254, 0.06) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 242, 254, 0.06) 1px, transparent 1px);
+            background-size: 45px 45px;
             z-index: -3;
             transform: perspective(600px) rotateX(60deg) translateY(-100px) translateZ(-200px);
-            animation: gridMove 15s linear infinite;
+            animation: gridMove 12s linear infinite;
         }
 
         @keyframes gridMove {
             0% { background-position: 0 0; }
-            100% { background-position: 0 800px; }
+            100% { background-position: 0 900px; }
         }
 
         #bg-canvas {
@@ -79,9 +81,9 @@
 
         .cursor-glow {
             position: fixed;
-            width: 550px;
-            height: 550px;
-            background: radial-gradient(circle, rgba(0,242,254,0.25) 0%, rgba(255,0,127,0.15) 35%, rgba(121,40,202,0.08) 55%, rgba(0,0,0,0) 70%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0,242,254,0.28) 0%, rgba(255,0,127,0.18) 35%, rgba(121,40,202,0.1) 55%, rgba(0,0,0,0) 70%);
             border-radius: 50%;
             pointer-events: none;
             transform: translate(-50%, -50%);
@@ -98,55 +100,56 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
-            box-shadow: 0 0 12px var(--primary), 0 0 24px var(--accent);
-            transition: transform 0.1s ease-out, opacity 0.3s ease;
+            box-shadow: 0 0 15px var(--primary), 0 0 30px var(--accent);
+            transition: transform 0.08s ease-out, opacity 0.3s ease;
         }
 
-        .sys-bar {
+        .top-system-bar {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 28px;
-            background: rgba(2, 4, 10, 0.9);
-            border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+            height: 32px;
+            background: rgba(2, 5, 14, 0.92);
+            border-bottom: 1px solid rgba(0, 242, 254, 0.3);
             z-index: 1001;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
-            font-size: 0.75rem;
+            padding: 0 25px;
+            font-size: 0.78rem;
             color: var(--primary);
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            backdrop-filter: blur(12px);
         }
 
-        .sys-bar-status {
+        .sys-left, .sys-right {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
 
         .status-dot {
             width: 8px;
             height: 8px;
-            background: #00ff88;
+            background: var(--green);
             border-radius: 50%;
-            box-shadow: 0 0 8px #00ff88;
-            animation: blink 1.5s infinite alternate;
+            box-shadow: 0 0 10px var(--green);
+            animation: pulseDot 1.2s infinite alternate;
         }
 
-        @keyframes blink {
-            0% { opacity: 0.3; }
-            100% { opacity: 1; }
+        @keyframes pulseDot {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
         }
 
         header {
             position: fixed;
-            top: 45px;
+            top: 48px;
             left: 50%;
             transform: translateX(-50%);
-            width: 92%;
-            max-width: 1300px;
+            width: 94%;
+            max-width: 1400px;
             z-index: 1000;
             animation: fadeInDown 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -155,13 +158,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 30px;
+            padding: 14px 32px;
             background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 242, 254, 0.15);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.7), inset 0 0 25px rgba(0, 242, 254, 0.18);
             position: relative;
             overflow: hidden;
         }
@@ -173,9 +176,9 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(0, 242, 254, 0.15), transparent);
+            background: linear-gradient(45deg, transparent, rgba(0, 242, 254, 0.2), transparent);
             transform: rotate(45deg);
-            animation: navbarShine 5s infinite linear;
+            animation: navbarShine 4s infinite linear;
         }
 
         @keyframes navbarShine {
@@ -184,46 +187,47 @@
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             font-weight: 900;
             letter-spacing: 2px;
             background: linear-gradient(45deg, var(--primary), var(--accent), var(--primary));
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
+            text-shadow: 0 0 25px rgba(0, 242, 254, 0.7);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             animation: shineText 3s linear infinite;
         }
 
         .logo i {
             color: var(--primary);
-            filter: drop-shadow(0 0 8px var(--primary));
+            filter: drop-shadow(0 0 10px var(--primary));
             animation: pulseIcon 2s infinite ease-in-out;
         }
 
         @keyframes pulseIcon {
             0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px var(--primary)); }
-            50% { transform: scale(1.18); filter: drop-shadow(0 0 20px var(--accent)); }
+            50% { transform: scale(1.2); filter: drop-shadow(0 0 22px var(--accent)); }
         }
 
         .nav-links {
             display: flex;
-            gap: 25px;
+            gap: 20px;
             list-style: none;
         }
 
         .nav-links a {
             color: var(--text-main);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             transition: all 0.3s ease;
             position: relative;
-            padding: 6px 12px;
+            padding: 8px 16px;
             display: inline-block;
-            border-radius: 8px;
+            border-radius: 10px;
+            letter-spacing: 1px;
         }
 
         .nav-links a::after {
@@ -236,13 +240,13 @@
             height: 2px;
             background: linear-gradient(90deg, var(--primary), var(--accent));
             transition: width 0.3s ease;
-            box-shadow: 0 0 12px var(--primary);
+            box-shadow: 0 0 15px var(--primary);
         }
 
         .nav-links a:hover {
             color: var(--primary);
-            text-shadow: 0 0 10px var(--primary);
-            background: rgba(0, 242, 254, 0.08);
+            text-shadow: 0 0 12px var(--primary);
+            background: rgba(0, 242, 254, 0.12);
             transform: translateY(-2px);
         }
 
@@ -253,16 +257,16 @@
         .btn-discord {
             background: linear-gradient(135deg, #5865F2, #4752C4);
             color: #fff;
-            padding: 10px 22px;
-            border-radius: 12px;
+            padding: 12px 24px;
+            border-radius: 14px;
             text-decoration: none;
-            font-weight: 700;
+            font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 0 20px rgba(88, 101, 242, 0.5);
+            gap: 10px;
+            box-shadow: 0 0 25px rgba(88, 101, 242, 0.6);
             transition: all 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.4);
             position: relative;
             overflow: hidden;
         }
@@ -274,7 +278,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 0.3s;
         }
@@ -284,98 +288,177 @@
         }
 
         .btn-discord:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 0 35px rgba(88, 101, 242, 0.9), 0 0 20px var(--primary);
+            transform: translateY(-3px) scale(1.06);
+            box-shadow: 0 0 40px rgba(88, 101, 242, 1), 0 0 25px var(--primary);
         }
 
-        .main-dashboard {
-            max-width: 1350px;
-            margin: 0 auto;
-            padding: 150px 20px 80px;
+        .dashboard-layout {
+            max-width: 1450px;
+            margin: 135px auto 40px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 310px 1fr;
+            gap: 30px;
+        }
+
+        .telemetry-sidebar {
             display: flex;
             flex-direction: column;
-            gap: 60px;
+            gap: 25px;
+            position: sticky;
+            top: 125px;
+            height: calc(100vh - 150px);
         }
 
-        .hero-window {
-            position: relative;
+        .hud-panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 80px 40px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 0 30px rgba(0, 242, 254, 0.15);
+            border-radius: 20px;
+            padding: 22px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0, 242, 254, 0.1);
+            position: relative;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 80vh;
         }
 
-        .hero-window::before {
-            content: '';
-            position: absolute;
-            top: -100%;
-            left: -100%;
-            width: 300%;
-            height: 300%;
-            background: conic-gradient(from 0deg, transparent 0deg, rgba(0, 242, 254, 0.15) 60deg, transparent 120deg);
-            animation: rotateCone 10s linear infinite;
-            pointer-events: none;
-        }
-
-        @keyframes rotateCone {
-            100% { transform: rotate(360deg); }
-        }
-
-        .win-header {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 38px;
-            background: rgba(0, 242, 254, 0.08);
-            border-bottom: 1px solid var(--glass-border);
+        .hud-panel-title {
+            font-size: 0.85rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+            font-weight: 800;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
-            font-size: 0.8rem;
-            color: var(--primary);
-            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+            padding-bottom: 8px;
         }
 
-        .win-controls {
+        .radar-canvas-container {
+            width: 100%;
+            height: 180px;
+            position: relative;
+            border-radius: 12px;
+            background: rgba(0, 242, 254, 0.03);
+            border: 1px solid rgba(0, 242, 254, 0.18);
+            overflow: hidden;
+        }
+
+        .radar-canvas-container canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .hud-stat-row {
             display: flex;
-            gap: 8px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.88rem;
         }
 
-        .win-btn {
+        .hud-stat-label {
+            color: var(--text-sub);
+        }
+
+        .hud-stat-value {
+            color: #fff;
+            font-weight: 800;
+            font-family: monospace;
+        }
+
+        .main-operations-area {
+            display: flex;
+            flex-direction: column;
+            gap: 45px;
+        }
+
+        .window-box {
+            background: var(--glass-bg);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 242, 254, 0.12);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s ease-out, border-color 0.4s ease, box-shadow 0.4s ease;
+            transform-style: preserve-3d;
+        }
+
+        .window-box:hover {
+            border-color: var(--primary);
+            box-shadow: 0 20px 60px rgba(0, 242, 254, 0.4), inset 0 0 30px rgba(0, 242, 254, 0.2);
+        }
+
+        .window-bar {
+            background: rgba(2, 7, 20, 0.9);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-bar-title {
+            font-size: 0.85rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .window-controls-btns {
+            display: flex;
+            gap: 9px;
+        }
+
+        .control-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            display: inline-block;
+            cursor: pointer;
+            transition: transform 0.2s;
         }
 
-        .win-close { background: #ff5f56; box-shadow: 0 0 6px #ff5f56; }
-        .win-min { background: #ffbd2e; box-shadow: 0 0 6px #ffbd2e; }
-        .win-max { background: #27c93f; box-shadow: 0 0 6px #27c93f; }
+        .control-dot:hover {
+            transform: scale(1.2);
+        }
+
+        .dot-close { background: #ff5f56; box-shadow: 0 0 8px #ff5f56; }
+        .dot-min { background: #ffbd2e; box-shadow: 0 0 8px #ffbd2e; }
+        .dot-max { background: #27c93f; box-shadow: 0 0 8px #27c93f; }
+
+        .window-body-content {
+            padding: 50px 40px;
+            position: relative;
+        }
+
+        .hero-section {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
 
         .badge {
-            padding: 8px 24px;
-            background: rgba(0, 242, 254, 0.1);
+            padding: 10px 26px;
+            background: rgba(0, 242, 254, 0.12);
             border: 1px solid var(--primary);
             border-radius: 30px;
             color: var(--primary);
             font-size: 0.95rem;
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 30px;
             letter-spacing: 2px;
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.4), inset 0 0 12px rgba(0, 242, 254, 0.25);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.5), inset 0 0 15px rgba(0, 242, 254, 0.3);
             animation: pulseGlow 2s infinite alternate, floatSlow 4s ease-in-out infinite;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
         }
 
         @keyframes floatSlow {
@@ -385,11 +468,11 @@
 
         @keyframes pulseGlow {
             0% { box-shadow: 0 0 15px rgba(0, 242, 254, 0.3), inset 0 0 5px rgba(0, 242, 254, 0.2); }
-            100% { box-shadow: 0 0 40px rgba(0, 242, 254, 0.9), inset 0 0 20px rgba(0, 242, 254, 0.6); }
+            100% { box-shadow: 0 0 45px rgba(0, 242, 254, 1), inset 0 0 22px rgba(0, 242, 254, 0.7); }
         }
 
         .hero-title {
-            font-size: 5.8rem;
+            font-size: 5.5rem;
             font-weight: 900;
             line-height: 1.1;
             margin-bottom: 25px;
@@ -407,7 +490,7 @@
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 40px rgba(0, 242, 254, 0.7);
+            text-shadow: 0 0 40px rgba(0, 242, 254, 0.75);
             animation: shineText 3s linear infinite;
         }
 
@@ -420,7 +503,7 @@
             color: var(--text-sub);
             max-width: 750px;
             margin-bottom: 45px;
-            line-height: 1.6;
+            line-height: 1.65;
             animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -431,13 +514,13 @@
         }
 
         .btn-primary {
-            padding: 18px 40px;
+            padding: 18px 42px;
             border-radius: 16px;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             color: #000;
-            font-weight: 800;
+            font-weight: 900;
             text-decoration: none;
-            box-shadow: 0 0 35px rgba(0, 242, 254, 0.6);
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.65);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             align-items: center;
@@ -464,17 +547,17 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-6px) scale(1.04);
-            box-shadow: 0 0 60px rgba(0, 242, 254, 1), 0 0 30px var(--accent);
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 0 65px rgba(0, 242, 254, 1), 0 0 35px var(--accent);
         }
 
         .btn-secondary {
-            padding: 18px 40px;
+            padding: 18px 42px;
             border-radius: 16px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: #fff;
-            font-weight: 700;
+            font-weight: 800;
             text-decoration: none;
             backdrop-filter: blur(15px);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -484,26 +567,20 @@
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.15);
             border-color: var(--primary);
-            transform: translateY(-6px) scale(1.04);
-            box-shadow: 0 0 40px rgba(0, 242, 254, 0.5);
-        }
-
-        .hud-grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 35px;
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 0 45px rgba(0, 242, 254, 0.5);
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 45px;
         }
 
         .section-title {
             font-size: 2.8rem;
-            font-weight: 800;
+            font-weight: 900;
             letter-spacing: 2px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             background: linear-gradient(90deg, #fff, var(--text-sub));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -526,66 +603,10 @@
 
         .section-desc {
             color: var(--primary);
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 3px;
             text-shadow: 0 0 12px rgba(0, 242, 254, 0.6);
-        }
-
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 45px 35px;
-            box-shadow: 0 12px 45px 0 rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.04);
-            transition: transform 0.25s ease-out, border-color 0.4s ease, box-shadow 0.4s ease;
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-        }
-
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-            transition: 0.7s;
-        }
-
-        .glass-card:hover::before {
-            left: 100%;
-        }
-
-        .glass-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 24px;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(0, 242, 254, 0.6), transparent, rgba(255, 0, 127, 0.6));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            opacity: 0.3;
-            transition: opacity 0.4s ease;
-        }
-
-        .glass-card:hover::after {
-            opacity: 1;
-        }
-
-        .glass-card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 20px 60px rgba(0, 242, 254, 0.35), inset 0 0 25px rgba(0, 242, 254, 0.2);
         }
 
         .cyber-corner {
@@ -598,7 +619,7 @@
             transition: all 0.3s ease;
         }
 
-        .glass-card:hover .cyber-corner {
+        .window-box:hover .cyber-corner, .glass-card:hover .cyber-corner {
             opacity: 1;
             box-shadow: 0 0 12px var(--primary);
         }
@@ -610,27 +631,43 @@
 
         .grid-3 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 28px;
+        }
+
+        .glass-card {
+            background: rgba(8, 14, 28, 0.55);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 20px;
+            padding: 35px;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-6px);
+            box-shadow: 0 15px 40px rgba(0, 242, 254, 0.3);
         }
 
         .feature-box {
             text-align: left;
-            padding: 40px 30px;
         }
 
         .feature-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 20px;
+            width: 65px;
+            height: 65px;
+            border-radius: 18px;
             background: linear-gradient(135deg, rgba(0, 242, 254, 0.3), rgba(255, 0, 127, 0.3));
             border: 1px solid var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.2rem;
+            font-size: 2rem;
             color: var(--primary);
-            margin-bottom: 25px;
+            margin-bottom: 22px;
             box-shadow: 0 0 25px rgba(0, 242, 254, 0.5);
             transition: all 0.4s ease;
         }
@@ -643,9 +680,9 @@
         }
 
         .feature-title {
-            font-size: 1.55rem;
+            font-size: 1.5rem;
             font-weight: 800;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             color: #fff;
         }
 
@@ -659,41 +696,41 @@
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 18px;
         }
 
         .req-item {
             display: flex;
             align-items: center;
-            gap: 18px;
-            font-size: 1.15rem;
-            padding: 16px 24px;
+            gap: 16px;
+            font-size: 1.12rem;
+            padding: 16px 22px;
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
             transition: all 0.3s ease;
         }
 
         .req-item:hover {
             background: rgba(0, 242, 254, 0.1);
             border-color: var(--primary);
-            transform: translateX(12px);
+            transform: translateX(10px);
             box-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
         }
 
         .req-item i {
             color: var(--primary);
-            font-size: 1.5rem;
-            filter: drop-shadow(0 0 8px var(--primary));
+            font-size: 1.4rem;
+            filter: drop-shadow(0 0 6px var(--primary));
         }
 
         .cta-box {
             text-align: center;
             background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(121, 40, 202, 0.2));
             border: 1px solid var(--primary);
-            padding: 60px 30px;
-            border-radius: 30px;
-            margin-top: 40px;
+            padding: 55px 25px;
+            border-radius: 26px;
+            margin-top: 45px;
             box-shadow: 0 0 60px rgba(0, 242, 254, 0.35), inset 0 0 25px rgba(0, 242, 254, 0.25);
             position: relative;
             overflow: hidden;
@@ -717,15 +754,15 @@
 
         footer {
             border-top: 1px solid var(--glass-border);
-            background: rgba(2, 4, 10, 0.95);
+            background: rgba(1, 3, 8, 0.96);
             backdrop-filter: blur(20px);
-            padding: 50px 20px;
+            padding: 45px 20px;
             text-align: center;
             color: var(--text-sub);
             font-size: 0.95rem;
             position: relative;
             z-index: 10;
-            margin-top: 40px;
+            margin-top: 60px;
         }
 
         .footer-content {
@@ -734,20 +771,20 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 25px;
+            gap: 22px;
         }
 
         .socials {
             display: flex;
-            gap: 22px;
+            gap: 20px;
         }
 
         .socials a {
             color: var(--text-sub);
-            font-size: 1.7rem;
+            font-size: 1.6rem;
             transition: all 0.3s ease;
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.05);
             display: flex;
@@ -760,13 +797,13 @@
             color: var(--primary);
             background: rgba(0, 242, 254, 0.2);
             border-color: var(--primary);
-            transform: translateY(-6px) scale(1.12);
+            transform: translateY(-5px) scale(1.12);
             box-shadow: 0 0 25px var(--primary);
         }
 
         .reveal {
             opacity: 0;
-            transform: translateY(50px);
+            transform: translateY(45px);
             transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -791,8 +828,11 @@
         }
 
         @media (max-width: 1024px) {
-            .hud-grid-2 {
+            .dashboard-layout {
                 grid-template-columns: 1fr;
+            }
+            .telemetry-sidebar {
+                display: none;
             }
         }
 
@@ -816,12 +856,18 @@
 </head>
 <body>
 
-    <div class="sys-bar">
-        <div class="sys-bar-status">
+    <div class="top-system-bar">
+        <div class="sys-left">
             <span class="status-dot"></span>
-            <span>VN SYSTEM HUD v4.0 ONLINE</span>
+            <span>VN TERMINAL OS v5.0 ONLINE</span>
+            <span style="color: var(--text-sub);">|</span>
+            <span id="fps-counter">FPS: 60</span>
         </div>
-        <div id="sys-clock">00:00:00 UTC</div>
+        <div class="sys-right">
+            <span>PING: <span id="ping-counter" style="color: var(--green);">18ms</span></span>
+            <span style="color: var(--text-sub);">|</span>
+            <div id="sys-clock">00:00:00:000</div>
+        </div>
     </div>
 
     <div class="scanline-overlay"></div>
@@ -848,179 +894,250 @@
         </nav>
     </header>
 
-    <div class="main-dashboard">
+    <div class="dashboard-layout">
 
-        <section id="home" class="hero-window">
-            <div class="win-header">
-                <div class="win-controls">
-                    <span class="win-btn win-close"></span>
-                    <span class="win-btn win-min"></span>
-                    <span class="win-btn win-max"></span>
-                </div>
-                <span>VN_MAIN_HUD.EXE</span>
-                <span>STATUS: ACTIVE</span>
-            </div>
-            <div class="badge">ROBLOX RIVALS COMPETITIVE CLAN</div>
-            <h1 class="hero-title">DOMINATE THE <span>RIVALS</span></h1>
-            <p class="hero-subtitle">我們是 VN 戰隊。專注於 Roblox Rivals 的頂尖競爭者戰對。</p>
-            <div class="hero-btns">
-                <a href="https://discord.gg/bysBDQBqN2" target="_blank" class="btn-primary">
-                    <i class="fa-solid fa-bolt"></i> 立即加入戰隊
-                </a>
-                <a href="#about" class="btn-secondary">探索戰隊資訊</a>
-            </div>
-        </section>
-
-        <div class="hud-grid-2">
-
-            <section id="about" class="reveal">
-                <div class="glass-card" style="height: 100%;">
-                    <div class="win-header" style="position: relative; margin: -45px -35px 30px -35px; width: calc(100% + 70px); border-radius: 24px 24px 0 0;">
-                        <div class="win-controls">
-                            <span class="win-btn win-close"></span>
-                            <span class="win-btn win-min"></span>
-                            <span class="win-btn win-max"></span>
-                        </div>
-                        <span>ABOUT_VN.LOG</span>
-                        <span>CONFIDENTIAL</span>
-                    </div>
-                    <div class="cyber-corner corner-tl"></div>
-                    <div class="cyber-corner corner-tr"></div>
-                    <div class="cyber-corner corner-bl"></div>
-                    <div class="cyber-corner corner-br"></div>
-                    <div class="section-desc">ABOUT VN CLAN</div>
-                    <h2 class="section-title" style="margin-bottom: 25px;">關於 VN 戰隊</h2>
-                    <h3 style="font-size: 1.8rem; margin-bottom: 15px; color: var(--primary);">簡單 文明 高手</h3>
-                    <p style="line-height: 1.8; color: var(--text-sub); font-size: 1.1rem; margin-bottom: 20px;">
-                        VN 建立於2026年5月18創建，我們的目的是簡單好考的戰對，讓人更好選擇，非常好考過。
-                    </p>
-                    <p style="line-height: 1.8; color: var(--text-sub); font-size: 1.1rem;">
-                        每個人技術都很好
-                    </p>
-                </div>
-            </section>
-
-            <section id="recruitment" class="reveal">
-                <div class="glass-card" style="height: 100%;">
-                    <div class="win-header" style="position: relative; margin: -45px -35px 30px -35px; width: calc(100% + 70px); border-radius: 24px 24px 0 0;">
-                        <div class="win-controls">
-                            <span class="win-btn win-close"></span>
-                            <span class="win-btn win-min"></span>
-                            <span class="win-btn win-max"></span>
-                        </div>
-                        <span>REQUIREMENTS.CFG</span>
-                        <span>LEVEL_REQ: 100+</span>
-                    </div>
-                    <div class="cyber-corner corner-tl"></div>
-                    <div class="cyber-corner corner-tr"></div>
-                    <div class="cyber-corner corner-bl"></div>
-                    <div class="cyber-corner corner-br"></div>
-                    <div class="section-desc">JOIN THE LEGEND</div>
-                    <h2 class="section-title" style="margin-bottom: 25px;">招募條件</h2>
-                    <ul class="req-list">
-                        <li class="req-item">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <span>Roblox Rivals 勝率最低要40%以上</span>
-                        </li>
-                        <li class="req-item">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <span>等級要超過100等</span>
-                        </li>
-                        <li class="req-item">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <span>考試要是贏，不能跳舞鞭屍。否則... 管理員會把你送去成都</span>
-                        </li>
-                        <li class="req-item">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <span>不能說自己爛。(你是最強的)</span>
-                        </li>
-                    </ul>
-                </div>
-            </section>
-
-        </div>
-
-        <section id="features" class="reveal">
-            <div class="section-header">
-                <div class="section-desc">CLAN ADVANTAGES</div>
-                <h2 class="section-title">戰隊特色</h2>
-            </div>
-            <div class="grid-3">
-                <div class="glass-card feature-box">
-                    <div class="cyber-corner corner-tl"></div>
-                    <div class="cyber-corner corner-tr"></div>
-                    <div class="cyber-corner corner-bl"></div>
-                    <div class="cyber-corner corner-br"></div>
-                    <div class="feature-icon"><i class="fa-solid fa-heart"></i></div>
-                    <div class="feature-title">友善禮貌氛圍</div>
-                    <div class="feature-text">隊內成員皆具備極佳個人素養與禮貌，溝通互相尊重、和善熱情。</div>
-                </div>
-
-                <div class="glass-card feature-box">
-                    <div class="cyber-corner corner-tl"></div>
-                    <div class="cyber-corner corner-tr"></div>
-                    <div class="cyber-corner corner-bl"></div>
-                    <div class="cyber-corner corner-br"></div>
-                    <div class="feature-icon"><i class="fa-solid fa-crosshair"></i></div>
-                    <div class="feature-title">堅實頂尖技術</div>
-                    <div class="feature-text">大家技術都很好，我們不追求強，只要你努力，就很棒了。</div>
-                </div>
-
-                <div class="glass-card feature-box">
-                    <div class="cyber-corner corner-tl"></div>
-                    <div class="cyber-corner corner-tr"></div>
-                    <div class="cyber-corner corner-bl"></div>
-                    <div class="cyber-corner corner-br"></div>
-                    <div class="feature-icon"><i class="fa-solid fa-user-shield"></i></div>
-                    <div class="feature-title">滿分防護安全</div>
-                    <div class="feature-text">Discord 伺服器配置最高等級防護機制與嚴格審核，絕對不存在炸群、翻群或惡意騷擾問題。</div>
-                </div>
-            </div>
-        </section>
-
-        <section id="rules" class="reveal">
-            <div class="section-header">
-                <div class="section-desc">CODE OF CONDUCT</div>
-                <h2 class="section-title">戰隊規章</h2>
-            </div>
-            <div class="glass-card">
-                <div class="win-header" style="position: relative; margin: -45px -35px 30px -35px; width: calc(100% + 70px); border-radius: 24px 24px 0 0;">
-                    <div class="win-controls">
-                        <span class="win-btn win-close"></span>
-                        <span class="win-btn win-min"></span>
-                        <span class="win-btn win-max"></span>
-                    </div>
-                    <span>RULES_POLICY.SYS</span>
-                    <span>PROTECTED</span>
-                </div>
+        <aside class="telemetry-sidebar">
+            <div class="hud-panel">
                 <div class="cyber-corner corner-tl"></div>
                 <div class="cyber-corner corner-tr"></div>
                 <div class="cyber-corner corner-bl"></div>
                 <div class="cyber-corner corner-br"></div>
-                <div class="grid-3" style="gap: 20px;">
-                    <div style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='var(--primary)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';">
-                        <h4 style="color: var(--primary); margin-bottom: 12px; font-size: 1.25rem;"><i class="fa-solid fa-handshake"></i> 尊重隊友</h4>
-                        <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.6;">任何形式的言語攻擊、挑釁或對內抱怨皆不被允許，保持良好對局氣氛。</p>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='var(--accent)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';">
-                        <h4 style="color: var(--accent); margin-bottom: 12px; font-size: 1.25rem;"><i class="fa-solid fa-ban"></i> 零容忍作弊</h4>
-                        <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.6;">嚴禁使用任何腳本、外掛或不正當手段，一經發現立即開除隊籍。</p>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='var(--secondary)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';">
-                        <h4 style="color: var(--secondary); margin-bottom: 12px; font-size: 1.25rem;"><i class="fa-solid fa-shield"></i> 維護隊徽</h4>
-                        <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.6;">代表 VN 戰隊參賽或遊玩時，請保持良好的競技風範與禮貌。</p>
-                    </div>
+                <div class="hud-panel-title">
+                    <span>RADAR SPECTRUM</span>
+                    <i class="fa-solid fa-satellite-dish"></i>
                 </div>
-
-                <div class="cta-box">
-                    <h3 style="font-size: 2.2rem; margin-bottom: 15px;">準備好接受考核了嗎？</h3>
-                    <p style="color: var(--text-sub); margin-bottom: 30px; font-size: 1.1rem;">點擊下方按鈕加入戰對 Discord Server</p>
-                    <a href="https://discord.gg/bysBDQBqN2" target="_blank" class="btn-primary" style="display: inline-flex;">
-                        <i class="fa-brands fa-discord"></i> 立即進入 Discord 申請
-                    </a>
+                <div class="radar-canvas-container">
+                    <canvas id="radar-canvas"></canvas>
                 </div>
             </div>
-        </section>
+
+            <div class="hud-panel">
+                <div class="cyber-corner corner-tl"></div>
+                <div class="cyber-corner corner-tr"></div>
+                <div class="cyber-corner corner-bl"></div>
+                <div class="cyber-corner corner-br"></div>
+                <div class="hud-panel-title">
+                    <span>CLAN TELEMETRY</span>
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <div class="hud-stat-row">
+                    <span class="hud-stat-label">CREATION</span>
+                    <span class="hud-stat-value">2026.05.18</span>
+                </div>
+                <div class="hud-stat-row">
+                    <span class="hud-stat-label">TARGET GAME</span>
+                    <span class="hud-stat-value">ROBLOX RIVALS</span>
+                </div>
+                <div class="hud-stat-row">
+                    <span class="hud-stat-label">MIN WINRATE</span>
+                    <span class="hud-stat-value" style="color: var(--primary);">40%+</span>
+                </div>
+                <div class="hud-stat-row">
+                    <span class="hud-stat-label">MIN LEVEL</span>
+                    <span class="hud-stat-value" style="color: var(--primary);">LV.100+</span>
+                </div>
+                <div class="hud-stat-row">
+                    <span class="hud-stat-label">SECURITY</span>
+                    <span class="hud-stat-value" style="color: var(--green);">ENCRYPTED</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-operations-area">
+
+            <section id="home" class="window-box">
+                <div class="cyber-corner corner-tl"></div>
+                <div class="cyber-corner corner-tr"></div>
+                <div class="cyber-corner corner-bl"></div>
+                <div class="cyber-corner corner-br"></div>
+                <div class="window-bar">
+                    <div class="window-bar-title">
+                        <i class="fa-solid fa-terminal"></i> CORE_TERMINAL // MAIN_HUD.EXE
+                    </div>
+                    <div class="window-controls-btns">
+                        <span class="control-dot dot-close"></span>
+                        <span class="control-dot dot-min"></span>
+                        <span class="control-dot dot-max"></span>
+                    </div>
+                </div>
+                <div class="window-body-content hero-section">
+                    <div class="badge">ROBLOX RIVALS COMPETITIVE CLAN</div>
+                    <h1 class="hero-title">DOMINATE THE <span>RIVALS</span></h1>
+                    <p class="hero-subtitle">我們是 VN 戰隊。專注於 Roblox Rivals 的頂尖競爭者戰對。</p>
+                    <div class="hero-btns">
+                        <a href="https://discord.gg/bysBDQBqN2" target="_blank" class="btn-primary">
+                            <i class="fa-solid fa-bolt"></i> 立即加入戰隊
+                        </a>
+                        <a href="#about" class="btn-secondary">探索戰隊資訊</a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="about" class="window-box reveal">
+                <div class="cyber-corner corner-tl"></div>
+                <div class="cyber-corner corner-tr"></div>
+                <div class="cyber-corner corner-bl"></div>
+                <div class="cyber-corner corner-br"></div>
+                <div class="window-bar">
+                    <div class="window-bar-title">
+                        <i class="fa-solid fa-circle-info"></i> INTELLIGENCE // ABOUT_VN.LOG
+                    </div>
+                    <div class="window-controls-btns">
+                        <span class="control-dot dot-close"></span>
+                        <span class="control-dot dot-min"></span>
+                        <span class="control-dot dot-max"></span>
+                    </div>
+                </div>
+                <div class="window-body-content">
+                    <div class="section-header">
+                        <div class="section-desc">ABOUT VN CLAN</div>
+                        <h2 class="section-title">關於 VN 戰隊</h2>
+                    </div>
+                    <div class="glass-card">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 15px; color: var(--primary);">簡單 文明 高手</h3>
+                        <p style="line-height: 1.8; color: var(--text-sub); font-size: 1.1rem; margin-bottom: 20px;">
+                            VN 建立於2026年5月18創建，我們的目的是簡單好考的戰對，讓人更好選擇，非常好考過。
+                        </p>
+                        <p style="line-height: 1.8; color: var(--text-sub); font-size: 1.1rem;">
+                            每個人技術都很好
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="features" class="window-box reveal">
+                <div class="cyber-corner corner-tl"></div>
+                <div class="cyber-corner corner-tr"></div>
+                <div class="cyber-corner corner-bl"></div>
+                <div class="cyber-corner corner-br"></div>
+                <div class="window-bar">
+                    <div class="window-bar-title">
+                        <i class="fa-solid fa-layer-group"></i> MODULES // ADVANTAGES.CFG
+                    </div>
+                    <div class="window-controls-btns">
+                        <span class="control-dot dot-close"></span>
+                        <span class="control-dot dot-min"></span>
+                        <span class="control-dot dot-max"></span>
+                    </div>
+                </div>
+                <div class="window-body-content">
+                    <div class="section-header">
+                        <div class="section-desc">CLAN ADVANTAGES</div>
+                        <h2 class="section-title">戰隊特色</h2>
+                    </div>
+                    <div class="grid-3">
+                        <div class="glass-card feature-box">
+                            <div class="feature-icon"><i class="fa-solid fa-heart"></i></div>
+                            <div class="feature-title">友善禮貌氛圍</div>
+                            <div class="feature-text">隊內成員皆具備極佳個人素養與禮貌，溝通互相尊重、和善熱情。</div>
+                        </div>
+
+                        <div class="glass-card feature-box">
+                            <div class="feature-icon"><i class="fa-solid fa-crosshair"></i></div>
+                            <div class="feature-title">堅實頂尖技術</div>
+                            <div class="feature-text">大家技術都很好，我們不追求強，只要你努力，就很棒了。</div>
+                        </div>
+
+                        <div class="glass-card feature-box">
+                            <div class="feature-icon"><i class="fa-solid fa-user-shield"></i></div>
+                            <div class="feature-title">滿分防護安全</div>
+                            <div class="feature-text">Discord 伺服器配置最高等級防護機制與嚴格審核，絕對不存在炸群、翻群或惡意騷擾問題。</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="recruitment" class="window-box reveal">
+                <div class="cyber-corner corner-tl"></div>
+                <div class="cyber-corner corner-tr"></div>
+                <div class="cyber-corner corner-bl"></div>
+                <div class="cyber-corner corner-br"></div>
+                <div class="window-bar">
+                    <div class="window-bar-title">
+                        <i class="fa-solid fa-user-plus"></i> ASSESSMENT // RECRUITMENT.DAT
+                    </div>
+                    <div class="window-controls-btns">
+                        <span class="control-dot dot-close"></span>
+                        <span class="control-dot dot-min"></span>
+                        <span class="control-dot dot-max"></span>
+                    </div>
+                </div>
+                <div class="window-body-content">
+                    <div class="section-header">
+                        <div class="section-desc">JOIN THE LEGEND</div>
+                        <h2 class="section-title">招募條件</h2>
+                    </div>
+                    <div class="glass-card">
+                        <ul class="req-list">
+                            <li class="req-item">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>Roblox Rivals 勝率最低要40%以上</span>
+                            </li>
+                            <li class="req-item">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>等級要超過100等</span>
+                            </li>
+                            <li class="req-item">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>考試要是贏，不能跳舞鞭屍。否則... 管理員會把你送去成都</span>
+                            </li>
+                            <li class="req-item">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>不能說自己爛。(你是最強的)</span>
+                            </li>
+                        </ul>
+
+                        <div class="cta-box">
+                            <h3 style="font-size: 2rem; margin-bottom: 15px;">準備好接受考核了嗎？</h3>
+                            <p style="color: var(--text-sub); margin-bottom: 25px;">點擊下方按鈕加入戰對 Discord Server</p>
+                            <a href="https://discord.gg/bysBDQBqN2" target="_blank" class="btn-primary" style="display: inline-flex;">
+                                <i class="fa-brands fa-discord"></i> 立即進入 Discord 申請
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="rules" class="window-box reveal">
+                <div class="cyber-corner corner-tl"></div>
+                <div class="cyber-corner corner-tr"></div>
+                <div class="cyber-corner corner-bl"></div>
+                <div class="cyber-corner corner-br"></div>
+                <div class="window-bar">
+                    <div class="window-bar-title">
+                        <i class="fa-solid fa-gavel"></i> PROTOCOL // RULES.SYS
+                    </div>
+                    <div class="window-controls-btns">
+                        <span class="control-dot dot-close"></span>
+                        <span class="control-dot dot-min"></span>
+                        <span class="control-dot dot-max"></span>
+                    </div>
+                </div>
+                <div class="window-body-content">
+                    <div class="section-header">
+                        <div class="section-desc">CODE OF CONDUCT</div>
+                        <h2 class="section-title">戰隊規章</h2>
+                    </div>
+                    <div class="glass-card">
+                        <div class="grid-3" style="gap: 20px;">
+                            <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='var(--primary)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';">
+                                <h4 style="color: var(--primary); margin-bottom: 10px; font-size: 1.2rem;"><i class="fa-solid fa-handshake"></i> 尊重隊友</h4>
+                                <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.5;">任何形式的言語攻擊、挑釁或對內抱怨皆不被允許，保持良好對局氣氛。</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='var(--accent)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';">
+                                <h4 style="color: var(--accent); margin-bottom: 10px; font-size: 1.2rem;"><i class="fa-solid fa-ban"></i> 零容忍作弊</h4>
+                                <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.5;">嚴禁使用任何腳本、外掛或不正當手段，一經發現立即開除隊籍。</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='var(--secondary)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';">
+                                <h4 style="color: var(--secondary); margin-bottom: 10px; font-size: 1.2rem;"><i class="fa-solid fa-shield"></i> 維護隊徽</h4>
+                                <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.5;">代表 VN 戰隊參賽或遊玩時，請保持良好的競技風範與禮貌。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
 
     </div>
 
@@ -1039,18 +1156,34 @@
     </footer>
 
     <script>
+        let audioCtx = null;
+        function playBeep(freq = 800, type = 'sine', duration = 0.05) {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        document.querySelectorAll('a, button, .control-dot, .glass-card').forEach(elem => {
+            elem.addEventListener('mouseenter', () => playBeep(900, 'sine', 0.04));
+            elem.addEventListener('click', () => playBeep(1200, 'triangle', 0.08));
+        });
+
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
 
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
-
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('sys-clock').innerText = now.toUTCString().split(' ')[4] + ' UTC';
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -1060,7 +1193,8 @@
         window.addEventListener('resize', resizeCanvas);
 
         const particles = [];
-        const particleCount = 140;
+        const particleCount = 110;
+        const shockwaves = [];
 
         class Particle {
             constructor() {
@@ -1074,23 +1208,25 @@
                 this.vy = (Math.random() - 0.5) * 1.8;
                 this.size = Math.random() * 2.8 + 1;
                 this.color = Math.random() > 0.4 ? '#00f2fe' : (Math.random() > 0.5 ? '#ff007f' : '#7928ca');
-                this.alpha = Math.random() * 0.7 + 0.3;
+                this.alpha = Math.random() * 0.7 + 0.2;
             }
 
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
 
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-
                 let dx = mouseX - this.x;
                 let dy = mouseY - this.y;
                 let dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 120) {
-                    this.x -= (dx / dist) * 2;
-                    this.y -= (dy / dist) * 2;
+
+                if (dist < 160) {
+                    let force = (160 - dist) / 160;
+                    this.x -= (dx / dist) * force * 3.5;
+                    this.y -= (dy / dist) * force * 3.5;
                 }
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
             }
 
             draw() {
@@ -1110,18 +1246,33 @@
             particles.push(new Particle());
         }
 
-        function drawConnections() {
+        window.addEventListener('click', (e) => {
+            shockwaves.push({
+                x: e.clientX,
+                y: e.clientY,
+                radius: 0,
+                maxRadius: 220,
+                alpha: 1
+            });
+        });
+
+        function animateBg() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
             for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
                 for (let j = i + 1; j < particles.length; j++) {
                     let dx = particles[i].x - particles[j].x;
                     let dy = particles[i].y - particles[j].y;
                     let dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < 110) {
+                    if (dist < 130) {
                         ctx.save();
-                        ctx.globalAlpha = (1 - dist / 110) * 0.25;
-                        ctx.strokeStyle = particles[i].color;
-                        ctx.lineWidth = 0.8;
+                        ctx.globalAlpha = (1 - dist / 130) * 0.3;
+                        ctx.strokeStyle = '#00f2fe';
+                        ctx.lineWidth = 0.9;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
@@ -1130,18 +1281,32 @@
                     }
                 }
             }
-        }
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-            drawConnections();
-            requestAnimationFrame(animate);
+            for (let i = shockwaves.length - 1; i >= 0; i--) {
+                let sw = shockwaves[i];
+                sw.radius += 7;
+                sw.alpha -= 0.022;
+
+                if (sw.alpha <= 0) {
+                    shockwaves.splice(i, 1);
+                    continue;
+                }
+
+                ctx.save();
+                ctx.globalAlpha = sw.alpha;
+                ctx.strokeStyle = '#00f2fe';
+                ctx.lineWidth = 2.5;
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#00f2fe';
+                ctx.beginPath();
+                ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            requestAnimationFrame(animateBg);
         }
-        animate();
+        animateBg();
 
         const glow = document.getElementById('cursor-glow');
         const trail = document.getElementById('cursor-trail');
@@ -1153,37 +1318,120 @@
             glow.style.left = mouseX + 'px';
             glow.style.top = mouseY + 'px';
 
-            trail.style.left = (mouseX - 5) + 'px';
-            trail.style.top = (mouseY - 5) + 'px';
+            trail.style.left = mouseX + 'px';
+            trail.style.top = mouseY + 'px';
         });
 
-        const cards = document.querySelectorAll('.glass-card, .hero-window');
-        cards.forEach(card => {
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            const ms = String(now.getMilliseconds()).padStart(3, '0');
+            document.getElementById('sys-clock').innerText = `${h}:${m}:${s}:${ms}`;
+        }
+        setInterval(updateClock, 30);
+
+        let lastFrameTime = performance.now();
+        let frameCount = 0;
+        function updateFPS() {
+            const now = performance.now();
+            frameCount++;
+            if (now - lastFrameTime >= 1000) {
+                document.getElementById('fps-counter').innerText = `FPS: ${frameCount}`;
+                frameCount = 0;
+                lastFrameTime = now;
+            }
+            requestAnimationFrame(updateFPS);
+        }
+        updateFPS();
+
+        setInterval(() => {
+            const ping = Math.floor(Math.random() * 8) + 14;
+            document.getElementById('ping-counter').innerText = `${ping}ms`;
+        }, 3000);
+
+        const radarCanvas = document.getElementById('radar-canvas');
+        if (radarCanvas) {
+            const rctx = radarCanvas.getContext('2d');
+            let angle = 0;
+
+            function drawRadar() {
+                const w = radarCanvas.width = radarCanvas.parentElement.clientWidth;
+                const h = radarCanvas.height = radarCanvas.parentElement.clientHeight;
+                const cx = w / 2;
+                const cy = h / 2;
+                const r = Math.min(w, h) / 2 - 12;
+
+                rctx.clearRect(0, 0, w, h);
+
+                rctx.strokeStyle = 'rgba(0, 242, 254, 0.22)';
+                rctx.lineWidth = 1;
+                rctx.beginPath();
+                rctx.arc(cx, cy, r, 0, Math.PI * 2);
+                rctx.arc(cx, cy, r * 0.65, 0, Math.PI * 2);
+                rctx.arc(cx, cy, r * 0.3, 0, Math.PI * 2);
+                rctx.moveTo(cx - r, cy); rctx.lineTo(cx + r, cy);
+                rctx.moveTo(cx, cy - r); rctx.lineTo(cx, cy + r);
+                rctx.stroke();
+
+                angle += 0.035;
+                rctx.save();
+                rctx.translate(cx, cy);
+                rctx.rotate(angle);
+                const grad = rctx.createConicGradient(0, 0, 0);
+                grad.addColorStop(0, 'rgba(0, 242, 254, 0.7)');
+                grad.addColorStop(0.25, 'rgba(0, 242, 254, 0.0)');
+                rctx.fillStyle = grad;
+                rctx.beginPath();
+                rctx.moveTo(0, 0);
+                rctx.arc(0, 0, r, 0, Math.PI / 2);
+                rctx.fill();
+                rctx.restore();
+
+                requestAnimationFrame(drawRadar);
+            }
+            drawRadar();
+        }
+
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        reveals.forEach(r => observer.observe(r));
+
+        document.querySelectorAll('.window-box, .glass-card').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -6;
+                const rotateY = ((x - centerX) / centerX) * 6;
 
-                card.style.transform = `perspective(1000px) rotateX(${-y / 25}deg) rotateY(${x / 25}deg) translateY(-6px)`;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(12px)`;
             });
 
             card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
             });
         });
 
-        const reveals = document.querySelectorAll('.reveal');
-        function checkScroll() {
-            const triggerBottom = window.innerHeight * 0.88;
-            reveals.forEach(reveal => {
-                const top = reveal.getBoundingClientRect().top;
-                if (top < triggerBottom) {
-                    reveal.classList.add('active');
+        document.querySelectorAll('.dot-min').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const win = e.target.closest('.window-box');
+                const body = win.querySelector('.window-body-content');
+                if (body) {
+                    body.style.display = body.style.display === 'none' ? 'block' : 'none';
                 }
             });
-        }
-        window.addEventListener('scroll', checkScroll);
-        checkScroll();
+        });
     </script>
 </body>
 </html>
