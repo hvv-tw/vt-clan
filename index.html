@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-base: #02040a;
+            --bg-base: #010308;
             --primary: #00f2fe;
             --secondary: #4facfe;
             --accent: #ff007f;
             --purple: #7928ca;
-            --glass-bg: rgba(10, 16, 31, 0.65);
-            --glass-border: rgba(0, 242, 254, 0.18);
+            --glass-bg: rgba(6, 11, 25, 0.75);
+            --glass-border: rgba(0, 242, 254, 0.25);
             --glass-glow: rgba(0, 242, 254, 0.4);
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
@@ -40,11 +40,11 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
             background-size: 100% 4px, 6px 100%;
             z-index: 999;
             pointer-events: none;
-            opacity: 0.6;
+            opacity: 0.65;
         }
 
         .cyber-grid {
@@ -54,20 +54,20 @@
             width: 100vw;
             height: 100vh;
             background-image: 
-                linear-gradient(to right, rgba(0, 242, 254, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 242, 254, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+                linear-gradient(to right, rgba(0, 242, 254, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 242, 254, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
             z-index: -3;
-            transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
-            animation: gridMove 20s linear infinite;
+            transform: perspective(600px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+            animation: gridMove 15s linear infinite;
         }
 
         @keyframes gridMove {
             0% { background-position: 0 0; }
-            100% { background-position: 0 1000px; }
+            100% { background-position: 0 800px; }
         }
 
-        #bg-canvas {
+        #bg-canvas, #radar-canvas {
             position: fixed;
             top: 0;
             left: 0;
@@ -79,14 +79,14 @@
 
         .cursor-glow {
             position: fixed;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(0,242,254,0.22) 0%, rgba(255,0,127,0.12) 40%, rgba(0,0,0,0) 70%);
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(0,242,254,0.25) 0%, rgba(255,0,127,0.15) 35%, rgba(0,0,0,0) 70%);
             border-radius: 50%;
             pointer-events: none;
             transform: translate(-50%, -50%);
             z-index: -1;
-            transition: width 0.3s, height 0.3s, background 0.5s;
+            transition: width 0.3s, height 0.3s;
             mix-blend-mode: screen;
         }
 
@@ -102,13 +102,51 @@
             transition: transform 0.15s ease-out, opacity 0.3s ease;
         }
 
+        .system-bar {
+            width: 100%;
+            background: rgba(2, 6, 16, 0.9);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 6px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--primary);
+            letter-spacing: 1px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1001;
+            backdrop-filter: blur(10px);
+        }
+
+        .sys-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #00ff66;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff66;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
         header {
             position: fixed;
-            top: 20px;
+            top: 40px;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
-            max-width: 1200px;
+            width: 92%;
+            max-width: 1300px;
             z-index: 1000;
             animation: fadeInDown 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -117,13 +155,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 30px;
+            padding: 12px 30px;
             background: var(--glass-bg);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 242, 254, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0, 242, 254, 0.15);
             position: relative;
             overflow: hidden;
         }
@@ -135,9 +173,9 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(0, 242, 254, 0.1), transparent);
+            background: linear-gradient(45deg, transparent, rgba(0, 242, 254, 0.15), transparent);
             transform: rotate(45deg);
-            animation: navbarShine 6s infinite linear;
+            animation: navbarShine 5s infinite linear;
         }
 
         @keyframes navbarShine {
@@ -248,14 +286,158 @@
             box-shadow: 0 0 30px rgba(88, 101, 242, 0.9), 0 0 15px var(--primary);
         }
 
+        .main-container {
+            max-width: 1350px;
+            margin: 120px auto 40px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
+
+        .side-hud {
+            position: sticky;
+            top: 110px;
+            height: calc(100vh - 140px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .hud-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hud-title {
+            font-size: 0.85rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .radar-box {
+            width: 100%;
+            height: 180px;
+            position: relative;
+            border-radius: 10px;
+            background: rgba(0, 242, 254, 0.03);
+            border: 1px solid rgba(0, 242, 254, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .radar-box canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .stat-label {
+            color: var(--text-sub);
+        }
+
+        .stat-val {
+            color: #fff;
+            font-weight: 700;
+            font-family: monospace;
+        }
+
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .window-frame {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 242, 254, 0.08);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s ease-out, border-color 0.4s ease, box-shadow 0.4s ease;
+            transform-style: preserve-3d;
+        }
+
+        .window-frame:hover {
+            border-color: var(--primary);
+            box-shadow: 0 15px 50px rgba(0, 242, 254, 0.35), inset 0 0 20px rgba(0, 242, 254, 0.15);
+        }
+
+        .window-header {
+            background: rgba(2, 6, 18, 0.85);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-title {
+            font-size: 0.85rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .win-btn {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .win-btn.close { background: #ff5f56; }
+        .win-btn.min { background: #ffbd2e; }
+        .win-btn.max { background: #27c93f; }
+
+        .window-body {
+            padding: 40px;
+            position: relative;
+        }
+
         .hero {
-            min-height: 100vh;
+            min-height: 75vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 120px 20px 60px;
+            padding: 60px 20px;
             position: relative;
         }
 
@@ -285,7 +467,7 @@
         }
 
         .hero-title {
-            font-size: 5.5rem;
+            font-size: 4.8rem;
             font-weight: 900;
             line-height: 1.1;
             margin-bottom: 20px;
@@ -312,7 +494,7 @@
         }
 
         .hero-subtitle {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             color: var(--text-sub);
             max-width: 700px;
             margin-bottom: 40px;
@@ -384,20 +566,13 @@
             box-shadow: 0 0 30px rgba(0, 242, 254, 0.4);
         }
 
-        .section {
-            padding: 100px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-        }
-
         .section-header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
         }
 
         .section-title {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: 800;
             letter-spacing: 2px;
             margin-bottom: 10px;
@@ -429,62 +604,6 @@
             text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
         }
 
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.03);
-            transition: transform 0.2s ease-out, border-color 0.4s ease, box-shadow 0.4s ease;
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-        }
-
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
-            transition: 0.7s;
-        }
-
-        .glass-card:hover::before {
-            left: 100%;
-        }
-
-        .glass-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 24px;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(0, 242, 254, 0.5), transparent, rgba(255, 0, 127, 0.5));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            opacity: 0.3;
-            transition: opacity 0.4s ease;
-        }
-
-        .glass-card:hover::after {
-            opacity: 1;
-        }
-
-        .glass-card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 15px 50px rgba(0, 242, 254, 0.3), inset 0 0 20px rgba(0, 242, 254, 0.15);
-        }
-
         .cyber-corner {
             position: absolute;
             width: 12px;
@@ -495,7 +614,7 @@
             transition: all 0.3s ease;
         }
 
-        .glass-card:hover .cyber-corner {
+        .window-frame:hover .cyber-corner {
             opacity: 1;
             box-shadow: 0 0 8px var(--primary);
         }
@@ -507,27 +626,43 @@
 
         .grid-3 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .glass-card {
+            background: rgba(10, 16, 31, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 242, 254, 0.15);
+            border-radius: 18px;
+            padding: 30px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.25);
         }
 
         .feature-box {
             text-align: left;
-            padding: 35px;
         }
 
         .feature-icon {
-            width: 65px;
-            height: 65px;
-            border-radius: 18px;
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
             background: linear-gradient(135deg, rgba(0, 242, 254, 0.25), rgba(255, 0, 127, 0.25));
             border: 1px solid var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--primary);
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
             transition: all 0.4s ease;
         }
@@ -540,7 +675,7 @@
         }
 
         .feature-title {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 800;
             margin-bottom: 12px;
             color: #fff;
@@ -549,24 +684,24 @@
         .feature-text {
             color: var(--text-sub);
             line-height: 1.7;
-            font-size: 1.05rem;
+            font-size: 1rem;
         }
 
         .req-list {
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 16px;
         }
 
         .req-item {
             display: flex;
             align-items: center;
             gap: 15px;
-            font-size: 1.15rem;
-            padding: 14px 22px;
+            font-size: 1.1rem;
+            padding: 14px 20px;
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 14px;
+            border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.06);
             transition: all 0.3s ease;
         }
@@ -580,7 +715,7 @@
 
         .req-item i {
             color: var(--primary);
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             filter: drop-shadow(0 0 5px var(--primary));
         }
 
@@ -588,9 +723,9 @@
             text-align: center;
             background: linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(121, 40, 202, 0.15));
             border: 1px solid var(--primary);
-            padding: 60px 20px;
-            border-radius: 30px;
-            margin-top: 60px;
+            padding: 50px 20px;
+            border-radius: 24px;
+            margin-top: 50px;
             box-shadow: 0 0 50px rgba(0, 242, 254, 0.3), inset 0 0 20px rgba(0, 242, 254, 0.2);
             position: relative;
             overflow: hidden;
@@ -614,7 +749,7 @@
 
         footer {
             border-top: 1px solid var(--glass-border);
-            background: rgba(2, 4, 10, 0.95);
+            background: rgba(1, 3, 8, 0.95);
             backdrop-filter: blur(15px);
             padding: 40px 20px;
             text-align: center;
@@ -622,6 +757,7 @@
             font-size: 0.9rem;
             position: relative;
             z-index: 10;
+            margin-top: 60px;
         }
 
         .footer-content {
@@ -640,7 +776,7 @@
 
         .socials a {
             color: var(--text-sub);
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             transition: all 0.3s ease;
             width: 45px;
             height: 45px;
@@ -686,9 +822,18 @@
             to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
         }
 
+        @media (max-width: 992px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            .side-hud {
+                display: none;
+            }
+        }
+
         @media (max-width: 768px) {
             .hero-title {
-                font-size: 3.2rem;
+                font-size: 3rem;
             }
             .nav-links {
                 display: none;
@@ -712,6 +857,14 @@
     <div class="cursor-glow" id="cursor-glow"></div>
     <div class="cursor-trail" id="cursor-trail"></div>
 
+    <div class="system-bar">
+        <div class="sys-status">
+            <div class="status-dot"></div>
+            <span>VN_SYSTEM_OS v3.5 :: ONLINE</span>
+        </div>
+        <div id="sys-clock">00:00:00:000</div>
+    </div>
+
     <header>
         <nav class="navbar">
             <div class="logo">
@@ -730,141 +883,244 @@
         </nav>
     </header>
 
-    <section id="home" class="hero">
-        <div class="badge">ROBLOX RIVALS COMPETITIVE CLAN</div>
-        <h1 class="hero-title">DOMINATE THE <span>RIVALS</span></h1>
-        <p class="hero-subtitle">我們是 VN 戰隊。專注於 Roblox Rivals 的頂尖競爭者戰對。</p>
-        <div class="hero-btns">
-            <a href="https://discord.gg/bysBDQBqN2" target="_blank" class="btn-primary">
-                <i class="fa-solid fa-bolt"></i> 立即加入戰隊
-            </a>
-            <a href="#about" class="btn-secondary">探索戰隊資訊</a>
-        </div>
-    </section>
+    <div class="main-container">
 
-    <section id="about" class="section reveal">
-        <div class="section-header">
-            <div class="section-desc">ABOUT VN CLAN</div>
-            <h2 class="section-title">關於 VN 戰隊</h2>
-        </div>
-        <div class="glass-card">
-            <div class="cyber-corner corner-tl"></div>
-            <div class="cyber-corner corner-tr"></div>
-            <div class="cyber-corner corner-bl"></div>
-            <div class="cyber-corner corner-br"></div>
-            <h3 style="font-size: 1.8rem; margin-bottom: 15px; color: var(--primary);">簡單 文明 高手</h3>
-            <p style="line-height: 1.8; color: var(--text-sub); font-size: 1.1rem; margin-bottom: 20px;">
-                VN 建立於2026年5月18創建，我們的目的是簡單好考的戰對，讓人更好選擇，非常好考過。
-            </p>
-            <p style="line-height: 1.8; color: var(--text-sub); font-size: 1.1rem;">
-                每個人技術都很好
-            </p>
-        </div>
-    </section>
+        <aside class="side-hud">
+            <div class="hud-card">
+                <div class="hud-title">
+                    <span>SYSTEM RADAR</span>
+                    <i class="fa-solid fa-satellite-dish"></i>
+                </div>
+                <div class="radar-box">
+                    <canvas id="radar-canvas"></canvas>
+                </div>
+            </div>
 
-    <section id="features" class="section reveal">
-        <div class="section-header">
-            <div class="section-desc">CLAN ADVANTAGES</div>
-            <h2 class="section-title">戰隊特色</h2>
-        </div>
-        <div class="grid-3">
-            <div class="glass-card feature-box">
+            <div class="hud-card">
+                <div class="hud-title">
+                    <span>CLAN TELEMETRY</span>
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">FOUNDED</span>
+                    <span class="stat-val">2026.05.18</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">GAME</span>
+                    <span class="stat-val">ROBLOX RIVALS</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">REQ WINRATE</span>
+                    <span class="stat-val">40%+</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">REQ LEVEL</span>
+                    <span class="stat-val">LV.100+</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">PROTECTION</span>
+                    <span class="stat-val" style="color: #00f2fe;">TIER MAX</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content-area">
+
+            <section id="home" class="window-frame">
                 <div class="cyber-corner corner-tl"></div>
                 <div class="cyber-corner corner-tr"></div>
                 <div class="cyber-corner corner-bl"></div>
                 <div class="cyber-corner corner-br"></div>
-                <div class="feature-icon"><i class="fa-solid fa-heart"></i></div>
-                <div class="feature-title">友善禮貌氛圍</div>
-                <div class="feature-text">隊內成員皆具備極佳個人素養與禮貌，溝通互相尊重、和善熱情。</div>
-            </div>
+                <div class="window-header">
+                    <div class="window-title">
+                        <i class="fa-solid fa-terminal"></i> TERMINAL // MAIN_CORE
+                    </div>
+                    <div class="window-controls">
+                        <span class="win-btn close"></span>
+                        <span class="win-btn min"></span>
+                        <span class="win-btn max"></span>
+                    </div>
+                </div>
+                <div class="window-body hero">
+                    <div class="badge">ROBLOX RIVALS COMPETITIVE CLAN</div>
+                    <h1 class="hero-title">DOMINATE THE <span>RIVALS</span></h1>
+                    <p class="hero-subtitle">我們是 VN 戰隊。專注於 Roblox Rivals 的頂尖競爭者戰對。</p>
+                    <div class="hero-btns">
+                        <a href="https://discord.gg/bysBDQBqN2" target="_blank" class="btn-primary">
+                            <i class="fa-solid fa-bolt"></i> 立即加入戰隊
+                        </a>
+                        <a href="#about" class="btn-secondary">探索戰隊資訊</a>
+                    </div>
+                </div>
+            </section>
 
-            <div class="glass-card feature-box">
+            <section id="about" class="window-frame reveal">
                 <div class="cyber-corner corner-tl"></div>
                 <div class="cyber-corner corner-tr"></div>
                 <div class="cyber-corner corner-bl"></div>
                 <div class="cyber-corner corner-br"></div>
-                <div class="feature-icon"><i class="fa-solid fa-crosshair"></i></div>
-                <div class="feature-title">堅實頂尖技術</div>
-                <div class="feature-text">大家技術都很好，我們不追求強，只要你努力，就很棒了。</div>
-            </div>
+                <div class="window-header">
+                    <div class="window-title">
+                        <i class="fa-solid fa-circle-info"></i> SYS_LOG // ABOUT_VN
+                    </div>
+                    <div class="window-controls">
+                        <span class="win-btn close"></span>
+                        <span class="win-btn min"></span>
+                        <span class="win-btn max"></span>
+                    </div>
+                </div>
+                <div class="window-body">
+                    <div class="section-header">
+                        <div class="section-desc">ABOUT VN CLAN</div>
+                        <h2 class="section-title">關於 VN 戰隊</h2>
+                    </div>
+                    <div class="glass-card">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 15px; color: var(--primary);">簡單 文明 高手</h3>
+                        <p style="line-height: 1.8; color: var(--text-sub); font-size: 1.1rem; margin-bottom: 20px;">
+                            VN 建立於2026年5月18創建，我們的目的是簡單好考的戰對，讓人更好選擇，非常好考過。
+                        </p>
+                        <p style="line-height: 1.8; color: var(--text-sub); font-size: 1.1rem;">
+                            每個人技術都很好
+                        </p>
+                    </div>
+                </div>
+            </section>
 
-            <div class="glass-card feature-box">
+            <section id="features" class="window-frame reveal">
                 <div class="cyber-corner corner-tl"></div>
                 <div class="cyber-corner corner-tr"></div>
                 <div class="cyber-corner corner-bl"></div>
                 <div class="cyber-corner corner-br"></div>
-                <div class="feature-icon"><i class="fa-solid fa-user-shield"></i></div>
-                <div class="feature-title">滿分防護安全</div>
-                <div class="feature-text">Discord 伺服器配置最高等級防護機制與嚴格審核，絕對不存在炸群、翻群或惡意騷擾問題。</div>
-            </div>
-        </div>
-    </section>
-
-    <section id="recruitment" class="section reveal">
-        <div class="section-header">
-            <div class="section-desc">JOIN THE LEGEND</div>
-            <h2 class="section-title">招募條件</h2>
-        </div>
-        <div class="glass-card">
-            <div class="cyber-corner corner-tl"></div>
-            <div class="cyber-corner corner-tr"></div>
-            <div class="cyber-corner corner-bl"></div>
-            <div class="cyber-corner corner-br"></div>
-            <ul class="req-list">
-                <li class="req-item">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <span>Roblox Rivals 勝率最低要40%以上</span>
-                </li>
-                <li class="req-item">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <span>等級要超過100等</span>
-                </li>
-                <li class="req-item">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <span>考試要是贏，不能跳舞鞭屍。否則... 管理員會把你送去成都</span>
-                </li>
-                <li class="req-item">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <span>不能說自己爛。(你是最強的)</span>
-                </li>
-            </ul>
-
-            <div class="cta-box">
-                <h3 style="font-size: 2rem; margin-bottom: 15px;">準備好接受考核了嗎？</h3>
-                <p style="color: var(--text-sub); margin-bottom: 25px;">點擊下方按鈕加入戰對 Discord Server</p>
-                <a href="https://discord.gg/bysBDQBqN2" target="_blank" class="btn-primary" style="display: inline-flex;">
-                    <i class="fa-brands fa-discord"></i> 立即進入 Discord 申請
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section id="rules" class="section reveal">
-        <div class="section-header">
-            <div class="section-desc">CODE OF CONDUCT</div>
-            <h2 class="section-title">戰隊規章</h2>
-        </div>
-        <div class="glass-card">
-            <div class="cyber-corner corner-tl"></div>
-            <div class="cyber-corner corner-tr"></div>
-            <div class="cyber-corner corner-bl"></div>
-            <div class="cyber-corner corner-br"></div>
-            <div class="grid-3" style="gap: 20px;">
-                <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='var(--primary)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';">
-                    <h4 style="color: var(--primary); margin-bottom: 10px; font-size: 1.2rem;"><i class="fa-solid fa-handshake"></i> 尊重隊友</h4>
-                    <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.5;">任何形式的言語攻擊、挑釁或對內抱怨皆不被允許，保持良好對局氣氛。</p>
+                <div class="window-header">
+                    <div class="window-title">
+                        <i class="fa-solid fa-layer-group"></i> SYS_LOG // ADVANTAGES
+                    </div>
+                    <div class="window-controls">
+                        <span class="win-btn close"></span>
+                        <span class="win-btn min"></span>
+                        <span class="win-btn max"></span>
+                    </div>
                 </div>
-                <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='var(--accent)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';">
-                    <h4 style="color: var(--accent); margin-bottom: 10px; font-size: 1.2rem;"><i class="fa-solid fa-ban"></i> 零容忍作弊</h4>
-                    <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.5;">嚴禁使用任何腳本、外掛或不正當手段，一經發現立即開除隊籍。</p>
+                <div class="window-body">
+                    <div class="section-header">
+                        <div class="section-desc">CLAN ADVANTAGES</div>
+                        <h2 class="section-title">戰隊特色</h2>
+                    </div>
+                    <div class="grid-3">
+                        <div class="glass-card feature-box">
+                            <div class="feature-icon"><i class="fa-solid fa-heart"></i></div>
+                            <div class="feature-title">友善禮貌氛圍</div>
+                            <div class="feature-text">隊內成員皆具備極佳個人素養與禮貌，溝通互相尊重、和善熱情。</div>
+                        </div>
+
+                        <div class="glass-card feature-box">
+                            <div class="feature-icon"><i class="fa-solid fa-crosshair"></i></div>
+                            <div class="feature-title">堅實頂尖技術</div>
+                            <div class="feature-text">大家技術都很好，我們不追求強，只要你努力，就很棒了。</div>
+                        </div>
+
+                        <div class="glass-card feature-box">
+                            <div class="feature-icon"><i class="fa-solid fa-user-shield"></i></div>
+                            <div class="feature-title">滿分防護安全</div>
+                            <div class="feature-text">Discord 伺服器配置最高等級防護機制與嚴格審核，絕對不存在炸群、翻群或惡意騷擾問題。</div>
+                        </div>
+                    </div>
                 </div>
-                <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='var(--secondary)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';">
-                    <h4 style="color: var(--secondary); margin-bottom: 10px; font-size: 1.2rem;"><i class="fa-solid fa-shield"></i> 維護隊徽</h4>
-                    <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.5;">代表 VN 戰隊參賽或遊玩時，請保持良好的競技風範與禮貌。</p>
+            </section>
+
+            <section id="recruitment" class="window-frame reveal">
+                <div class="cyber-corner corner-tl"></div>
+                <div class="cyber-corner corner-tr"></div>
+                <div class="cyber-corner corner-bl"></div>
+                <div class="cyber-corner corner-br"></div>
+                <div class="window-header">
+                    <div class="window-title">
+                        <i class="fa-solid fa-user-plus"></i> SYS_LOG // RECRUITMENT
+                    </div>
+                    <div class="window-controls">
+                        <span class="win-btn close"></span>
+                        <span class="win-btn min"></span>
+                        <span class="win-btn max"></span>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </section>
+                <div class="window-body">
+                    <div class="section-header">
+                        <div class="section-desc">JOIN THE LEGEND</div>
+                        <h2 class="section-title">招募條件</h2>
+                    </div>
+                    <div class="glass-card">
+                        <ul class="req-list">
+                            <li class="req-item">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>Roblox Rivals 勝率最低要40%以上</span>
+                            </li>
+                            <li class="req-item">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>等級要超過100等</span>
+                            </li>
+                            <li class="req-item">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>考試要是贏，不能跳舞鞭屍。否則... 管理員會把你送去成都</span>
+                            </li>
+                            <li class="req-item">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>不能說自己爛。(你是最強的)</span>
+                            </li>
+                        </ul>
+
+                        <div class="cta-box">
+                            <h3 style="font-size: 2rem; margin-bottom: 15px;">準備好接受考核了嗎？</h3>
+                            <p style="color: var(--text-sub); margin-bottom: 25px;">點擊下方按鈕加入戰對 Discord Server</p>
+                            <a href="https://discord.gg/bysBDQBqN2" target="_blank" class="btn-primary" style="display: inline-flex;">
+                                <i class="fa-brands fa-discord"></i> 立即進入 Discord 申請
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="rules" class="window-frame reveal">
+                <div class="cyber-corner corner-tl"></div>
+                <div class="cyber-corner corner-tr"></div>
+                <div class="cyber-corner corner-bl"></div>
+                <div class="cyber-corner corner-br"></div>
+                <div class="window-header">
+                    <div class="window-title">
+                        <i class="fa-solid fa-gavel"></i> SYS_LOG // RULES
+                    </div>
+                    <div class="window-controls">
+                        <span class="win-btn close"></span>
+                        <span class="win-btn min"></span>
+                        <span class="win-btn max"></span>
+                    </div>
+                </div>
+                <div class="window-body">
+                    <div class="section-header">
+                        <div class="section-desc">CODE OF CONDUCT</div>
+                        <h2 class="section-title">戰隊規章</h2>
+                    </div>
+                    <div class="glass-card">
+                        <div class="grid-3" style="gap: 20px;">
+                            <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='var(--primary)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';">
+                                <h4 style="color: var(--primary); margin-bottom: 10px; font-size: 1.2rem;"><i class="fa-solid fa-handshake"></i> 尊重隊友</h4>
+                                <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.5;">任何形式的言語攻擊、挑釁或對內抱怨皆不被允許，保持良好對局氣氛。</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='var(--accent)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';">
+                                <h4 style="color: var(--accent); margin-bottom: 10px; font-size: 1.2rem;"><i class="fa-solid fa-ban"></i> 零容忍作弊</h4>
+                                <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.5;">嚴禁使用任何腳本、外掛或不正當手段，一經發現立即開除隊籍。</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;" onmouseover="this.style.borderColor='var(--secondary)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';">
+                                <h4 style="color: var(--secondary); margin-bottom: 10px; font-size: 1.2rem;"><i class="fa-solid fa-shield"></i> 維護隊徽</h4>
+                                <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.5;">代表 VN 戰隊參賽或遊玩時，請保持良好的競技風範與禮貌。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
 
     <footer>
         <div class="footer-content">
@@ -895,8 +1151,7 @@
         window.addEventListener('resize', resizeCanvas);
 
         const particles = [];
-        const particleCount = 120;
-
+        const particleCount = 100;
         const shockwaves = [];
 
         class Particle {
@@ -921,6 +1176,7 @@
                 let dx = mouseX - this.x;
                 let dy = mouseY - this.y;
                 let dist = Math.sqrt(dx * dx + dy * dy);
+
                 if (dist < 150) {
                     let force = (150 - dist) / 150;
                     this.x -= (dx / dist) * force * 3;
@@ -932,43 +1188,15 @@
             }
 
             draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = this.alpha;
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = this.color;
                 ctx.fill();
-                ctx.globalAlpha = 1.0;
-            }
-        }
-
-        class Shockwave {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.radius = 1;
-                this.maxRadius = 180;
-                this.alpha = 1;
-                this.color = Math.random() > 0.5 ? '#00f2fe' : '#ff007f';
-            }
-
-            update() {
-                this.radius += 6;
-                this.alpha = 1 - (this.radius / this.maxRadius);
-            }
-
-            draw() {
-                if (this.alpha <= 0) return;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.strokeStyle = this.color;
-                ctx.lineWidth = 3;
-                ctx.globalAlpha = this.alpha;
-                ctx.shadowBlur = 20;
-                ctx.shadowColor = this.color;
-                ctx.stroke();
-                ctx.globalAlpha = 1.0;
+                ctx.restore();
             }
         }
 
@@ -977,53 +1205,66 @@
         }
 
         window.addEventListener('click', (e) => {
-            shockwaves.push(new Shockwave(e.clientX, e.clientY));
-            for(let i = 0; i < 15; i++) {
-                let p = new Particle();
-                p.x = e.clientX;
-                p.y = e.clientY;
-                p.vx = (Math.random() - 0.5) * 8;
-                p.vy = (Math.random() - 0.5) * 8;
-                particles.push(p);
-                if (particles.length > particleCount + 50) particles.shift();
-            }
+            shockwaves.push({
+                x: e.clientX,
+                y: e.clientY,
+                radius: 0,
+                maxRadius: 200,
+                alpha: 1
+            });
         });
 
-        function animateCanvas() {
+        function animateBg() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            for (let i = 0; i < shockwaves.length; i++) {
-                shockwaves[i].update();
-                shockwaves[i].draw();
-            }
-            for (let i = shockwaves.length - 1; i >= 0; i--) {
-                if (shockwaves[i].alpha <= 0) shockwaves.splice(i, 1);
-            }
 
             for (let i = 0; i < particles.length; i++) {
                 particles[i].update();
                 particles[i].draw();
 
                 for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < 130) {
+                    if (dist < 120) {
+                        ctx.save();
+                        ctx.globalAlpha = (1 - dist / 120) * 0.25;
+                        ctx.strokeStyle = '#00f2fe';
+                        ctx.lineWidth = 0.8;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = particles[i].color;
-                        ctx.globalAlpha = (1 - dist / 130) * 0.4;
-                        ctx.lineWidth = 0.8;
                         ctx.stroke();
-                        ctx.globalAlpha = 1.0;
+                        ctx.restore();
                     }
                 }
             }
-            requestAnimationFrame(animateCanvas);
+
+            for (let i = shockwaves.length - 1; i >= 0; i--) {
+                let sw = shockwaves[i];
+                sw.radius += 6;
+                sw.alpha -= 0.02;
+
+                if (sw.alpha <= 0) {
+                    shockwaves.splice(i, 1);
+                    continue;
+                }
+
+                ctx.save();
+                ctx.globalAlpha = sw.alpha;
+                ctx.strokeStyle = '#00f2fe';
+                ctx.lineWidth = 2;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#00f2fe';
+                ctx.beginPath();
+                ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            requestAnimationFrame(animateBg);
         }
-        animateCanvas();
+        animateBg();
 
         const glow = document.getElementById('cursor-glow');
         const trail = document.getElementById('cursor-trail');
@@ -1039,42 +1280,85 @@
             trail.style.top = mouseY + 'px';
         });
 
-        const cards = document.querySelectorAll('.glass-card');
-        cards.forEach(card => {
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            const ms = String(now.getMilliseconds()).padStart(3, '0');
+            document.getElementById('sys-clock').innerText = `${h}:${m}:${s}:${ms}`;
+        }
+        setInterval(updateClock, 33);
+
+        const radarCanvas = document.getElementById('radar-canvas');
+        if (radarCanvas) {
+            const rctx = radarCanvas.getContext('2d');
+            let angle = 0;
+
+            function drawRadar() {
+                const w = radarCanvas.width = radarCanvas.parentElement.clientWidth;
+                const h = radarCanvas.height = radarCanvas.parentElement.clientHeight;
+                const cx = w / 2;
+                const cy = h / 2;
+                const r = Math.min(w, h) / 2 - 10;
+
+                rctx.clearRect(0, 0, w, h);
+
+                rctx.strokeStyle = 'rgba(0, 242, 254, 0.2)';
+                rctx.lineWidth = 1;
+                rctx.beginPath();
+                rctx.arc(cx, cy, r, 0, Math.PI * 2);
+                rctx.arc(cx, cy, r * 0.6, 0, Math.PI * 2);
+                rctx.arc(cx, cy, r * 0.3, 0, Math.PI * 2);
+                rctx.moveTo(cx - r, cy); rctx.lineTo(cx + r, cy);
+                rctx.moveTo(cx, cy - r); rctx.lineTo(cx, cy + r);
+                rctx.stroke();
+
+                angle += 0.03;
+                rctx.save();
+                rctx.translate(cx, cy);
+                rctx.rotate(angle);
+                const grad = rctx.createConicGradient(0, 0, 0);
+                grad.addColorStop(0, 'rgba(0, 242, 254, 0.6)');
+                grad.addColorStop(0.2, 'rgba(0, 242, 254, 0.0)');
+                rctx.fillStyle = grad;
+                rctx.beginPath();
+                rctx.moveTo(0, 0);
+                rctx.arc(0, 0, r, 0, Math.PI / 2);
+                rctx.fill();
+                rctx.restore();
+
+                requestAnimationFrame(drawRadar);
+            }
+            drawRadar();
+        }
+
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        reveals.forEach(r => observer.observe(r));
+
+        document.querySelectorAll('.window-frame, .glass-card').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                card.style.transform = `perspective(1000px) rotateX(${-y / 15}deg) rotateY(${x / 15}deg) translateY(-10px) scale(1.01)`;
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -5;
+                const rotateY = ((x - centerX) / centerX) * 5;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
             });
 
             card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)';
-            });
-        });
-
-        const reveals = document.querySelectorAll('.reveal');
-        function checkReveal() {
-            const windowHeight = window.innerHeight;
-            reveals.forEach(el => {
-                const revealTop = el.getBoundingClientRect().top;
-                if (revealTop < windowHeight - 100) {
-                    el.classList.add('active');
-                }
-            });
-        }
-        window.addEventListener('scroll', checkReveal);
-        checkReveal();
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if(target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
             });
         });
     </script>
